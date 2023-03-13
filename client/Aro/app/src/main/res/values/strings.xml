@@ -10,6 +10,11 @@
     <string name="made_by_textview_text">MADE BY NASSAFY</string>
 
 
+    <string name="hello_blank_fragment">MADE BY NASSAFY</string>
+
+
+
+
 
     <string name="email_edittext_text">이메일</string>
     <string name="email_validate_number_edittext_text">이메인 인증 번호</string>
