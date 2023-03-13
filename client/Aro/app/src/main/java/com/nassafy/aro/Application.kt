@@ -4,6 +4,7 @@ import android.app.Application
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.nassafy.aro.Util.SharedPreferencesUtil
+import dagger.hilt.android.HiltAndroidApp
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -14,6 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
+@HiltAndroidApp
 class Application : Application() {
     override fun onCreate() {
         super.onCreate()
