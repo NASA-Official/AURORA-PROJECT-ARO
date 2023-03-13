@@ -43,12 +43,12 @@ class Application : Application() {
             .setDateFormat("yyyy-MM-dd HH:mm:ss")
             .create()
 
-        retrofit = Retrofit.Builder()
-            .baseUrl(SERVER_URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-            .client(okHttpClient)
-            .build()
+//        retrofit = Retrofit.Builder()
+//            .baseUrl(SERVER_URL)
+//            .addConverterFactory(GsonConverterFactory.create(gson))
+//            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+//            .client(okHttpClient)
+//            .build()
 
         val headerOkHttpClient = OkHttpClient.Builder()
             .readTimeout(30, TimeUnit.SECONDS)
@@ -59,11 +59,11 @@ class Application : Application() {
             .addInterceptor(interceptor)
             .build()
 
-        headerRetrofit = Retrofit.Builder()
-            .baseUrl(SERVER_URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .client(headerOkHttpClient)
-            .build()
+//        headerRetrofit = Retrofit.Builder()
+//            .baseUrl(SERVER_URL)
+//            .addConverterFactory(GsonConverterFactory.create(gson))
+//            .client(headerOkHttpClient)
+//            .build()
     } // End of initRetrofit
 
     inner class AppInterceptor : Interceptor {
