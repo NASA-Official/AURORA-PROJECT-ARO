@@ -1,23 +1,22 @@
-package com.nassafy.aro.UI.view.main
+package com.nassafy.aro.UI.view.stamp
 
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.nassafy.aro.R
 
-class MainFragment : Fragment() {
+class StampHomeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-    }
+    } // onCreate
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_main, container, false)
-    }
-
-}
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_stamp_home, container, false)
+    } // End of onCreateView
+} // End of StampHomeFragment class
