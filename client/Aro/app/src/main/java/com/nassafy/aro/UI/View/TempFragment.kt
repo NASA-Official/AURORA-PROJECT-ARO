@@ -1,4 +1,4 @@
-package com.nassafy.aro.UI.View
+package com.nassafy.aro.UI.view
 
 import androidx.fragment.app.Fragment
 
