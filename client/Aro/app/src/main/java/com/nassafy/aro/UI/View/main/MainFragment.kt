@@ -1,4 +1,4 @@
-package com.nassafy.aro.UI.view.main
+package com.nassafy.aro.UI.View.main
 
 import android.content.Context
 import android.os.Bundle
@@ -21,12 +21,6 @@ class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
     private var tabTitle : ArrayList<String> = arrayListOf()
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        Log.d(TAG, "onAttach: hi")
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

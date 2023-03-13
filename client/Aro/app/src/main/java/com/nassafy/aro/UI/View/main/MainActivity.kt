@@ -1,4 +1,4 @@
-package com.nassafy.aro.UI.view.main
+package com.nassafy.aro.UI.View.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
