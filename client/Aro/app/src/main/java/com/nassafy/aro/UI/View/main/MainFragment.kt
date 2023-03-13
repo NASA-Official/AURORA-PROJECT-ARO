@@ -17,10 +17,11 @@ import com.nassafy.aro.UI.View.TempFragment
 import com.nassafy.aro.databinding.FragmentMainBinding
 
 private const val TAG = "MainFragment_sdr"
+
 class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
-    private var tabTitle : ArrayList<String> = arrayListOf()
+    private var tabTitle: ArrayList<String> = arrayListOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +40,10 @@ class MainFragment : Fragment() {
         }
 
         // add tablayout title
-        tabTitle = arrayListOf(getString(R.string.aurora), getString(R.string.meteor_shower))
+        tabTitle = arrayListOf(
+            getString(R.string.service_aurora),
+            getString(R.string.service_meteor_shower)
+        )
 
         TabLayoutMediator(binding.tablayout, binding.viewpager) { tab, position ->
             tab.text = tabTitle[position]
@@ -60,7 +64,7 @@ class MainFragment : Fragment() {
         }
 
         override fun createFragment(position: Int): Fragment {
-            return when(position) {
+            return when (position) {
                 0 -> AuroraFragment()
                 // TODO: Meteor Shower Fragment
                 else -> TempFragment()
