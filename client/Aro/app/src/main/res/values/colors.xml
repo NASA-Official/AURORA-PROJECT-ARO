@@ -7,4 +7,24 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- 로고 컬러 -->
+    <color name="main_logo_color">#73E29F</color>
+    <color name="main_logo_color_dark">#363636</color>
+
+
+    <!-- 메인 컬러 -->
+    <color name="main_app_color">#4BB575</color>
+    <color name="main_app_color_light">#72DFC5</color>
+
+    <!-- 회원 가입 -->
+    <!--회원 화면 백그라운드 컬러-->
+    <color name="join_background_color">#252525</color>
+    <color name="join_edit_text_error_color">#FF7373</color>
+
+    <!-- 메인 화면 -->
+    <!-- 홈 화면 백그라운드 컬러-->
+    <color name="main_background_color">#242424</color>
+
+
 </resources>
