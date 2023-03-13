@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Aro</string>
+    <string name="hello_blank_fragment">MADE BY NASSAFY</string>
 
     <!-- 로그인 및 회원가입 -->
     <string name="join_button_text">처음 오셨나요? 회원가입하기</string>
