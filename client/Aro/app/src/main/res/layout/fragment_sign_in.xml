@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UI.View.sign.SignInFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/logo_imageview"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/sing_in_edittext_linearlayout"
+            tools:background="@color/black" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/sing_in_edittext_linearlayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/logo_imageview"
+            app:layout_constraintBottom_toTopOf="@id/sign_in_button">
+
+            <EditText
+                android:id="@+id/sign_in_email_id_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="EMAIL"
+                android:layout_marginBottom="8dp"/>
+
+
+            <EditText
+                android:id="@+id/sign_in_password_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="PW" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <Button
+            android:id="@+id/sign_in_button"
+            android:text="SIGN IN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sing_in_edittext_linearlayout"
+            app:layout_constraintBottom_toTopOf="@id/sign_up_textview"/>
+
+        <TextView
+            android:id="@+id/sign_up_textview"
+            android:text="처음 오셨나요? 회원가입하기"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sign_in_button"
+            app:layout_constraintBottom_toTopOf="@id/naver_sign_in_imagebutton"/>
+
+        <ImageButton
+            android:id="@+id/naver_sign_in_imagebutton"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            app:layout_constraintEnd_toStartOf="@id/github_sign_in_imagebutton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sign_up_textview"
+            app:layout_constraintBottom_toTopOf="@id/footer_textview" />
+
+        <TextView
+            android:id="@+id/naver_sign_in_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="네이버로 시작하기"
+            app:layout_constraintTop_toBottomOf="@id/naver_sign_in_imagebutton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/github_sign_in_textview" />
+
+        <ImageButton
+            android:id="@+id/github_sign_in_imagebutton"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/naver_sign_in_imagebutton"
+            app:layout_constraintTop_toTopOf="@id/naver_sign_in_imagebutton"
+            app:layout_constraintBottom_toBottomOf="@id/naver_sign_in_imagebutton"/>
+
+        <TextView
+            android:id="@+id/github_sign_in_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="깃허브로 시작하기"
+            app:layout_constraintTop_toBottomOf="@id/naver_sign_in_imagebutton"
+            app:layout_constraintStart_toEndOf="@id/naver_sign_in_textview"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/footer_textview"
+            android:text="MADE BY NASSAFY"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/naver_sign_in_imagebutton"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
