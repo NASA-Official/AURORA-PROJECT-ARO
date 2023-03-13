@@ -4,15 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.view.main.MainActivity">
+    tools:context=".UI.View.aurora.AuroraFragment">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentcontainerview"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:text="I am Aurora Frag."
+        android:textSize="30dp"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
