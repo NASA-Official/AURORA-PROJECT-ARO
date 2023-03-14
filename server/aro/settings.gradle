@@ -1,1 +1,5 @@
 rootProject.name = 'aro'
+include 'api-module'
+include 'batch-module'
+include 'core-module'
+
