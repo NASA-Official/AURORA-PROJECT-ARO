@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.nassafy.aro.UI.View.main.MainFragment"
+        android:name="com.nassafy.aro.ui.view.main.MainFragment"
         android:label="MainFragmentDirection">
 
 
