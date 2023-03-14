@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<font-family xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingDefaultResource">
+
+    <font
+        android:font="@font/nanum_barun_gothic"
+        android:fontStyle="normal"
+        android:fontWeight="400" />
+
+    <font
+        android:font="@font/nanum_barun_gothic_bold"
+        android:fontStyle="normal"
+        android:fontWeight="400" />
+
+    <font
+        android:font="@font/nanum_barun_gothic_light"
+        android:fontStyle="normal"
+        android:fontWeight="400" />
+    <font
+        android:font="@font/nanum_barun_gothic_ultra_light"
+        android:fontStyle="normal"
+        android:fontWeight="400" />
+    <font
+        android:font="@font/nanum_myeongjo"
+        android:fontStyle="normal"
+        android:fontWeight="400" />
+    <font
+        android:font="@font/nanum_myeongjo_bold"
+        android:fontStyle="normal"
+        android:fontWeight="400" />
+    <font
+        android:font="@font/nanum_myeongjo_extra_bold"
+        android:fontStyle="normal"
+        android:fontWeight="400" />
+
+    <font
+        android:font="@font/nanum_square_b"
+        android:fontStyle="normal"
+        android:fontWeight="400" />
+
+    <font
+        android:font="@font/nanum_square_eb"
+        android:fontStyle="normal"
+        android:fontWeight="400" />
+
+    <font
+        android:font="@font/nanum_square_l"
+        android:fontStyle="normal"
+        android:fontWeight="400" />
+    <font
+        android:font="@font/nanum_square_otf"
+        android:fontStyle="normal"
+        android:fontWeight="400" />
+
+    <font
+        android:font="@font/nanum_square_otf_ac_eb"
+        android:fontStyle="normal"
+        android:fontWeight="400" />
+    <font
+        android:font="@font/nanum_square_otf_ac_l"
+        android:fontStyle="normal"
+        android:fontWeight="400" />
+
+    <font
+        android:font="@font/nanum_square_otf_ac_r"
+        android:fontStyle="normal"
+        android:fontWeight="400" />
+
+    <font
+        android:font="@font/nanum_square_r"
+        android:fontStyle="normal"
+        android:fontWeight="400" />
+
+</font-family>
