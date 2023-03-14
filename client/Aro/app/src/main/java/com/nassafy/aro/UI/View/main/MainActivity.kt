@@ -2,10 +2,12 @@ package com.nassafy.aro.ui.view.main
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
@@ -13,8 +15,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.navigation.NavigationView
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
@@ -32,12 +36,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(binding.root)
 
         // 임시 권한 성공하면 initView()
-        requestPermission()
+//        requestPermission()
+        initView()
 
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
             R.id.mypage_item -> {
                 Toast.makeText(this, "${item.title}", Toast.LENGTH_SHORT).show()
             }
@@ -55,6 +60,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
     private fun initView() {
+        // initialize toolbar
+        initToolBar()
+
         // initialize navigation view
         binding.mainNavigation.setNavigationItemSelectedListener(this)
 
@@ -71,35 +79,62 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     // 임시 권한 체크
-    private fun requestPermission() {
-        TedPermission.create()
-            .setPermissionListener(object : PermissionListener {
-                override fun onPermissionGranted() {
-                    initView()
-                }
+//    private fun requestPermission() {
+//        TedPermission.create()
+//            .setPermissionListener(object : PermissionListener {
+//                override fun onPermissionGranted() {
+//                    initView()
+//                }
+//
+//                override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
+//                    Toast.makeText(
+//                        this@MainActivity,
+//                        "권한을 허가해주세요",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                }
+//            })
+//            .setDeniedMessage("권한을 허용해주세요.")
+//            .setPermissions(
+//                Manifest.permission.ACCESS_COARSE_LOCATION,
+//                Manifest.permission.ACCESS_FINE_LOCATION,
+//                Manifest.permission.INTERNET,
+//                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                Manifest.permission.READ_EXTERNAL_STORAGE
+//            )
+//            .check()
+//    }
 
-                override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "권한을 허가해주세요",
-                        Toast.LENGTH_SHORT
-                    ).show()
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.activity_main_drawer_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.mypage_item -> {
+                if (binding.mainDrawerlayout.isDrawerOpen(GravityCompat.END)) {
+                    binding.mainDrawerlayout.closeDrawer(GravityCompat.END)
+                } else {
+                    binding.mainDrawerlayout.openDrawer(GravityCompat.END)
                 }
-            })
-            .setDeniedMessage("권한을 허용해주세요.")
-            .setPermissions(
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.INTERNET,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            )
-            .check()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun initToolBar() {
+        val toolbar = findViewById<Toolbar>(R.id.main_toolbar)
+        setSupportActionBar(toolbar)
     }
 
     private fun initDrawer() {
+        binding.mainDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         val toggle: ActionBarDrawerToggle = object : ActionBarDrawerToggle(
-            this, binding.mainDrawerlayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+            this,
+            binding.mainDrawerlayout,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
         ) {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
                 super.onDrawerSlide(drawerView, slideOffset)
@@ -120,10 +155,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
         }
-        binding.mainDrawerlayout.apply {
-            addDrawerListener(toggle)
-            setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-        }
+        binding.mainDrawerlayout.addDrawerListener(toggle)
         toggle.syncState()
     }
 
@@ -131,7 +163,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun openDrawer() {
         binding.mainDrawerlayout.openDrawer(GravityCompat.END)
     }
+
     fun closeDrawer() {
+        Log.d(TAG, "closeDrawer: close")
         binding.mainDrawerlayout.closeDrawer(GravityCompat.END)
     }
 }

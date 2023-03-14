@@ -45,10 +45,10 @@ class MainFragment : Fragment() {
         // initialize tab layout
         initTabLayout()
 
-        binding.menuFloatingactionbutton.setOnClickListener {
-            val mainActivity = activity as MainActivity
-            mainActivity.openDrawer()
-        }
+//        binding.menuFloatingactionbutton.setOnClickListener {
+//            val mainActivity = activity as MainActivity
+//            mainActivity.openDrawer()
+//        }
     }
 
     override fun onDestroyView() {
