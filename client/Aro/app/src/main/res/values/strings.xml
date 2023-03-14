@@ -44,6 +44,8 @@
     <!-- 홈 및 메인 -->
     <string name="kp_index_textview_text">KP INDEX</string>
     <string name="my_favorite_textview_text">MY FAVORITE</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!--  타이머 다이얼 로그 -->
     <string name="date_dialog_date_title_textview_text">DATE</string>
@@ -55,6 +57,7 @@
 
 
     <!-- 스탬프 인증 실패 -->
+    <string name="stamp_main_title_textview_text">STAMP</string>
     <string name="stamp_certification_fail_dialog_title_textview_text">인증 실패</string>
     <string name="stamp_certification_fail_dialog_inform_textview_text">인증을 다시 진행해주세요!</string>
     <string name="stamp_certification_date_title_textview_text">인증 날짜 : </string>
