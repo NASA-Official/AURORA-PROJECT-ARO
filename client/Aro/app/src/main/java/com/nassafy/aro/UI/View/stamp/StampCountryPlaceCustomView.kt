@@ -1,4 +1,4 @@
-package com.nassafy.aro.UI.View.stamp
+package com.nassafy.aro.ui.view.stamp
 
 import android.content.Context
 import android.util.AttributeSet
@@ -11,6 +11,7 @@ class StampCountryPlaceCustomView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet?
 ) : ConstraintLayout(context, attrs) {
+    private lateinit var countryPlaceAdapter : CountryPlaceViewPagerAdapter
 
     private var countryPlaceNameTextView: TextView? = null
     private var countryNameTextView: TextView? = null
@@ -22,10 +23,18 @@ class StampCountryPlaceCustomView @JvmOverloads constructor(
         val view = inflater.inflate(R.layout.stamp_country_customview_layout, this, false)
         addView(view)
 
+        // 값이 들어갈 부분
         countryPlaceNameTextView = view.findViewById(R.id.stamp_country_place_name_textview)
         countryNameTextView = view.findViewById(R.id.stamp_country_name_textview)
         countryPlaceInformTextView = view.findViewById(R.id.stamp_country_place_inform_textview)
+
+
     }
+
+    fun setView(typeNum : Int) {
+
+    } // End of setView
+
 
 
 } // End of StampCountryPlaceCustomView class
