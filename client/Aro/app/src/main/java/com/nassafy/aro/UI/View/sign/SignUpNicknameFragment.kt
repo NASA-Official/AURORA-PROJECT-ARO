@@ -1,18 +1,18 @@
 package com.nassafy.aro.ui.view.sign
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.nassafy.aro.R
-import com.nassafy.aro.databinding.FragmentSignInBinding
+import com.nassafy.aro.databinding.FragmentSignUpNicknameBinding
 
-class SignInFragment : Fragment() {
+class SignUpNicknameFragment : Fragment() {
 
-    private var _binding: FragmentSignInBinding? = null
+
+    private var _binding: FragmentSignUpNicknameBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,8 +23,7 @@ class SignInFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        _binding = FragmentSignInBinding.inflate(inflater, container, false)
+        _binding = FragmentSignUpNicknameBinding.inflate(inflater)
         return binding.root
     }
 
@@ -35,14 +34,20 @@ class SignInFragment : Fragment() {
 
     }
 
-    private fun initView() {
-        binding.signUpTextview.setOnClickListener {
-            findNavController().navigate(R.id.action_signInFragment_to_signUpEmailFragment2)
-        }
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+    private fun initView() {
+
+        binding.nextButton.setOnClickListener {
+            findNavController().navigate(R.id.action_signUpNicknameFragment_to_signUpServiceFragment)
+        }
+        binding.cancelButton.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+    }
+
 }
