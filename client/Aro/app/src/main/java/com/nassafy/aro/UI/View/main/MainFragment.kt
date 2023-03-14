@@ -14,9 +14,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.nassafy.aro.R
+import com.nassafy.aro.databinding.FragmentMainBinding
 import com.nassafy.aro.ui.view.aurora.AuroraFragment
 import com.nassafy.aro.ui.view.TempFragment
-import com.nassafy.aro.databinding.FragmentMainBinding
 
 private const val TAG = "MainFragment_sdr"
 
@@ -42,12 +42,27 @@ class MainFragment : Fragment() {
             isUserInputEnabled = false
         }
 
+        // initialize tab layout
+        initTabLayout()
+
+        binding.menuFloatingactionbutton.setOnClickListener {
+            val mainActivity = activity as MainActivity
+            mainActivity.openDrawer()
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun initTabLayout() {
         // add tablayout title
         tabTitle = arrayListOf(
             getString(R.string.service_aurora),
             getString(R.string.service_meteor_shower)
         )
-
+        // add tablayout Icon
         tabIcon = arrayListOf(
             ContextCompat.getDrawable(requireContext(), R.drawable.weather_snowy_icon)!!,
             ContextCompat.getDrawable(requireContext(), R.drawable.weather_sunny_icon)!!
@@ -57,12 +72,6 @@ class MainFragment : Fragment() {
             tab.text = tabTitle[position]
             tab.icon = tabIcon[position]
         }.attach()
-
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
 

@@ -1,9 +1,21 @@
 package com.nassafy.aro.ui.view.main
 
 import android.Manifest
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.Gravity
+import android.view.MenuItem
+import android.view.View
+import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
 import com.nassafy.aro.R
@@ -11,7 +23,7 @@ import com.nassafy.aro.databinding.ActivityMainBinding
 
 private const val TAG = "MainActivity_sdr"
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,7 +36,32 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.mypage_item -> {
+                Toast.makeText(this, "${item.title}", Toast.LENGTH_SHORT).show()
+            }
+            R.id.stamp_item -> {
+                Toast.makeText(this, "${item.title}", Toast.LENGTH_SHORT).show()
+            }
+            R.id.setting_item -> {
+                Toast.makeText(this, "${item.title}", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        closeDrawer()
+        return true
+    }
+
+
     private fun initView() {
+        // initialize navigation view
+        binding.mainNavigation.setNavigationItemSelectedListener(this)
+
+        // initialize drawer view
+        initDrawer()
+
+        // initialize fragment container view
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentcontainerview)
         if (currentFragment == null) {
             supportFragmentManager.beginTransaction()
@@ -60,4 +97,41 @@ class MainActivity : AppCompatActivity() {
             .check()
     }
 
+    private fun initDrawer() {
+        val toggle: ActionBarDrawerToggle = object : ActionBarDrawerToggle(
+            this, binding.mainDrawerlayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+        ) {
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+                super.onDrawerSlide(drawerView, slideOffset)
+            }
+
+            override fun onDrawerOpened(drawerView: View) {
+                super.onDrawerOpened(drawerView)
+                val nickname: TextView = findViewById<View>(R.id.nickname_textview) as TextView
+                val email: TextView = findViewById<View>(R.id.email_textview) as TextView
+                val closeButton: ImageButton = findViewById(R.id.close_button)
+
+                // TODO : Add Nickname and Email from User Data
+//                nickname.text = user.nickname
+//                email.text = user.email
+
+                closeButton.setOnClickListener {
+                    closeDrawer()
+                }
+            }
+        }
+        binding.mainDrawerlayout.apply {
+            addDrawerListener(toggle)
+            setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+        }
+        toggle.syncState()
+    }
+
+    // Main Fragment에서 FAB를 누르면 Drawer Open
+    fun openDrawer() {
+        binding.mainDrawerlayout.openDrawer(GravityCompat.END)
+    }
+    fun closeDrawer() {
+        binding.mainDrawerlayout.closeDrawer(GravityCompat.END)
+    }
 }

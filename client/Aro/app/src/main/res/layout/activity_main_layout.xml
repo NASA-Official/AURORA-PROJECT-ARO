@@ -4,17 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.view.aurora.AuroraFragment">
+    tools:context=".ui.view.main.MainActivity">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/map_view"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:id="@+id/fragmentcontainerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:layout="@layout/activity_main_layout" />
+        android:name="com.nassafy.aro.ui.view.main.MainFragment"
+        tools:layout="@layout/fragment_test_emptry" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
