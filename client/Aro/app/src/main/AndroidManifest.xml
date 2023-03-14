@@ -23,7 +23,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".UI.View.sign.SignActivity"
+            android:name=".ui.view.sign.SignActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,7 +32,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".UI.view.main.MainActivity"
+            android:name=".ui.view.main.MainActivity"
             android:exported="true">
         </activity>
     </application>
