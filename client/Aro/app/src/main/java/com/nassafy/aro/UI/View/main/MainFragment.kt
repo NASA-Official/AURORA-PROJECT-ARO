@@ -1,4 +1,4 @@
-package com.nassafy.aro.UI.view.main
+package com.nassafy.aro.ui.view.main
 
 import android.os.Bundle
 import android.view.LayoutInflater
