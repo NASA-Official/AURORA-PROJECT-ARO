@@ -1,19 +1,21 @@
-package com.nassafy.aro.UI.View.main
+package com.nassafy.aro.ui.view.main
 
-import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
+import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.nassafy.aro.R
-import com.nassafy.aro.UI.View.aurora.AuroraFragment
-import com.nassafy.aro.UI.View.TempFragment
+import com.nassafy.aro.ui.view.aurora.AuroraFragment
+import com.nassafy.aro.ui.view.TempFragment
 import com.nassafy.aro.databinding.FragmentMainBinding
 
 private const val TAG = "MainFragment_sdr"
@@ -22,6 +24,7 @@ class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
     private var tabTitle: ArrayList<String> = arrayListOf()
+    private var tabIcon: ArrayList<Drawable> = arrayListOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,8 +48,14 @@ class MainFragment : Fragment() {
             getString(R.string.service_meteor_shower)
         )
 
+        tabIcon = arrayListOf(
+            ContextCompat.getDrawable(requireContext(), R.drawable.weather_snowy_icon)!!,
+            ContextCompat.getDrawable(requireContext(), R.drawable.weather_sunny_icon)!!
+        )
+
         TabLayoutMediator(binding.tablayout, binding.viewpager) { tab, position ->
             tab.text = tabTitle[position]
+            tab.icon = tabIcon[position]
         }.attach()
 
     }
@@ -70,5 +79,6 @@ class MainFragment : Fragment() {
                 else -> TempFragment()
             }
         }
+
     }
 }
