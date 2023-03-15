@@ -7,19 +7,30 @@
     android:layout_height="match_parent"
     tools:openDrawer="end">
 
-    <include
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentcontainerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        layout="@layout/activity_main_app_bar" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:name="com.nassafy.aro.ui.view.main.MainFragment"
+        tools:layout="@layout/fragment_main" />
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/main_navigation"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
         android:layout_gravity="end"
         android:background="@color/join_background_color"
         android:orientation="vertical"
-        app:itemTextColor="@color/white"
+        app:itemIconSize="16dp"
+        app:itemIconPadding="20dp"
+        app:itemVerticalPadding="20dp"
+        app:itemTextColor="@color/main_app_color"
+        app:itemTextAppearance="@style/NavigationItemStyle"
         app:itemIconTint="@color/white"
         app:headerLayout="@layout/activity_main_drawer_header"
         app:menu="@menu/activity_main_drawer_menu"/>

@@ -2,24 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/open_item"
-        android:icon="@drawable/menu_icon"
-        android:title="@string/navigation_drawer_open"
-        app:showAsAction="always" />
-    <item
         android:id="@+id/mypage_item"
         android:icon="@drawable/menu_mypage_icon"
-        android:title="@string/my_page_main_title_textview_text"
-        app:showAsAction="never" />
+        android:title="@string/my_page_main_title_textview_text" />
     <item
         android:id="@+id/stamp_item"
         android:icon="@drawable/menu_stamp_icon"
-        android:title="@string/stamp_main_title_textview_text"
-        app:showAsAction="never" />
+        android:title="@string/stamp_main_title_textview_text" />
     <item
         android:id="@+id/setting_item"
         android:icon="@drawable/menu_setting_icon"
-        android:title="@string/settings_fragment_title_textview_text"
-        app:showAsAction="never" />
+        android:title="@string/settings_fragment_title_textview_text" />
 
 </menu>

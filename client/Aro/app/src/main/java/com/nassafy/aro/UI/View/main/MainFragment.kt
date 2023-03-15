@@ -9,9 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.nassafy.aro.R
 import com.nassafy.aro.databinding.FragmentMainBinding
@@ -45,10 +43,6 @@ class MainFragment : Fragment() {
         // initialize tab layout
         initTabLayout()
 
-//        binding.menuFloatingactionbutton.setOnClickListener {
-//            val mainActivity = activity as MainActivity
-//            mainActivity.openDrawer()
-//        }
     }
 
     override fun onDestroyView() {

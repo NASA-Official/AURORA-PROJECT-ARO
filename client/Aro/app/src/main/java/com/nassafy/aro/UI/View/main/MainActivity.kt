@@ -1,24 +1,15 @@
 package com.nassafy.aro.ui.view.main
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.Gravity
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.navigation.NavigationView
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
@@ -60,11 +51,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
     private fun initView() {
-        // initialize toolbar
-        initToolBar()
-
         // initialize navigation view
-        binding.mainNavigation.setNavigationItemSelectedListener(this)
+        binding.mainNavigation.setNavigationItemSelectedListener(this@MainActivity)
 
         // initialize drawer view
         initDrawer()
@@ -105,31 +93,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //            .check()
 //    }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.activity_main_drawer_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
-            R.id.mypage_item -> {
-                if (binding.mainDrawerlayout.isDrawerOpen(GravityCompat.END)) {
-                    binding.mainDrawerlayout.closeDrawer(GravityCompat.END)
-                } else {
-                    binding.mainDrawerlayout.openDrawer(GravityCompat.END)
-                }
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    private fun initToolBar() {
-        val toolbar = findViewById<Toolbar>(R.id.main_toolbar)
-        setSupportActionBar(toolbar)
-    }
-
     private fun initDrawer() {
-        binding.mainDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         val toggle: ActionBarDrawerToggle = object : ActionBarDrawerToggle(
             this,
             binding.mainDrawerlayout,
@@ -155,7 +119,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
         }
-        binding.mainDrawerlayout.addDrawerListener(toggle)
+        binding.mainDrawerlayout.apply {
+            setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            addDrawerListener(toggle)
+        }
         toggle.syncState()
     }
 
@@ -165,7 +132,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun closeDrawer() {
-        Log.d(TAG, "closeDrawer: close")
         binding.mainDrawerlayout.closeDrawer(GravityCompat.END)
     }
 }
