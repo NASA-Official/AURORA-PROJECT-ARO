@@ -1,4 +1,4 @@
-package com.nassafy.aro.ViewModel
+package com.nassafy.aro.viewmodel
 
 import androidx.lifecycle.ViewModel
 
