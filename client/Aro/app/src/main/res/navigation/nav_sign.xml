@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_sign"
+    app:startDestination="@id/signInFragment">
+
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.nassafy.aro.ui.view.sign.SignInFragment"
+        android:label="fragment_sign_in"
+        tools:layout="@layout/fragment_sign_in" >
+        <action
+            android:id="@+id/action_signInFragment_to_signUpEmailFragment2"
+            app:destination="@id/signUpEmailFragment2"
+            app:enterAnim="@anim/aro_enter_anim"
+            app:exitAnim="@anim/aro_exit_anim"
+            app:popEnterAnim="@anim/aro_pop_enter_anim"
+            app:popExitAnim="@anim/aro_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpEmailFragment2"
+        android:name="com.nassafy.aro.ui.view.sign.SignUpEmailFragment"
+        android:label="fragment_sign_up_email"
+        tools:layout="@layout/fragment_sign_up_email" >
+        <action
+            android:id="@+id/action_signUpEmailFragment2_to_signUpPasswordFragment"
+            app:destination="@id/signUpPasswordFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpPasswordFragment"
+        android:name="com.nassafy.aro.ui.view.sign.SignUpPasswordFragment"
+        android:label="fragment_sign_up_password"
+        tools:layout="@layout/fragment_sign_up_password" >
+        <action
+            android:id="@+id/action_signUpPasswordFragment_to_signUpNicknameFragment"
+            app:destination="@id/signUpNicknameFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpNicknameFragment"
+        android:name="com.nassafy.aro.ui.view.sign.SignUpNicknameFragment"
+        android:label="SignUpNicknameFragment" >
+        <action
+            android:id="@+id/action_signUpNicknameFragment_to_signUpServiceFragment"
+            app:destination="@id/signUpServiceFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpFavoriteFragment"
+        android:name="com.nassafy.aro.ui.view.sign.SignUpFavoriteFragment"
+        android:label="SignUpFavoriteFragment" />
+    <fragment
+        android:id="@+id/signUpServiceFragment"
+        android:name="com.nassafy.aro.ui.view.sign.SignUpServiceFragment"
+        android:label="SignUpServiceFragment" >
+        <action
+            android:id="@+id/action_signUpServiceFragment_to_signUpFavoriteFragment"
+            app:destination="@id/signUpFavoriteFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
+    </fragment>
+</navigation>
