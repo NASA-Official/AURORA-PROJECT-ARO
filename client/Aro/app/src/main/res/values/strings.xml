@@ -10,16 +10,10 @@
     <string name="login_edittext_pw_hint_text">PW</string>
     <string name="made_by_textview_text">MADE BY NASSAFY</string>
 
-
-    <string name="hello_blank_fragment">MADE BY NASSAFY</string>
-
-
-
-
-
     <string name="email_edittext_text">이메일</string>
-    <string name="email_validate_number_edittext_text">이메인 인증 번호</string>
+    <string name="email_validate_number_edittext_text">이메일 인증 번호</string>
     <string name="email_validate_number_fail_textview_text">인증번호가 다릅니다</string>
+    <string name="email_verify_textview_text">인증하기</string>
 
     <string name="password_edittext_text">비밀번호</string>
     <string name="password_validate_edittext_text">비밀번호 확인</string>
@@ -38,7 +32,6 @@
 
     <!-- 명소 선택 -->
     <string name="location_select_title_textview_text">관심 위치를 선택해주세요</string>
-
 
 
     <!-- 서비스 선택 -->
