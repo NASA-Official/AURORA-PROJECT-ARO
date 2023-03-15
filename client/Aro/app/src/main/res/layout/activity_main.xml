@@ -1,18 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_drawerlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.view.main.MainActivity">
+    tools:openDrawer="end">
 
     <androidx.fragment.app.FragmentContainerView
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:id="@+id/nav_main_fragment"
+        android:id="@+id/fragmentcontainerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:navGraph="@navigation/nav_main"
-        tools:layout="@layout/fragment_main"
-        app:defaultNavHost="true"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:name="com.nassafy.aro.ui.view.main.MainFragment"
+        tools:layout="@layout/fragment_main" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/main_navigation"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="end"
+        android:background="@color/join_background_color"
+        android:orientation="vertical"
+        app:itemIconSize="16dp"
+        app:itemIconPadding="20dp"
+        app:itemVerticalPadding="20dp"
+        app:itemTextColor="@color/main_app_color"
+        app:itemTextAppearance="@style/NavigationItemStyle"
+        app:itemIconTint="@color/white"
+        app:headerLayout="@layout/activity_main_drawer_header"
+        app:menu="@menu/activity_main_drawer_menu"/>
+
+</androidx.drawerlayout.widget.DrawerLayout>
