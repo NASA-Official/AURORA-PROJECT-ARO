@@ -18,7 +18,6 @@ class StampCountryPlacePagerFragmentStateAdapter(fragmentActivity: FragmentActiv
         fragments.add(fragment)
         notifyItemInserted(fragments.size - 1)
     } // End of addFragment
-
     fun removeFragment() {
         fragments.removeLast()
         notifyItemRemoved(fragments.size)

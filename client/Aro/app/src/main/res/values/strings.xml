@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Aro</string>
+    <string name="hello_blank_fragment">MADE BY NASSAFY</string>
 
     <!-- 로그인 및 회원가입 -->
     <string name="join_button_text">처음 오셨나요? 회원가입하기</string>
@@ -48,6 +49,8 @@
     <!-- 홈 및 메인 -->
     <string name="kp_index_textview_text">KP INDEX</string>
     <string name="my_favorite_textview_text">MY FAVORITE</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!--  타이머 다이얼 로그 -->
     <string name="date_dialog_date_title_textview_text">DATE</string>
@@ -59,6 +62,7 @@
 
 
     <!-- 스탬프 인증 실패 -->
+    <string name="stamp_main_title_textview_text">STAMP</string>
     <string name="stamp_certification_fail_dialog_title_textview_text">인증 실패</string>
     <string name="stamp_certification_fail_dialog_inform_textview_text">인증을 다시 진행해주세요!</string>
     <string name="stamp_certification_date_title_textview_text">인증 날짜 : </string>
@@ -112,6 +116,5 @@
     <string name="country_name_russia_text">러시아</string>
     <string name="country_name_norway_text">노르웨이</string>
     <string name="country_name_sweden_text">스웨덴</string>
-
 
 </resources>
