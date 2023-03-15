@@ -1,6 +1,7 @@
 package com.nassafy.aro.ui.view.sign
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -40,6 +41,9 @@ class SignUpEmailFragment : Fragment() {
         }
         binding.cancelButton.setOnClickListener {
             findNavController().popBackStack()
+        }
+        binding.verifyEmailTextview.setOnClickListener {
+            //todo Verify Email Logic
         }
     }
 
