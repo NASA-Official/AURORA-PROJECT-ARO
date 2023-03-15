@@ -30,7 +30,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // 임시 권한 성공하면 initView()
 //        requestPermission()
         initView()
-
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
