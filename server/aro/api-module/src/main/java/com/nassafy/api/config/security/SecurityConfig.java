@@ -88,7 +88,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
 //                .requestMatchers("/api/hello", "/api/authenticate", "/api/signup").permitAll()
 //                .antMatchers("/api/hello", "/api/authenticate", "/api/signup").permitAll()
-                .antMatchers("/api/member/login").permitAll()
+                .antMatchers("/api/members/login").permitAll()
+                .antMatchers("/api/members/hello").permitAll()
                 .requestMatchers(PathRequest.toH2Console()).permitAll()
                 .anyRequest().authenticated()
 

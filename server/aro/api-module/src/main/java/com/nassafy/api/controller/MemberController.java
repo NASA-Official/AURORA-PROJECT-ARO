@@ -5,10 +5,8 @@ import com.nassafy.api.dto.req.MemberLoginReqDto;
 import com.nassafy.api.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -17,6 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
     private final MemberService memberService;
 
+    @GetMapping("/hello")
+    public ResponseEntity<String> hello() {
+        return ResponseEntity.ok("hello");
+    }
+
+    @PostMapping("/test")
+    public String test() {
+        return "success";
+    }
     @PostMapping("/login")
     public TokenDto login(@RequestBody MemberLoginReqDto memberLoginRequestDto) {
         String memberId = memberLoginRequestDto.getMemberId();
