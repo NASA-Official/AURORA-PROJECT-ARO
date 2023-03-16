@@ -42,7 +42,8 @@ class SignUpNicknameFragment : Fragment() {
     private fun initView() {
 
         binding.nextButton.setOnClickListener {
-            findNavController().navigate(R.id.action_signUpNicknameFragment_to_signUpServiceFragment)
+//            findNavController().navigate(R.id.action_signUpNicknameFragment_to_signUpServiceFragment)
+            findNavController().navigate(R.id.action_signUpNicknameFragment_to_aroServiceSelectFragment)
         }
         binding.cancelButton.setOnClickListener {
             findNavController().popBackStack()

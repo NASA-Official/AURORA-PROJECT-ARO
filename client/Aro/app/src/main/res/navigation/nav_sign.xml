@@ -55,6 +55,13 @@
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right" />
+        <action
+            android:id="@+id/action_signUpNicknameFragment_to_aroServiceSelectFragment"
+            app:destination="@id/aroServiceSelectFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
     <fragment
         android:id="@+id/signUpFavoriteFragment"
@@ -66,6 +73,18 @@
         android:label="SignUpServiceFragment" >
         <action
             android:id="@+id/action_signUpServiceFragment_to_signUpFavoriteFragment"
+            app:destination="@id/signUpFavoriteFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/aroServiceSelectFragment"
+        android:name="com.nassafy.aro.ui.view.custom.AroServiceSelectFragment"
+        android:label="AroServiceSelectFragment" >
+        <action
+            android:id="@+id/action_aroServiceSelectFragment_to_signUpFavoriteFragment"
             app:destination="@id/signUpFavoriteFragment"
             app:enterAnim="@anim/from_right"
             app:exitAnim="@anim/to_left"

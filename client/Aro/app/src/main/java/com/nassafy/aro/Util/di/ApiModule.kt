@@ -1,8 +1,8 @@
 package com.nassafy.aro.util.di
 
 import com.nassafy.aro.BuildConfig
-import com.nassafy.aro.util.Constants
 import com.nassafy.aro.domain.repository.api.TestApi
+import com.nassafy.aro.util.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,7 +32,7 @@ class ApiModule {
 
     //BASE_URL 제공
     @Provides
-    fun provideBaseUrl() = Constants.BASE_URL
+    fun provideBaseUrl() = BASE_URL
 
     //HttpClient 제공
     @Singleton
