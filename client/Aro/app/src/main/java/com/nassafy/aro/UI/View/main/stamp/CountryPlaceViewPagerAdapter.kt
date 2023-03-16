@@ -19,7 +19,7 @@ private const val TAG = "CountryPlaceViewPagerAd_싸피"
 
 class CountryPlaceViewPagerAdapter(
     private val countryPlaceList: List<Country>
-) : RecyclerView.Adapter<CountryPlaceViewPagerAdapter.CountryPlaceHolder>() { // End of CountryPlaceViewPagerAdapter class
+) : RecyclerView.Adapter<CountryPlaceViewPagerAdapter.CountryPlaceHolder>() {
     private lateinit var binding: StampCountryPlaceListItemBinding
 
     inner class CountryPlaceHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
