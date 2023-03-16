@@ -9,13 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.nassafy.aro.R
 import com.nassafy.aro.data.dto.Country
-import com.nassafy.aro.databinding.FragmentStampHomeBinding
+import com.nassafy.aro.databinding.FragmentStampDiaryBinding
 
-private const val TAG = "StampHomeFragment_싸피"
-
-class StampHomeFragment : Fragment() {
+class StampDiaryFragment : Fragment() {
+    private lateinit var binding: FragmentStampDiaryBinding
     private lateinit var mContext: Context
-    private lateinit var binding: FragmentStampHomeBinding
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -26,17 +24,17 @@ class StampHomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentStampHomeBinding.inflate(inflater, container, false)
+        binding = FragmentStampDiaryBinding.inflate(inflater, container, false)
         return binding.root
     } // End of onCreateView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.stampCountryCustomViewpager2.adapter =
-            CountryPlaceViewPagerAdapter(countryPlaceList)
-        binding.stampCountryCustomViewpager2.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-
+        // 뷰페이저
+        binding.stampDiaryImageViewpager2.adapter =
+            StampDiaryImageViewPagerAdapter(countryPlaceList)
+        binding.stampDiaryImageViewpager2.orientation = ViewPager2.ORIENTATION_HORIZONTAL
     } // End of onViewCreated
 
     companion object {
@@ -48,4 +46,4 @@ class StampHomeFragment : Fragment() {
             Country("미국", "데날리", R.drawable.usa_denali_color, "알래스카 산악 공원의 자연 예술"),
         )
     }
-} // End of StampHomeFragment class
+} // End of StampDiaryFragment
