@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class Member implements UserDetails {
 
     @Id
-    @Column(updatable = false, unique = true, nullable = false)
+    @Column(name = "member_id", updatable = false, unique = true, nullable = false)
     private String memberId;
 
     @Column(nullable = false)
