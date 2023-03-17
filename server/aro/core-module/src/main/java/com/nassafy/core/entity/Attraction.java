@@ -20,6 +20,8 @@ public class Attraction {
 
     private String attractionName;
 
+    private String description;
+
     private Float latitude;
 
     private Float longitude;
