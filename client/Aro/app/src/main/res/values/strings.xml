@@ -50,8 +50,9 @@
     <string name="date_dialog_hour_title_textview_text">HOUR</string>
 
     <!-- 다이얼로그 버튼 -->
-    <string name="dialog_confirm_button_text">확인</string>
+    <string name="dialog_confirm_button_text"><u>확인</u></string>
     <string name="dialog_cancel_button_text">취소</string>
+    <string name="dialog_date_test_text">23 / 03 / 17</string>
 
 
     <!-- 스탬프 인증 실패 -->

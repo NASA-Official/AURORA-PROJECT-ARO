@@ -111,4 +111,7 @@ dependencies {
 
     // viewpager2
     implementation "androidx.viewpager2:viewpager2:1.0.0"
+
+    // carouselrecyclerview
+    implementation 'com.github.sparrow007:carouselrecyclerview:1.2.6'
 }
