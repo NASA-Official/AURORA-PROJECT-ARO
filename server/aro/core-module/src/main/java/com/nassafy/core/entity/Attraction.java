@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -31,4 +33,7 @@ public class Attraction {
     private String colorAuth;
 
     private String grayAuth;
+
+    @OneToMany(mappedBy = "attraction")
+    private List<Interest> interests = new ArrayList<>();
 }
