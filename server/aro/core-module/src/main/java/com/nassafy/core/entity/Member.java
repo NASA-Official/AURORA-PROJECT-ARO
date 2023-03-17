@@ -21,11 +21,11 @@ public class Member {
 
     private String nickname;
 
-    private boolean alarm;
+    private boolean alarm = true;
 
-    private boolean auroraDisplay;
+    private boolean auroraDisplay = true;
 
-    private boolean auroraService;
+    private boolean auroraService = false;
     @OneToMany(mappedBy = "member")
     private List<Interest> interests = new ArrayList<>();
 }
