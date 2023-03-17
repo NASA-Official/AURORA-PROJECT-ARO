@@ -1,6 +1,7 @@
 package com.nassafy.aro.ui.view.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
@@ -56,14 +57,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         // initialize drawer view
         initDrawer()
-
-        // initialize fragment container view
-        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentcontainerview)
-        if (currentFragment == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.mainFragment, MainFragment())
-                .commit()
-        }
     }
 
     // 임시 권한 체크
