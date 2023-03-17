@@ -35,7 +35,7 @@ class AuroraFragment : Fragment(), OnMapReadyCallback  {
 
         binding.drawerImagebutton.setOnClickListener {
             val mainActivity = activity as MainActivity
-            mainActivity.openDrawer()
+            //mainActivity.openDrawer()
         }
 
         binding.dateTimeLinearlayout.setOnClickListener {

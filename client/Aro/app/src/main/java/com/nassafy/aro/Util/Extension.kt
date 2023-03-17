@@ -1,4 +1,4 @@
-package com.nassafy.aro.Util
+package com.nassafy.aro.util
 
 import android.content.Context
 import android.view.Gravity
