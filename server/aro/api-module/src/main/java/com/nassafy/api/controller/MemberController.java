@@ -21,9 +21,15 @@ public class MemberController {
     }
 
     @PostMapping("/test")
-    public String test() {
-        return "success";
+    public String posttest() {
+        return "post success";
     }
+
+    @GetMapping("/test")
+    public String gettest() {
+        return "get success";
+    }
+
     @PostMapping("/login")
     public TokenDto login(@RequestBody MemberLoginReqDto memberLoginRequestDto) {
         String memberId = memberLoginRequestDto.getMemberId();
