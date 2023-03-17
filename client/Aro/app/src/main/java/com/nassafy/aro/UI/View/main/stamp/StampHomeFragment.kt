@@ -37,6 +37,8 @@ class StampHomeFragment : Fragment() {
             CountryPlaceViewPagerAdapter(countryPlaceList)
         binding.stampCountryCustomViewpager2.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
+
+
     } // End of onViewCreated
 
     companion object {

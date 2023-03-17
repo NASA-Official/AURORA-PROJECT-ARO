@@ -41,7 +41,7 @@ class MainFragment : Fragment() {
         }
 
         // initialize tab layout
-        initTabLayout()
+        //initTabLayout()
 
     }
 
@@ -62,10 +62,10 @@ class MainFragment : Fragment() {
             ContextCompat.getDrawable(requireContext(), R.drawable.weather_sunny_icon)!!
         )
 
-        TabLayoutMediator(binding.tablayout, binding.viewpager) { tab, position ->
-            tab.text = tabTitle[position]
-            tab.icon = tabIcon[position]
-        }.attach()
+//        TabLayoutMediator(binding.tablayout, binding.viewpager) { tab, position ->
+//            tab.text = tabTitle[position]
+//            tab.icon = tabIcon[position]
+//        }.attach()
     }
 
 
