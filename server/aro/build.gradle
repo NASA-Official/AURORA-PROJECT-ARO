@@ -265,6 +265,9 @@ project(':batch-module') {
 		testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
 		testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 
+		// Rserve 의존성 추가
+		implementation group: 'org.rosuda.REngine', name: 'Rserve', version: '1.8.1'
+
 
 	}
 }
