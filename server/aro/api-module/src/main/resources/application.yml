@@ -6,8 +6,11 @@ server:
 logging:
   level:
     root: warn
-    com.nassafy.api: info
+    com.nassafy.api: trace
     org.hibernate.type.descriptor.sql: trace
+#logging:
+#  level:
+#    ccom.nassafy.api: info    # 로깅 레벨
 
 spring:
 

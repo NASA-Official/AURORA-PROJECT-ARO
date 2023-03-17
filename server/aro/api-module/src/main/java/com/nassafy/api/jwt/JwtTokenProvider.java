@@ -47,6 +47,7 @@ public class JwtTokenProvider implements InitializingBean {
 
     // 유저 정보를 가지고 AccessToken, RefreshToken 을 생성하는 메서드
     public TokenDto generateToken(Authentication authentication) {
+        logger.debug("\t Start generateToken");
         // 권한 가져오기
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -77,6 +78,7 @@ public class JwtTokenProvider implements InitializingBean {
 
     // JWT 토큰을 복호화하여 토큰에 들어있는 정보를 꺼내는 메서드
     public Authentication getAuthentication(String accessToken) {
+        logger.debug("\t Start getAuthentication");
         // 토큰 복호화
         Claims claims = parseClaims(accessToken);
 
@@ -97,6 +99,7 @@ public class JwtTokenProvider implements InitializingBean {
 
     // 토큰 정보를 검증하는 메서드
     public boolean validateToken(String token) {
+        logger.debug("\t Start validateToken");
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
