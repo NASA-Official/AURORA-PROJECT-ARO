@@ -1,5 +1,6 @@
 package com.nassafy.core.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,6 +27,7 @@ public class Member {
     private boolean auroraDisplay = true;
 
     private boolean auroraService = false;
+    @JsonIgnore
     @OneToMany(mappedBy = "member")
     private List<Interest> interests = new ArrayList<>();
 }

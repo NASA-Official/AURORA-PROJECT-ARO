@@ -1,5 +1,6 @@
 package com.nassafy.core.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +17,7 @@ public class Interest {
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
-
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "attraction_id")
     private Attraction attraction;
