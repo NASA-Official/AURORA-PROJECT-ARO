@@ -26,20 +26,19 @@ class AroServiceCardView @JvmOverloads constructor(context: Context, attrs: Attr
         //get Blur 이미지
         val blurImage = convertImageToBlurImage(context, BitmapFactory.decodeResource(resources, resourceId))
         setImageWithGrayScale(blurImage, binding.serviceImageview)
-
-        binding.serviceImageview.setImageResource(resourceId)
-
         styledAttributes.recycle()
 
         view.setOnClickListener {
-            if (!view.isSelected) {
-                binding.serviceImageview.colorFilter = null
-                binding.serviceImageview.setImageResource(resourceId)
-            } else {
-                setImageWithGrayScale(blurImage, binding.serviceImageview)
+            when(view.isSelected) {
+                false -> {
+                    binding.serviceImageview.colorFilter = null
+                    binding.serviceImageview.setImageResource(resourceId)
+                }
+                true -> {
+                    setImageWithGrayScale(blurImage, binding.serviceImageview)
+                }
             }
             view.isSelected = !view.isSelected
-
         }
 
     } // End of Init
