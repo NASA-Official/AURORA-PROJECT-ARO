@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -39,5 +40,9 @@ public class AttractionRepository {
                 .setParameter("nation", nation)
                 .getResultList();
 
+    }
+
+    public Optional<Attraction> findById(Long attractionId) {
+        return Optional.ofNullable(em.find(Attraction.class, attractionId));
     }
 }
