@@ -90,5 +90,16 @@
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right" />
+        <action
+            android:id="@+id/action_aroServiceSelectFragment_to_aroCountryPlaceSelectFragment"
+            app:destination="@id/aroCountryPlaceSelectFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
+    <fragment
+        android:id="@+id/aroCountryPlaceSelectFragment"
+        android:name="com.nassafy.aro.ui.view.custom.AroCountryPlaceSelectFragment"
+        android:label="AroCountryPlaceSelectFragment" />
 </navigation>

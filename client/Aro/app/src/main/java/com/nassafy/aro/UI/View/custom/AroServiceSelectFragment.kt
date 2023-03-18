@@ -42,7 +42,7 @@ class AroServiceSelectFragment: Fragment() {
 
     private fun initView() {
         binding.nextButton.setOnClickListener {
-            findNavController().navigate(R.id.action_aroServiceSelectFragment_to_signUpFavoriteFragment)
+            findNavController().navigate(R.id.action_aroServiceSelectFragment_to_aroCountryPlaceSelectFragment)
         }
         binding.cancelButton.setOnClickListener {
             findNavController().popBackStack()
