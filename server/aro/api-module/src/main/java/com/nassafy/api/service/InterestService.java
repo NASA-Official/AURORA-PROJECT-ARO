@@ -20,10 +20,10 @@ public class InterestService {
     private final MemberRepository memberRepository;
     private final AttractionRepository attractionRepository;
 
-    @Transactional
-    public void registerInterest(Long memberid, List<Long> attractionIds) {
-        Member member = memberRepository.findById(memberid)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid member id"));
+    @Transactional(readOnly = false)
+    public void registerInterest(Long memberId, List<Long> attractionIds) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 멤버 ID입니다"));
     // 해당 회원 관심 지역 비우기
         member.getInterests().clear();
 
