@@ -4,9 +4,8 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-fun getDateList(): (ArrayList<String>) {
+fun getDateList(now : LocalDateTime): (ArrayList<String>) {
     var dateList = arrayListOf<String>()
-    val now = LocalDateTime.now()
     val startTime = LocalDateTime.of(now.year, now.month, now.dayOfMonth, now.hour, 0)
     val endTime = startTime.plusHours(71L)
 
@@ -31,9 +30,8 @@ fun getDateList(): (ArrayList<String>) {
     return dateList
 } // End of getDateList
 
-fun getHourList(dateList: ArrayList<String>): (ArrayList<ArrayList<String>>) {
+fun getHourList(dateList: ArrayList<String>, now: LocalDateTime): (ArrayList<ArrayList<String>>) {
     var hourList = arrayListOf<ArrayList<String>>()
-    val now = LocalDateTime.now()
     val fullHours = arrayListOf<String>(
         "00:00", "01:00", "02:00", "03:00", "04:00", "05:00",
         "06:00", "07:00", "08:00", "09:00", "10:00", "11:00",
