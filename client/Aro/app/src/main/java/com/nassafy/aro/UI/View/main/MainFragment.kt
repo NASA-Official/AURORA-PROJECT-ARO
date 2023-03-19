@@ -16,6 +16,7 @@ import com.nassafy.aro.R
 import com.nassafy.aro.databinding.FragmentMainBinding
 import com.nassafy.aro.ui.view.aurora.AuroraFragment
 import com.nassafy.aro.ui.view.TempFragment
+import java.time.LocalDateTime
 
 private const val TAG = "MainFragment_sdr"
 
@@ -29,14 +30,12 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d(TAG, "onCreateView: ")
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
-    }
+    } // End of onCreateView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d(TAG, "onViewCreated: ")
         binding.viewpager.apply {
             adapter = ViewPagerAdapter(childFragmentManager, lifecycle)
             isUserInputEnabled = false
@@ -45,18 +44,12 @@ class MainFragment : Fragment() {
         // initialize tab layout
         initTabLayout()
 
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d(TAG, "onStart: ")
-    }
+    } // End of onViewCreated
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.d(TAG, "onDestroyView: ")
         _binding = null
-    }
+    } // End of onDestroyView
 
     private fun initTabLayout() {
         // add tablayout title
@@ -74,7 +67,7 @@ class MainFragment : Fragment() {
             tab.text = tabTitle[position]
             tab.icon = tabIcon[position]
         }.attach()
-    }
+    } // End of initTabLayout
 
 
     inner class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
@@ -90,6 +83,5 @@ class MainFragment : Fragment() {
                 else -> TempFragment()
             }
         }
-
-    }
+    } // End of ViewPagerAdapter
 }
