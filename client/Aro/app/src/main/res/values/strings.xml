@@ -44,6 +44,10 @@
     <string name="my_favorite_textview_text">MY FAVORITE</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="bottom_sheet_name_test_text">그리핀도르</string>
+    <string name="bottom_sheet_percent_test_text">88%</string>
+
+
 
     <!--  타이머 다이얼 로그 -->
     <string name="date_dialog_date_title_textview_text">DATE</string>
