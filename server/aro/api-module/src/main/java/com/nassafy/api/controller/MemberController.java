@@ -37,7 +37,8 @@ public class MemberController {
         return "get success";
     }
 
-    @PostMapping("/login")
+    //    @PostMapping("/login")
+    @RequestMapping(value = "/login", method={RequestMethod.GET, RequestMethod.POST})
     public TokenDto login(@RequestBody MemberLoginReqDto memberLoginRequestDto) {
         logger.debug("\t Start login");
         String email = memberLoginRequestDto.getEmail();
