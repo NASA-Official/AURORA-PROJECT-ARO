@@ -1,4 +1,4 @@
-package com.nassafy.api.contrroller;
+package com.nassafy.api.controller;
 
 import com.nassafy.api.service.AttrationService;
 import com.nassafy.core.entity.Attraction;
