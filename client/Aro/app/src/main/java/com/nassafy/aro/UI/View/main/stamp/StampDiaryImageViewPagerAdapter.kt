@@ -1,28 +1,25 @@
 package com.nassafy.aro.ui.view.main.stamp
 
-import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.constraintlayout.widget.ConstraintSet.Transform
 import androidx.recyclerview.widget.RecyclerView
 import com.nassafy.aro.R
-import com.nassafy.aro.data.dto.Country
+import com.nassafy.aro.data.dto.CountryTest
+import com.nassafy.aro.data.dto.PlaceDiaryTest
 import com.nassafy.aro.databinding.StampDiaryImageListItemBinding
 import com.squareup.picasso.Picasso
-import com.squareup.picasso.Transformation
-import jp.wasabeef.picasso.transformations.CropTransformation
 
 private const val TAG = "StampDiaryImageViewPage_싸피"
 
 class StampDiaryImageViewPagerAdapter(
-    private val diaryImageList: List<Country>
+    private val placeDiaryImageList: List<Int>
 ) : RecyclerView.Adapter<StampDiaryImageViewPagerAdapter.StampDiaryPlaceHolder>() {
     private lateinit var binding: StampDiaryImageListItemBinding
 
     inner class StampDiaryPlaceHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bindInfo(data: Country) {
+        fun bindInfo(data: CountryTest) {
 
         } // End of bindInfo
     } // End of StampDiaryPlaceHolder class
@@ -35,18 +32,15 @@ class StampDiaryImageViewPagerAdapter(
     } // End of onCreateViewHolder
 
     override fun onBindViewHolder(holder: StampDiaryPlaceHolder, position: Int) {
-        binding.stampDiaryImageListImageview.setImageResource(diaryImageList[position].image)
+        Picasso.get().load(placeDiaryImageList[position]).fit().centerCrop().into(binding.stampDiaryImageListImageview)
 
-        val imageView =
-            holder.itemView.findViewById<ImageView>(R.id.stamp_diary_image_list_imageview)
-        Picasso.get().load(diaryImageList[position].image).fit().centerCrop().into(imageView)
-
-        holder.itemView.setOnClickListener {
+        binding.stampDiaryHistoryImageDeleteButton.setOnClickListener {
             itemClickListener.imageRemoveButtonClick(position)
         }
+
     } // End of onBindViewHolder
 
-    override fun getItemCount(): Int = diaryImageList.size
+    override fun getItemCount(): Int = placeDiaryImageList.size
 
     interface ItemClickListener {
         fun imageRemoveButtonClick(position: Int)
