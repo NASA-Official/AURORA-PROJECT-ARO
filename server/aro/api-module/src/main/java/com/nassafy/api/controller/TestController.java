@@ -1,4 +1,4 @@
-package com.nassafy.api.contrroller;
+package com.nassafy.api.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

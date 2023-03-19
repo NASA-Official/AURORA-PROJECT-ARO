@@ -18,7 +18,7 @@ public class SecurityUtil {
     // Security Context에 Authentication 객체가 저장되는 시점은
     // JwtFilter의 doFilter 메소드에서 Request가 들어올때
     // SecurityContext에 Authentication 객체를 저장해서 사용
-    public static Optional<String> getCurrentUsername() {
+    public static Optional<String> getCurrentEmail() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null) {

@@ -8,5 +8,5 @@
 -- insert into user_authority (user_id, authority_name) values (1, 'ROLE_ADMIN');
 -- insert into user_authority (user_id, authority_name) values (2, 'ROLE_USER');
 
-insert into "MEMBER" (member_id, password, nickname) values ('member_A', '1234', 'nickname');
-insert into "MEMBER_ROLES" (member_member_id, roles) values ('member_A', 'USER');
+insert into member (email, password, nickname) values ('admin@nassafy.com', 'admin', 'admin');
+insert into member_roles (member_email, roles) values ('admin@nassafy.com', 'USER');

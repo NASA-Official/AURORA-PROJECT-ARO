@@ -17,7 +17,7 @@ import javax.persistence.Id;
 public class RefreshToken {
 
     @Id
-    private String id;
+    private String email;
 
     private String refreshToken;
 
