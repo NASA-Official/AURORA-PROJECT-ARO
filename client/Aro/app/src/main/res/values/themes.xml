@@ -22,7 +22,7 @@
         <item name="colorControlActivated">@color/main_app_color_light</item> // Focus 상태일때 밑줄 색.
         <item name="android:textCursorDrawable">@color/white</item>  // cursor 색.
 
-        <item name="endIconTint">@color/main_app_color_light</item>
+        <item name="endIconTint">@color/white</item>
         
         <item name="android:textColorHint">@color/white</item>  // hint 색
         <item name="hintTextColor">@color/white</item>   // floating hint 색
