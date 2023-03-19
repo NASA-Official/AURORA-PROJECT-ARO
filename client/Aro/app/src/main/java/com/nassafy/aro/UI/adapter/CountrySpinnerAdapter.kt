@@ -42,8 +42,9 @@ class CountrySpinnerAdapter(
         try {
             binding.itemCountrySpinnerLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.view_pager_background_color))
             binding.itemCountrySpinnerTextview.text = countryName
+            binding.itemCountrySpinnerTextview.setTextColor(ContextCompat.getColor(context, R.color.white))
             if (position == list.size - 1)
-                binding.itemCountrySpinnerTextview.setTextColor(ContextCompat.getColor(context, R.color.white))
+                binding.itemCountrySpinnerDivider.isGone = true
         } catch (e: Exception) {
             e.printStackTrace()
         }
