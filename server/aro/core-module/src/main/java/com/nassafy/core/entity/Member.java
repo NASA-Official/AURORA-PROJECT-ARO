@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
 public class Member implements UserDetails {
 
     @Id
-    @Column(name = "member_id", updatable = false, unique = true, nullable = false)
-    private String memberId;
+    @Column(updatable = false, unique = true, nullable = false)
+    private String email;
 
     @Column(nullable = false)
     private String password;
@@ -44,7 +44,7 @@ public class Member implements UserDetails {
 
     @Override
     public String getUsername() {
-        return memberId;
+        return email;
     }
 
     @Override

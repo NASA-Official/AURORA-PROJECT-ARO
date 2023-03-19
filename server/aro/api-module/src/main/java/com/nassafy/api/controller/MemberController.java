@@ -40,11 +40,9 @@ public class MemberController {
     @PostMapping("/login")
     public TokenDto login(@RequestBody MemberLoginReqDto memberLoginRequestDto) {
         logger.debug("\t Start login");
-        String memberId = memberLoginRequestDto.getMemberId();
+        String email = memberLoginRequestDto.getEmail();
         String password = memberLoginRequestDto.getPassword();
-        TokenDto tokenDto = memberService.login(memberId, password);
-
-
+        TokenDto tokenDto = memberService.login(email, password);
 
         return tokenDto;
     }
