@@ -2,7 +2,7 @@ package com.nassafy.aro.util.di
 
 import com.nassafy.aro.BuildConfig
 import com.nassafy.aro.util.Constants
-import com.nassafy.aro.domain.repository.api.TestApi
+import com.nassafy.aro.domain.api.TestApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
