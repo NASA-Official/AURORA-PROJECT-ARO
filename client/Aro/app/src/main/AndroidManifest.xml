@@ -21,14 +21,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Aro"
         android:usesCleartextTraffic="true"
-        android:screenOrientation="portrait"
         tools:targetApi="31">
         <activity
             android:name=".ui.view.sign.SignActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
         </activity>
         <activity
             android:name=".ui.view.main.MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

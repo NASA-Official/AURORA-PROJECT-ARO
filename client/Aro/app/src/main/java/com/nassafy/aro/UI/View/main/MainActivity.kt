@@ -17,13 +17,11 @@ import com.nassafy.aro.databinding.ActivityMainBinding
 
 
 private const val TAG = "MainActivity_sdr"
-
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        hideStatusBar()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -119,7 +117,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
     }
 
-    // Main Fragment에서 FAB를 누르면 Drawer Open
     fun openDrawer() {
         binding.mainDrawerlayout.openDrawer(GravityCompat.END)
     }
@@ -128,7 +125,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         binding.mainDrawerlayout.closeDrawer(GravityCompat.END)
     }
 
-    private fun hideStatusBar() {
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
-    } // End of hideStatusBar
+//    private fun hideStatusBar() {
+//        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+//    } // End of hideStatusBar
 }
