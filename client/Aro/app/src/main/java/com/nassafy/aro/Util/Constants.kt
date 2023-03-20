@@ -1,5 +1,12 @@
 package com.nassafy.aro.util
 
-object Constants {
-    const val BASE_URL = ""
-}
+import android.net.Uri
+import com.nassafy.aro.BuildConfig
+
+const val BASE_URL = ""
+val githubLoginUri = Uri.Builder().scheme("https").authority("github.com")
+    .appendPath("login")
+    .appendPath("oauth")
+    .appendPath("authorize")
+    .appendQueryParameter("client_id", BuildConfig.GITHUB_CLIENT_ID)
+    .build()

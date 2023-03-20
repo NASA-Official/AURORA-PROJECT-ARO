@@ -11,9 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.google.android.material.tabs.TabLayoutMediator
 import com.nassafy.aro.R
 import com.nassafy.aro.databinding.FragmentMainBinding
+import com.nassafy.aro.ui.TempFragment
 import com.nassafy.aro.ui.view.aurora.AuroraFragment
 import com.nassafy.aro.ui.view.TempFragment
 import java.time.LocalDateTime
@@ -42,7 +42,7 @@ class MainFragment : Fragment() {
         }
 
         // initialize tab layout
-        initTabLayout()
+        //initTabLayout()
 
     } // End of onViewCreated
 

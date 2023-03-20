@@ -10,32 +10,33 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentcontainerview"
+        android:name="com.nassafy.aro.ui.view.main.MainFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:navGraph="@navigation/nav_main"
         app:defaultNavHost="true"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:name="com.nassafy.aro.ui.view.main.MainFragment"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:layout="@layout/fragment_main" />
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/main_navigation"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginTop="20dp"
         android:layout_gravity="end"
+        android:layout_marginTop="20dp"
         android:background="@color/join_background_color"
         android:orientation="vertical"
-        app:itemIconSize="16dp"
-        app:itemIconPadding="20dp"
-        app:itemVerticalPadding="20dp"
-        app:itemTextColor="@color/main_app_color"
-        app:itemTextAppearance="@style/NavigationItemStyle"
-        app:itemIconTint="@color/white"
         app:headerLayout="@layout/activity_main_drawer_header"
-        app:menu="@menu/activity_main_drawer_menu"/>
+        app:itemIconPadding="20dp"
+        app:itemIconSize="16dp"
+        app:itemIconTint="@color/white"
+        app:itemTextAppearance="@style/NavigationItemStyle"
+        app:itemTextColor="@color/main_app_color"
+        app:itemVerticalPadding="20dp"
+        app:menu="@menu/activity_main_drawer_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
