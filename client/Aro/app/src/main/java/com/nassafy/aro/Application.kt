@@ -1,6 +1,7 @@
 package com.nassafy.aro
 
 import android.app.Application
+import androidx.viewbinding.BuildConfig
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.nassafy.aro.util.SharedPreferencesUtil
