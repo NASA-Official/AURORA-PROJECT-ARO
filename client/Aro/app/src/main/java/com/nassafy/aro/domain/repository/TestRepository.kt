@@ -3,18 +3,15 @@ package com.nassafy.aro.domain.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.nassafy.aro.Application
 import com.nassafy.aro.domain.api.TestApi
 import com.nassafy.aro.util.NetworkResult
+import com.nassafy.aro.util.di.AuthInterceptorApi
+import com.nassafy.aro.util.di.OtherInterceptorApi
+import javax.inject.Inject
 
 private const val TAG = "TestRepository_싸피"
 
-class TestRepository {
-    private val testApi = Application.retrofit.create(TestApi::class.java)
-
-    // 토큰 헤더가 담긴 Retrofit
-    private val testHeaderApi = Application.retrofit.create(TestApi::class.java)
-
+class TestRepository @Inject constructor(@OtherInterceptorApi private val testApi: TestApi, @AuthInterceptorApi private val testHeaderApi: TestApi){
     // 테스트 통신 LiveData
     private val _getServerCallTestResponseLiveData = MutableLiveData<NetworkResult<String>>()
     val getServerCallTestResponseLiveData: LiveData<NetworkResult<String>>
@@ -22,7 +19,7 @@ class TestRepository {
 
     // 테스트 통신
     suspend fun getServerCallTest() {
-        val response = testApi.serveerCallTest()
+        val response = testApi.serverCallTest()
         Log.d(TAG, "response.code : ${response.code()}")
         Log.d(TAG, "response.message: ${response.message()}")
         Log.d(TAG, "response.headers: ${response.headers()}")

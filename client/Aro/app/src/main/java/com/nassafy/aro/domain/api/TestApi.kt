@@ -4,7 +4,6 @@ import retrofit2.Response
 import retrofit2.http.GET
 
 interface TestApi {
-
     @GET("/")
-    suspend fun serveerCallTest(): Response<String>
+    suspend fun serverCallTest(): Response<String>
 } // End of TestApi inferface
