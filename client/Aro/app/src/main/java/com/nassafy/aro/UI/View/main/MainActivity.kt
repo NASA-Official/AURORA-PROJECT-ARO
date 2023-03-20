@@ -1,6 +1,7 @@
 package com.nassafy.aro.ui.view.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
@@ -19,13 +20,11 @@ import com.nassafy.aro.databinding.ActivityMainBinding
 
 
 private const val TAG = "MainActivity_sdr"
-
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        hideStatusBar()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -52,8 +51,9 @@ class MainActivity : AppCompatActivity() {
 //        closeDrawer()
 //        return true
 //    }
-
-
+        // initialize drawer view
+        initDrawer()
+    }
 //    private fun initView() {
 //        // initialize navigation view
 //        binding.mainNavigation.setNavigationItemSelectedListener(this@MainActivity)
@@ -69,7 +69,6 @@ class MainActivity : AppCompatActivity() {
 //                .commit()
 //        }
 //    }
-
     // 임시 권한 체크
 //    private fun requestPermission() {
 //        TedPermission.create()
@@ -138,8 +137,4 @@ class MainActivity : AppCompatActivity() {
 //    fun closeDrawer() {
 //        binding.mainDrawerlayout.closeDrawer(GravityCompat.END)
 //    }
-
-    private fun hideStatusBar() {
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
-    } // End of hideStatusBar
 }

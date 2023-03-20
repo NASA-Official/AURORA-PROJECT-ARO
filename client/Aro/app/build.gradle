@@ -126,7 +126,6 @@ dependencies {
     // viewpager2
     implementation "androidx.viewpager2:viewpager2:1.0.0"
 
-
     // UI Tests
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
@@ -162,4 +161,9 @@ dependencies {
     //naver
     implementation 'com.navercorp.nid:oauth-jdk8:5.4.0' // jdk 8
 
+    // carouselrecyclerview
+    implementation 'com.github.sparrow007:carouselrecyclerview:1.2.6'
+
+    // MPAndroidChart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }
