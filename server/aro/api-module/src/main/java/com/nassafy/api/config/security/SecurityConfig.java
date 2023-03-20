@@ -93,6 +93,7 @@ public class SecurityConfig {
                 .antMatchers("/api/members/login").permitAll()
                 .antMatchers("/api/members/hello").permitAll()
                 .antMatchers("/api/test/**").permitAll()
+                .antMatchers("/api/stamps/nations").permitAll()
 //                .requestMatchers(PathRequest.toH2Console()).permitAll()
                 .anyRequest().authenticated()
 
