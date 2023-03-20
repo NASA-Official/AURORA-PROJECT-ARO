@@ -31,6 +31,9 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Interest> interests = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member")
+    private List<Stamp> stamps = new ArrayList<>();
+
     public void toggleAlarm(){
         this.alarm = !this.alarm;
     }
@@ -40,3 +43,4 @@ public class Member {
     }
 
 }
+
