@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.nassafy.aro.BuildConfig.*
 import com.nassafy.aro.R
 import com.nassafy.aro.databinding.FragmentSignInBinding
+import com.nassafy.aro.ui.view.main.MainActivity
 import com.nassafy.aro.util.githubLoginUri
 import com.navercorp.nid.NaverIdLoginSDK
 import com.navercorp.nid.oauth.NidOAuthLogin
@@ -100,6 +101,11 @@ class SignInFragment : Fragment() {
         }
         binding.signInGithubImagebutton.apply {
             naverLogin()
+        }
+        binding.signInButton.setOnClickListener {
+            val intent = Intent(requireContext(), MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
         }
     } // ENd of initView
 

@@ -20,7 +20,8 @@ import com.nassafy.aro.databinding.ActivityMainBinding
 
 
 private const val TAG = "MainActivity_sdr"
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity() {
+//class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +34,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //        requestPermission()
         //initView()
     }
-
 
 //    override fun onNavigationItemSelected(item: MenuItem): Boolean {
 //        when (item.itemId) {
@@ -52,8 +52,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //        return true
 //    }
         // initialize drawer view
-        initDrawer()
-    }
+//        initDrawer()
+//    }
 //    private fun initView() {
 //        // initialize navigation view
 //        binding.mainNavigation.setNavigationItemSelectedListener(this@MainActivity)
