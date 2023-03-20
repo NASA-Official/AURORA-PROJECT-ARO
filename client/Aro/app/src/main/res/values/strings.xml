@@ -48,7 +48,6 @@
     <string name="bottom_sheet_percent_test_text">88%</string>
 
 
-
     <!--  타이머 다이얼 로그 -->
     <string name="date_dialog_date_title_textview_text">DATE</string>
     <string name="date_dialog_hour_title_textview_text">HOUR</string>

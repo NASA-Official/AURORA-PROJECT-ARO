@@ -58,7 +58,6 @@ class ServerCallTestFragment :
             when (it) {
                 is NetworkResult.Success -> {
                     binding.serverCallResultTextview.text = it.data.toString()
-
                     Log.d(TAG, "getServerCallTestObserve: ${it.data}")
                 }
 

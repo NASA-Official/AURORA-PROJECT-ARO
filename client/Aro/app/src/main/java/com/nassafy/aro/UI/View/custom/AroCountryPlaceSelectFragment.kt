@@ -1,13 +1,11 @@
 package com.nassafy.aro.ui.view.custom
 
-import com.nassafy.aro.R
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Divider
@@ -20,10 +18,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.nassafy.aro.R
 import com.nassafy.aro.databinding.FragmentAroCountryPlaceSelectBinding
 import com.nassafy.aro.ui.adapter.CountrySpinnerAdapter
 
-class AroCountryPlaceSelectFragment: Fragment() {
+class AroCountryPlaceSelectFragment : Fragment() {
     private var _binding: FragmentAroCountryPlaceSelectBinding? = null
     private val binding get() = _binding!!
 
@@ -57,8 +56,10 @@ class AroCountryPlaceSelectFragment: Fragment() {
             setContent {
                 // In Compose world
                 MaterialTheme {
-                    Column(modifier = Modifier
-                        .height(this.height.dp)) {
+                    Column(
+                        modifier = Modifier
+                            .height(this.height.dp)
+                    ) {
                         CountryPlaceChips()
                         Divider(
                             modifier = Modifier.height(2.dp),
@@ -77,23 +78,33 @@ class AroCountryPlaceSelectFragment: Fragment() {
     } // End of initView
 
     fun initSpinner() {
-        val countryPlaceList = arrayOf("place 1", "place 2", "place 3")
-        val adapter = CountrySpinnerAdapter(requireContext(), R.layout.item_country_spinner, countryPlaceList)
+        val countryPlaceList = arrayListOf("place 1", "place 2", "place 3")
+        val adapter =
+            CountrySpinnerAdapter(requireContext(), R.layout.item_country_spinner, countryPlaceList)
         binding.selectCountryPlaceSpinner.adapter = adapter
-        binding.selectCountryPlaceSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(p0: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                Log.d("ssafy", "$position item_selected!")
-            }
-            override fun onNothingSelected(p0: AdapterView<*>?) {}
-        } // End of onItemSelectedListener
+        binding.selectCountryPlaceSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    p0: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    Log.d("ssafy", "$position item_selected!")
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {}
+            } // End of onItemSelectedListener
     } // End of initSpinner
 }
 
 @Preview(showBackground = true)
 @Composable
 fun preview() {
-    Column(modifier = Modifier
-        .height(200.dp)) {
+    Column(
+        modifier = Modifier
+            .height(200.dp)
+    ) {
         CountryPlaceChips()
         Divider(
             modifier = Modifier.height(2.dp),
