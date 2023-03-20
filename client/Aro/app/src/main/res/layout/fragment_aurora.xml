@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.view.aurora.AuroraFragment">
 
-
     <FrameLayout
         android:id="@+id/aurora_header_framelayout"
         android:layout_width="match_parent"
@@ -16,7 +15,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
-
 
         <LinearLayout
             android:id="@+id/date_hour_linearlayout"
@@ -66,7 +64,6 @@
         app:layout_constraintTop_toBottomOf="@id/aurora_header_framelayout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:layout="@layout/fragment_test_emptry" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

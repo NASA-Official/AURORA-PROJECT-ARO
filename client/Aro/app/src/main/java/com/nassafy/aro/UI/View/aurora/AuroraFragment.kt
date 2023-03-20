@@ -25,7 +25,8 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 private const val TAG = "AuroraFragment_sdr"
-class AuroraFragment : Fragment(), OnMapReadyCallback  {
+
+class AuroraFragment : Fragment(), OnMapReadyCallback {
     private var _binding: FragmentAuroraBinding? = null
     private val binding get() = _binding!!
     private lateinit var googleMap: GoogleMap
@@ -45,15 +46,11 @@ class AuroraFragment : Fragment(), OnMapReadyCallback  {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        lifecycleScope.launchWhenCreated {
-            val mapFragment: SupportMapFragment? =
-                childFragmentManager.findFragmentById(R.id.map_view) as? SupportMapFragment
+        val mapFragment: SupportMapFragment =
+            childFragmentManager.findFragmentById(R.id.map_view) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+        initView()
 
-            Log.d(TAG, "onViewCreated: $mapFragment")
-            googleMap = mapFragment?.awaitMap()!!
-            Log.d(TAG, "googleMap: $googleMap")
-            initView()
-        }
     } // End of onViewCreated
 
     override fun onMapReady(gMap: GoogleMap) {
@@ -63,12 +60,10 @@ class AuroraFragment : Fragment(), OnMapReadyCallback  {
         val polylineOptions = getKpPolylineOptions(kpIndex)
         googleMap.addPolyline(polylineOptions)
         googleMap.setOnMapClickListener {
-            Log.d(TAG, "onMapClick: $it")
             // TODO: setClickedLocation using viewModel
             clickedLocation = it
         }
         googleMap.setOnPolylineClickListener {
-            Log.d(TAG, "polyclick: $clickedLocation")
             it.addInfoWindow(googleMap, clickedLocation, "KP 지수 $kpIndex", "")
         }
     } // End of onMapReady
@@ -80,7 +75,6 @@ class AuroraFragment : Fragment(), OnMapReadyCallback  {
 
 
     private fun initView() {
-        Log.d(TAG, "initView: ${BuildConfig.MAPS_API_KEY}")
         dateList = getDateList(now)
         hourList = getHourList(dateList, now)
 
@@ -90,11 +84,13 @@ class AuroraFragment : Fragment(), OnMapReadyCallback  {
         }
 
         binding.dateTextview.text = LocalDate.of(now.year, now.month, now.dayOfMonth).format(
-            DateTimeFormatter.ofPattern("yy/MM/dd"))
-
-        binding.hourTextview.text = LocalDateTime.of(now.year, now.month, now.dayOfMonth, now.hour, 0).format(
-            DateTimeFormatter.ofPattern("HH:mm")
+            DateTimeFormatter.ofPattern("yy/MM/dd")
         )
+
+        binding.hourTextview.text =
+            LocalDateTime.of(now.year, now.month, now.dayOfMonth, now.hour, 0).format(
+                DateTimeFormatter.ofPattern("HH:mm")
+            )
 
         binding.dateHourLinearlayout.setOnClickListener {
             val dateHourSelectDialog = DateHourSelectDialog(dateList, hourList)
@@ -116,7 +112,7 @@ class AuroraFragment : Fragment(), OnMapReadyCallback  {
             // in a raw resource file.
             val success = googleMap.setMapStyle(
                 MapStyleOptions.loadRawResourceStyle(
-                    requireContext(), R.raw.map_dark_style
+                    requireContext(), R.raw.map_night_style
                 )
             )
             if (!success) {
