@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="AroServiceCardView">
+        <attr name="service_image"  format="integer|reference"/>
+        <attr name="android:state_selected" />
+    </declare-styleable>
+</resources>
