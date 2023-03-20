@@ -13,8 +13,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class InteresetController {
     private final InterestService interestService;
-
-    //관심 지역 등록 테스트 해봐야함
     @PostMapping("/favorite")
     public ResponseEntity<String> registerInterest(@RequestParam Long memberId, @RequestBody Map<String, Object> requestBody) {
         List<Integer> ids = (List<Integer>) requestBody.get("attractionIds");

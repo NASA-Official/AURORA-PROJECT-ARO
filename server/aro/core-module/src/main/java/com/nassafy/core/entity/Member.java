@@ -30,4 +30,13 @@ public class Member {
     @JsonIgnore
     @OneToMany(mappedBy = "member")
     private List<Interest> interests = new ArrayList<>();
+
+    public void toggleAlarm(){
+        this.alarm = !this.alarm;
+    }
+
+    public void toggleAuroraDisplay(){
+        this.auroraDisplay = !this.auroraDisplay;
+    }
+
 }

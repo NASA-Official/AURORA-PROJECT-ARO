@@ -12,7 +12,7 @@ public class TestController {
 
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> test() {
-        String responseJson = "{ \"message\": \"test\" }"; // JSON 형식의 문자열
+        String responseJson = "{ \"message\": \"test\" }"; // JSON 형식의 문자열 반환
         return ResponseEntity.ok(responseJson);
     }
 
