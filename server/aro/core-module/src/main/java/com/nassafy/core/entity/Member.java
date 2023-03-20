@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +27,8 @@ public class Member {
     private boolean auroraDisplay = true;
 
     private boolean auroraService = false;
+
+    private boolean meteorService = false;
     @JsonIgnore
     @OneToMany(mappedBy = "member")
     private List<Interest> interests = new ArrayList<>();
@@ -40,6 +42,14 @@ public class Member {
 
     public void toggleAuroraDisplay(){
         this.auroraDisplay = !this.auroraDisplay;
+    }
+
+    public boolean getAuroraService(){
+        return this.auroraService;
+    }
+
+    public boolean getMeteorService(){
+        return this.meteorService;
     }
 
 }
