@@ -17,9 +17,10 @@ import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
 import com.nassafy.aro.R
 import com.nassafy.aro.databinding.ActivityMainBinding
-
+import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "MainActivity_sdr"
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 //class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
