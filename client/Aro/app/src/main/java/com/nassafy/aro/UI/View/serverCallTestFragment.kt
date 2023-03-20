@@ -9,6 +9,8 @@ import androidx.fragment.app.viewModels
 import com.nassafy.aro.databinding.FragmentServerCallTestBinding
 import com.nassafy.aro.util.NetworkResult
 import com.nassafy.aro.util.showSnackBarMessage
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.scopes.FragmentScoped
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,6 +18,7 @@ import kotlinx.coroutines.launch
 
 private const val TAG = "serverCallTestFragment_싸피"
 
+@AndroidEntryPoint
 class ServerCallTestFragment :
     BaseFragment<FragmentServerCallTestBinding>(FragmentServerCallTestBinding::inflate) {
 
@@ -23,7 +26,7 @@ class ServerCallTestFragment :
     private lateinit var mContext: Context
 
     // viewModel
-    private val serverCallTestViewModel by viewModels<ServerCallTestViewModel>()
+    private val serverCallTestViewModel: ServerCallTestViewModel by viewModels()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -72,7 +75,7 @@ class ServerCallTestFragment :
                     binding.serverCallTestProgressbar.visibility = View.VISIBLE
                     binding.serverCallTestProgressbar.isVisible = true
                 }
-
+                else -> {}
             }
         }
     } // End of getServerCallTestObserve
