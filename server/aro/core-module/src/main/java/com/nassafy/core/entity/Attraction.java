@@ -41,4 +41,7 @@ public class Attraction {
 
     @OneToMany(mappedBy = "attraction")
     private List<Interest> interests = new ArrayList<>();
+
+    @OneToMany(mappedBy = "attraction")
+    private List<Stamp> stamps = new ArrayList<>();
 }

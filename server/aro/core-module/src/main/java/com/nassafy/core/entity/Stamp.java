@@ -19,11 +19,11 @@ public class Stamp {
 
     private String memo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-    @JsonIgnore
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "attraction_id")
     private Attraction attraction;
 }
