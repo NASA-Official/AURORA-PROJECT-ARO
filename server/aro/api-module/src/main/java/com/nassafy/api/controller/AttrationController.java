@@ -50,7 +50,7 @@ public class AttrationController {
         List<Attraction> attractions = attractionRepository.findByNation(nation);
         List<MapStampDTO> mapStamps = new ArrayList<>();
             for (Attraction attraction : attractions) {
-            MapStampDTO mapStampDTO = new MapStampDTO(attraction.getColorStamp(), attraction.getMapImage(), false);
+            MapStampDTO mapStampDTO = new MapStampDTO(attraction.getColorStamp(), false);
             mapStamps.add(mapStampDTO);
         }
             return mapStamps;
