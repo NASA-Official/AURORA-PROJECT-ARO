@@ -11,6 +11,8 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:navigationBarColor">@color/view_pager_background_color</item>
         <!-- Customize your theme here. -->
     </style>
     <style name="EditTextStyle" parent="Widget.Design.TextInputLayout"> // important : parent 를 이것으로.
