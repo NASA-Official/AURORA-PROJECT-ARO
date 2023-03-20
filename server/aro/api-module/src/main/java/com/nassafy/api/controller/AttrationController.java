@@ -4,10 +4,7 @@ import com.nassafy.api.service.AttrationService;
 import com.nassafy.core.entity.Attraction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,6 +23,10 @@ public class AttrationController {
         List<String> nations = attrationService.getAllNation();
         return ResponseEntity.ok(nations);
     }
+
+//    @PostMapping("/stamps/attrations/{nation}")
+//    public ResponseEntity<>
+
 
     @GetMapping("/stamps/attrations/{nation}")
     public ResponseEntity<List<Attraction>> getAttrationsByNation(@PathVariable String nation){

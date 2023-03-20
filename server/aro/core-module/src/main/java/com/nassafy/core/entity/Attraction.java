@@ -24,17 +24,20 @@ public class Attraction {
 
     private Float latitude;
 
-    private Float longitude;
 
-    private String grayStamp;
+    private Float longitude;
 
     private String colorStamp;
 
+    // 작은 사진
     private String image;
 
     private String colorAuth;
 
     private String grayAuth;
+
+    // 지도 사진
+    private String mapImage;
 
     @OneToMany(mappedBy = "attraction")
     private List<Interest> interests = new ArrayList<>();
