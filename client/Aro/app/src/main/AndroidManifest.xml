@@ -10,8 +10,6 @@
 
 
     <!-- notification -->
-
-
     <application
         android:name=".Application"
         android:allowBackup="true"

@@ -96,11 +96,11 @@ class SignInFragment : Fragment() {
         binding.signUpTextview.setOnClickListener {
             findNavController().navigate(R.id.action_signInFragment_to_signUpEmailFragment2)
         }
+        binding.signInNaverImagebutton.setOnClickListener {
+            naverLogin()
+        }
         binding.signInGithubImagebutton.setOnClickListener {
             githubLogin()
-        }
-        binding.signInGithubImagebutton.apply {
-            naverLogin()
         }
         binding.signInButton.setOnClickListener {
             val intent = Intent(requireContext(), MainActivity::class.java)

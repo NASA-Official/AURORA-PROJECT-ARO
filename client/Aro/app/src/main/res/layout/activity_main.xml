@@ -9,8 +9,8 @@
     tools:openDrawer="end">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentcontainerview"
-        android:name="com.nassafy.aro.ui.view.main.MainFragment"
+        android:id="@+id/main_fragmentcontainerview"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:navGraph="@navigation/nav_main"

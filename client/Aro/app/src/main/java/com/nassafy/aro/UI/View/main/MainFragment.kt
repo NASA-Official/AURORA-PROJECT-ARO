@@ -16,6 +16,7 @@ import com.nassafy.aro.R
 import com.nassafy.aro.databinding.FragmentMainBinding
 import com.nassafy.aro.ui.TempFragment
 import com.nassafy.aro.ui.view.aurora.AuroraFragment
+import java.time.LocalDateTime
 
 private const val TAG = "MainFragment_sdr"
 
@@ -39,9 +40,8 @@ class MainFragment : Fragment() {
             adapter = ViewPagerAdapter(childFragmentManager, lifecycle)
             isUserInputEnabled = false
         }
-
         // initialize tab layout
-        //initTabLayout()
+        initTabLayout()
 
     } // End of onViewCreated
 
