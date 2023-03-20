@@ -2,6 +2,7 @@ package com.nassafy.aro.ui.view.main
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,8 @@ import com.nassafy.aro.R
 import com.nassafy.aro.databinding.FragmentMainBinding
 import com.nassafy.aro.ui.TempFragment
 import com.nassafy.aro.ui.view.aurora.AuroraFragment
+import com.nassafy.aro.ui.view.TempFragment
+import java.time.LocalDateTime
 
 private const val TAG = "MainFragment_sdr"
 
@@ -29,11 +32,10 @@ class MainFragment : Fragment() {
     ): View {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
-    }
+    } // End of onCreateView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.viewpager.apply {
             adapter = ViewPagerAdapter(childFragmentManager, lifecycle)
             isUserInputEnabled = false
@@ -42,12 +44,12 @@ class MainFragment : Fragment() {
         // initialize tab layout
         //initTabLayout()
 
-    }
+    } // End of onViewCreated
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
+    } // End of onDestroyView
 
     private fun initTabLayout() {
         // add tablayout title
@@ -61,11 +63,11 @@ class MainFragment : Fragment() {
             ContextCompat.getDrawable(requireContext(), R.drawable.weather_sunny_icon)!!
         )
 
-//        TabLayoutMediator(binding.tablayout, binding.viewpager) { tab, position ->
-//            tab.text = tabTitle[position]
-//            tab.icon = tabIcon[position]
-//        }.attach()
-    }
+        TabLayoutMediator(binding.tablayout, binding.viewpager) { tab, position ->
+            tab.text = tabTitle[position]
+            tab.icon = tabIcon[position]
+        }.attach()
+    } // End of initTabLayout
 
 
     inner class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
@@ -81,6 +83,5 @@ class MainFragment : Fragment() {
                 else -> TempFragment()
             }
         }
-
-    }
+    } // End of ViewPagerAdapter
 }

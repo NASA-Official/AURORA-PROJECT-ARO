@@ -19,7 +19,7 @@
 
 
         <LinearLayout
-            android:id="@+id/date_time_linearlayout"
+            android:id="@+id/date_hour_linearlayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center"
@@ -35,7 +35,7 @@
                 android:textColor="@color/white" />
 
             <TextView
-                android:id="@+id/time_textview"
+                android:id="@+id/hour_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
