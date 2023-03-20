@@ -14,6 +14,7 @@
         <item name="android:windowFullscreen">true</item>
         <item name="android:navigationBarColor">@color/view_pager_background_color</item>
         <!-- Customize your theme here. -->
+        <item name="bottomSheetDialogTheme">@drawable/bottom_sheet_background</item>
     </style>
     <style name="EditTextStyle" parent="Widget.Design.TextInputLayout"> // important : parent 를 이것으로.
 
@@ -30,6 +31,5 @@
         <item name="hintTextColor">@color/white</item>   // floating hint 색
 
         <item name="errorTextColor">@color/join_edit_text_error_color</item>
-
     </style>
 </resources>
