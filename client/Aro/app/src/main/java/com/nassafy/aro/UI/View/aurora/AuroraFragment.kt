@@ -7,11 +7,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.maps.android.ktx.awaitMap
+import com.nassafy.aro.BuildConfig
 import com.nassafy.aro.R
 import com.nassafy.aro.databinding.FragmentAuroraBinding
 import com.nassafy.aro.ui.view.dialog.DateHourSelectDialog
@@ -42,31 +45,15 @@ class AuroraFragment : Fragment(), OnMapReadyCallback  {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map_view) as? SupportMapFragment
-        mapFragment?.getMapAsync(this)
+        lifecycleScope.launchWhenCreated {
+            val mapFragment: SupportMapFragment? =
+                childFragmentManager.findFragmentById(R.id.map_view) as? SupportMapFragment
 
-        dateList = getDateList(now)
-        hourList = getHourList(dateList, now)
-
-        binding.drawerImagebutton.setOnClickListener {
-            val mainActivity = activity as MainActivity
-            mainActivity.openDrawer()
+            Log.d(TAG, "onViewCreated: $mapFragment")
+            googleMap = mapFragment?.awaitMap()!!
+            Log.d(TAG, "googleMap: $googleMap")
+            initView()
         }
-
-        binding.dateTextview.text = LocalDate.of(now.year, now.month, now.dayOfMonth).format(
-            DateTimeFormatter.ofPattern("yy/MM/dd"))
-
-        binding.hourTextview.text = LocalDateTime.of(now.year, now.month, now.dayOfMonth, now.hour, 0).format(
-            DateTimeFormatter.ofPattern("HH:mm")
-        )
-
-        binding.dateHourLinearlayout.setOnClickListener {
-            val dateHourSelectDialog = DateHourSelectDialog(dateList, hourList)
-            dateHourSelectDialog.show(
-                childFragmentManager, "DateHourSelectDialog"
-            )
-        }
-
     } // End of onViewCreated
 
     override fun onMapReady(gMap: GoogleMap) {
@@ -90,6 +77,33 @@ class AuroraFragment : Fragment(), OnMapReadyCallback  {
         super.onDestroyView()
         _binding = null
     } // End of onDestroyView
+
+
+    private fun initView() {
+        Log.d(TAG, "initView: ${BuildConfig.MAPS_API_KEY}")
+        dateList = getDateList(now)
+        hourList = getHourList(dateList, now)
+
+        binding.drawerImagebutton.setOnClickListener {
+            val mainActivity = activity as MainActivity
+            mainActivity.openDrawer()
+        }
+
+        binding.dateTextview.text = LocalDate.of(now.year, now.month, now.dayOfMonth).format(
+            DateTimeFormatter.ofPattern("yy/MM/dd"))
+
+        binding.hourTextview.text = LocalDateTime.of(now.year, now.month, now.dayOfMonth, now.hour, 0).format(
+            DateTimeFormatter.ofPattern("HH:mm")
+        )
+
+        binding.dateHourLinearlayout.setOnClickListener {
+            val dateHourSelectDialog = DateHourSelectDialog(dateList, hourList)
+            dateHourSelectDialog.show(
+                childFragmentManager, "DateHourSelectDialog"
+            )
+        }
+    }
+
 
     fun setDateTimeLinearLayoutText(date: String, hour: String) {
         binding.dateTextview.text = date

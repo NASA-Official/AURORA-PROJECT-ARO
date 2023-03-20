@@ -1,6 +1,8 @@
 package com.nassafy.aro.ui.view.main
 
 import android.os.Bundle
+import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
@@ -10,6 +12,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
 import com.nassafy.aro.R
 import com.nassafy.aro.databinding.ActivityMainBinding
 
@@ -24,21 +27,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.main_fragmentcontainerview) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.main_fragmentcontainerview) as NavHostFragment
         val navController = navHostFragment.navController
 
         binding.mainNavigation.setupWithNavController(navController)
-        // 임시 권한 성공하면 initView()
-//        requestPermission()
-        initView()
-    }
 
-    private fun initView() {
-        // initialize navigation view
-        // initialize drawer view
         initDrawer()
-
-    }
+    } // End of onCreate
 
     private fun initDrawer() {
         val toggle: ActionBarDrawerToggle = object : ActionBarDrawerToggle(
@@ -50,7 +46,6 @@ class MainActivity : AppCompatActivity() {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
                 super.onDrawerSlide(drawerView, slideOffset)
             }
-
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
                 val nickname: TextView = findViewById<View>(R.id.nickname_textview) as TextView
@@ -71,7 +66,7 @@ class MainActivity : AppCompatActivity() {
             addDrawerListener(toggle)
         }
         toggle.syncState()
-    }
+    } // End of initDrawer
 
     // Main Fragment에서 버튼을 누르면 Drawer Open
     fun openDrawer() {
@@ -81,4 +76,5 @@ class MainActivity : AppCompatActivity() {
     fun closeDrawer() {
         binding.mainDrawerlayout.closeDrawer(GravityCompat.END)
     }
+
 }

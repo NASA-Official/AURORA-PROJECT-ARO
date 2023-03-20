@@ -1,5 +1,6 @@
 package com.nassafy.aro.ui.view.main
 
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
@@ -13,26 +14,24 @@ import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.nassafy.aro.R
+import com.nassafy.aro.databinding.FragmentAuroraBinding
 import com.nassafy.aro.databinding.FragmentMainBinding
 import com.nassafy.aro.ui.TempFragment
+import com.nassafy.aro.ui.view.BaseFragment
 import com.nassafy.aro.ui.view.aurora.AuroraFragment
 import java.time.LocalDateTime
 
 private const val TAG = "MainFragment_sdr"
 
-class MainFragment : Fragment() {
-    private var _binding: FragmentMainBinding? = null
-    private val binding get() = _binding!!
+class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::inflate) {
+    private lateinit var mContext : Context
     private var tabTitle: ArrayList<String> = arrayListOf()
     private var tabIcon: ArrayList<Drawable> = arrayListOf()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentMainBinding.inflate(inflater, container, false)
-        return binding.root
-    } // End of onCreateView
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,11 +43,6 @@ class MainFragment : Fragment() {
         initTabLayout()
 
     } // End of onViewCreated
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    } // End of onDestroyView
 
     private fun initTabLayout() {
         // add tablayout title
@@ -67,7 +61,6 @@ class MainFragment : Fragment() {
             tab.icon = tabIcon[position]
         }.attach()
     } // End of initTabLayout
-
 
     inner class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
         FragmentStateAdapter(fragmentManager, lifecycle) {
