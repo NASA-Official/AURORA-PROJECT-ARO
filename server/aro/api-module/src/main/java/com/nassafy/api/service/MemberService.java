@@ -1,53 +1,46 @@
 package com.nassafy.api.service;
 
-import com.nassafy.api.jwt.JwtTokenProvider;
-import com.nassafy.api.dto.jwt.TokenDto;
-import com.nassafy.core.entity.RefreshToken;
+import com.nassafy.api.dto.req.SignupReqDto;
+import com.nassafy.core.entity.Member;
 import com.nassafy.core.respository.MemberRepository;
-import com.nassafy.core.respository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-@Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Service
 public class MemberService {
+
     private static final Logger logger = LoggerFactory.getLogger(MemberService.class);
 
+
     private final MemberRepository memberRepository;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Transactional
-    public TokenDto login(String email, String password) {
-        logger.debug("\t Start login");
-        // 1. Login ID/PW 를 기반으로 Authentication 객체 생성
-        // 이때 authentication 는 인증 여부를 확인하는 authenticated 값이 false
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
+    public Member create(SignupReqDto signupReqDto){
+        logger.debug("\t create");
+        Member member = new Member();
 
-        // 2. 실제 검증 (사용자 비밀번호 체크)이 이루어지는 부분
-        // authenticate 매서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드가 실행
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        member.setEmail(signupReqDto.getEmail());
+        member.setPassword(passwordEncoder.encode(signupReqDto.getPassword()));
+        member.setNickname(signupReqDto.getNickname());
+        member.setAuroraService(signupReqDto.isAuroraService());
+        member.setMeteorService(signupReqDto.isMeteorService());
 
-        // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        TokenDto tokenDto = jwtTokenProvider.generateToken(authentication);
+//        member.builder()
+//                .email(signupReqDto.getEmail())
+//                .password(passwordEncoder.encode(signupReqDto.getPassword()))
+//                .nickname(signupReqDto.getNickname())
+//                .auroraService(signupReqDto.isAuroraService())
+//                .meteorService(signupReqDto.isMeteorService())
+//                .build();
 
-        refreshTokenRepository.save(
-                RefreshToken.builder()
-                        .email(authenticationToken.getName())
-                        .refreshToken(tokenDto.getRefreshToken())
-                        .build()
-        );
+        logger.debug("\t member " + member);
+        memberRepository.save(member);
 
-        return tokenDto;
+        return member;
     }
 }
