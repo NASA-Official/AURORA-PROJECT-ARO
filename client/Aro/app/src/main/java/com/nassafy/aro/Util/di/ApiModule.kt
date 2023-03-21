@@ -5,6 +5,7 @@ import androidx.viewbinding.BuildConfig
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.nassafy.aro.Application
+import com.nassafy.aro.domain.api.UserAccessApi
 import com.nassafy.aro.domain.api.TestApi
 import com.nassafy.aro.util.SERVER_URL
 import dagger.Module
@@ -21,7 +22,6 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Qualifier
-import javax.inject.Singleton
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
@@ -44,7 +44,7 @@ class OtherInterceptor @Inject constructor() : Interceptor {
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response = with(chain) {
         val newRequest = request().newBuilder()
-            //todo
+            .addHeader("Content-Type", "application/json")
             .build()
         proceed(newRequest)
     }
@@ -54,7 +54,7 @@ class AuthInterceptor @Inject constructor() : Interceptor {
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response = with(chain) {
         val newRequest = request().newBuilder()
-            //todo
+            .addHeader("Content-Type", "application/json")
             .addHeader("Authorization", Application.sharedPreferencesUtil.getUserAccessToken())
             .build()
         proceed(newRequest)
@@ -67,7 +67,7 @@ object ApiModule {
 
     private val gson: Gson = GsonBuilder() //날짜 데이터 포맷
         .setDateFormat("yyyy-MM-dd HH:mm:ss")
-        .setLenient() // TODO DELETE
+//        .setLenient() // TODO DELETE
         .create()
 
     //BASE_URL 제공
@@ -124,6 +124,16 @@ object ApiModule {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(TestApi::class.java)
+    }
+
+    @Provides
+    fun provideLoginApi(@OtherInterceptorOkHttpClient okHttpClient: OkHttpClient): UserAccessApi {
+        return Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(provideBaseUrl())
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+            .create(UserAccessApi::class.java)
     }
 
     @AuthInterceptorApi

@@ -10,7 +10,6 @@ import com.nassafy.aro.util.di.OtherInterceptorApi
 import javax.inject.Inject
 
 private const val TAG = "TestRepository_싸피"
-
 class TestRepository @Inject constructor(@OtherInterceptorApi private val testApi: TestApi, @AuthInterceptorApi private val testHeaderApi: TestApi){
     // 테스트 통신 LiveData
     private val _getServerCallTestResponseLiveData = MutableLiveData<NetworkResult<String>>()
@@ -51,7 +50,5 @@ class TestRepository @Inject constructor(@OtherInterceptorApi private val testAp
         } catch (e: java.lang.Exception) {
             Log.e(TAG, "getServerCallTest: ${e.message}")
         }
-
-
     } // End of getServerCallTest
 } // End of TestRepository class

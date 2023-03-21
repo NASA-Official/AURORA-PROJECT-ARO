@@ -75,7 +75,6 @@ class ServerCallTestFragment :
                     binding.serverCallTestProgressbar.visibility = View.VISIBLE
                     binding.serverCallTestProgressbar.isVisible = true
                 }
-                else -> {}
             }
         }
     } // End of getServerCallTestObserve
