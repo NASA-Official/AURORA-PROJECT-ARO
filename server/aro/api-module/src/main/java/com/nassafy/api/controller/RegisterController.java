@@ -74,21 +74,23 @@ public class RegisterController {
         memberRepository.save(member);
         return ResponseEntity.noContent().build();
     }
-    // 테스트 해봐야함
+
     @PutMapping("servies/{member_id}")
     public ResponseEntity<Void> serviesRegiser(@PathVariable Long member_id, @RequestParam ServiesRegisterDTO serviesRegisterDTO) {
         Member member = memberRepository.findById(member_id)
                 .orElseThrow(
                         () -> new EntityNotFoundException("해당 id를 가진 회원이 없습니다.")
                 );
-        if (member.getAuroraService() != serviesRegisterDTO.isAuroraServise()) {
+        if (member.getAuroraService() != serviesRegisterDTO.getAuroraServise()) {
             member.toggleAuroraService();
         }
-        if (member.getMeteorService() != serviesRegisterDTO.isMeteorServise()) {
+        if (member.getMeteorService() != serviesRegisterDTO.getMeteorServise()) {
             member.toggleMeteorService();
         }
         memberRepository.save(member);
         return ResponseEntity.noContent().build();
 
     }
+
+
 }
