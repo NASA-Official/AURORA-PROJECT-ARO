@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/join_background_color"
-    tools:context=".ui.view.sign.SignUpEmailFragment">
+    tools:context=".ui.view.login.JoinEmailFragment">
 
     <ImageButton
         android:id="@+id/cancel_button"
@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/sign_up_input_layout"
+        android:id="@+id/join_input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
@@ -29,7 +29,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <FrameLayout
-            android:id="@+id/sign_up_email_id_layout"
+            android:id="@+id/join_email_id_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -38,7 +38,7 @@
             app:layout_constraintVertical_chainStyle="packed">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/sign_up_email_id_textfield"
+                android:id="@+id/join_email_id_textfield"
                 style="@style/EditTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -82,13 +82,14 @@
             app:errorEnabled="true"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sign_up_email_id_layout"
+            app:layout_constraintTop_toBottomOf="@id/join_email_id_layout"
             app:layout_constraintVertical_chainStyle="packed">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
+                android:inputType="number"
                 android:maxLength="6"
                 android:translationZ="0dp" />
 

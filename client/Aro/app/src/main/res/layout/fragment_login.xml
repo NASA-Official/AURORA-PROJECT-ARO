@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/login_background"
-    tools:context=".ui.view.sign.SignInFragment">
+    tools:context=".ui.view.login.LoginFragment">
 
         <ImageView
             android:id="@+id/logo_imageview"
@@ -14,11 +14,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/sing_in_edittext_linearlayout"
+            app:layout_constraintBottom_toTopOf="@id/login_edittext_linearlayout"
             android:src="@drawable/green_logo" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/sing_in_edittext_linearlayout"
+            android:id="@+id/login_edittext_linearlayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -26,10 +26,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/logo_imageview"
-            app:layout_constraintBottom_toTopOf="@id/sign_in_button">
+            app:layout_constraintBottom_toTopOf="@id/login_button">
 
             <EditText
-                android:id="@+id/sign_in_email_id_edittext"
+                android:id="@+id/login_email_id_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/main_app_color_light"
@@ -40,7 +40,7 @@
 
 
             <EditText
-                android:id="@+id/sign_in_password_edittext"
+                android:id="@+id/login_password_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/main_app_color_light"
@@ -51,18 +51,18 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <ImageButton
-            android:id="@+id/sign_in_button"
+            android:id="@+id/login_button"
             android:src="@drawable/sign_in_button"
             android:background="@android:color/transparent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sing_in_edittext_linearlayout"
-            app:layout_constraintBottom_toTopOf="@id/sign_in_naver_imagebutton"/>
+            app:layout_constraintTop_toBottomOf="@id/login_edittext_linearlayout"
+            app:layout_constraintBottom_toTopOf="@id/login_naver_imagebutton"/>
 
         <TextView
-            android:id="@+id/sign_up_textview"
+            android:id="@+id/join_textview"
             android:textSize="12sp"
             android:text="@string/join_button_text"
             android:layout_width="wrap_content"
@@ -70,32 +70,32 @@
             android:layout_marginTop="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sign_in_button"/>
+            app:layout_constraintTop_toBottomOf="@id/login_button"/>
 
         <ImageButton
-            android:id="@+id/sign_in_naver_imagebutton"
+            android:id="@+id/login_naver_imagebutton"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:scaleType="fitCenter"
             android:layout_marginBottom="4dp"
             android:src="@drawable/sign_in_naver_circle_button"
             android:background="@android:color/transparent"
-            app:layout_constraintEnd_toStartOf="@id/sign_in_github_imagebutton"
+            app:layout_constraintEnd_toStartOf="@id/login_github_imagebutton"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sign_in_button"
+            app:layout_constraintTop_toBottomOf="@id/login_button"
             app:layout_constraintBottom_toTopOf="@id/footer_textview" />
 
         <TextView
-            android:id="@+id/sign_in_naver_textview"
+            android:id="@+id/login_naver_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/start_naver_textview_text"
-            app:layout_constraintTop_toBottomOf="@id/sign_in_naver_imagebutton"
-            app:layout_constraintStart_toStartOf="@id/sign_in_naver_imagebutton"
-            app:layout_constraintEnd_toEndOf="@id/sign_in_naver_imagebutton" />
+            app:layout_constraintTop_toBottomOf="@id/login_naver_imagebutton"
+            app:layout_constraintStart_toStartOf="@id/login_naver_imagebutton"
+            app:layout_constraintEnd_toEndOf="@id/login_naver_imagebutton" />
 
         <ImageButton
-            android:id="@+id/sign_in_github_imagebutton"
+            android:id="@+id/login_github_imagebutton"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_marginBottom="4dp"
@@ -103,24 +103,25 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
-            app:layout_constraintStart_toEndOf="@id/sign_in_naver_imagebutton"
-            app:layout_constraintTop_toTopOf="@id/sign_in_naver_imagebutton"
-            app:layout_constraintBottom_toBottomOf="@id/sign_in_naver_imagebutton"/>
+            app:layout_constraintStart_toEndOf="@id/login_naver_imagebutton"
+            app:layout_constraintTop_toTopOf="@id/login_naver_imagebutton"
+            app:layout_constraintBottom_toBottomOf="@id/login_naver_imagebutton"/>
 
         <TextView
-            android:id="@+id/sign_in_github_textview"
+            android:id="@+id/login_github_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/start_github_textview_text"
-            app:layout_constraintTop_toBottomOf="@id/sign_in_naver_imagebutton"
-            app:layout_constraintStart_toStartOf="@id/sign_in_github_imagebutton"
-            app:layout_constraintEnd_toEndOf="@id/sign_in_github_imagebutton"/>
+            app:layout_constraintTop_toBottomOf="@id/login_naver_imagebutton"
+            app:layout_constraintStart_toStartOf="@id/login_github_imagebutton"
+            app:layout_constraintEnd_toEndOf="@id/login_github_imagebutton"/>
 
         <TextView
             android:id="@+id/footer_textview"
             android:text="@string/made_by_textview_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="8sp"
             android:layout_marginBottom="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

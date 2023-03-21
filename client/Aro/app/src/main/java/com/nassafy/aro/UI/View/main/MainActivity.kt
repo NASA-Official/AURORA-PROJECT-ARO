@@ -15,10 +15,11 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
 import com.nassafy.aro.R
 import com.nassafy.aro.databinding.ActivityMainBinding
-
+import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "MainActivity_sdr"
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
