@@ -28,15 +28,6 @@ public class MemberService {
             throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
         }
 
-
-//        member.setEmail(signupReqDto.getEmail());
-//        member.setPassword(passwordEncoder.encode(signupReqDto.getPassword()));
-//        member.setNickname(signupReqDto.getNickname());
-//        member.setAuroraService(signupReqDto.isAuroraService());
-//        member.setMeteorService(signupReqDto.isMeteorService());
-//        member.setAlarm(true);
-//        member.setAuroraDisplay(true);
-
         Member member = Member.builder()
                 .email(signupReqDto.getEmail())
                 .password(passwordEncoder.encode(signupReqDto.getPassword()))
@@ -46,7 +37,7 @@ public class MemberService {
                 .alarm(true)
                 .auroraDisplay(true)
                 .build();
-
+        member.getRoles().add("USER");
         logger.debug("\t member " + member);
         memberRepository.save(member);
 
