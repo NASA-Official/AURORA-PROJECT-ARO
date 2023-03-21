@@ -25,5 +25,4 @@ public class ApiApplication {
         // 다른 모듈의 yml 읽어오기 위해서 사용
         System.setProperty("spring.config.name", "application, application-core");
     }
-
 }

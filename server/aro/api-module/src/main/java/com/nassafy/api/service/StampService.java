@@ -99,6 +99,6 @@ public class StampService {
 
             imageUrls.add(imageUrl);
         }
-        return StampDiaryResDTO.builder().memo(savedStamp.getMemo()).stampId(savedStamp.getId()).images(imageUrls).build();
+        return StampDiaryResDTO.builder().memo(savedStamp.getMemo()).images(imageUrls).build();
     }
 }

@@ -1,0 +1,13 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+  s3:
+    bucket: nassafy
+    access-key: AKIA6RPAGTVSAHG42EQ2
+    secret-key: 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
+#  database:
+#    driver-class-name: org.mariadb.jdbc.Driver
+#    url: jdbc:mariadb://database:3306/nassafy
+#    username: root
+#    password: root
