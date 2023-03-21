@@ -1,6 +1,7 @@
 package com.nassafy.api.service;
 
 import com.nassafy.core.DTO.MapStampDTO;
+import com.nassafy.core.DTO.RegisterStampDTO;
 import com.nassafy.core.entity.Attraction;
 import com.nassafy.core.entity.Member;
 import com.nassafy.core.entity.Stamp;
@@ -25,6 +26,23 @@ public class StampService {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    // 회원 가입 때 스탬프 조회
+    public List<RegisterStampDTO> findStampsCountry(String countryName) {
+        List<Attraction> attractions = attractionRepository.findByNation(countryName);
+        List<RegisterStampDTO> registerStampDTOS = new ArrayList<>();
+
+        for (Attraction attraction : attractions) {
+            Attraction attraction1 = attractions.stream()
+                    .filter(s -> s.getNation().equals(countryName))
+                    .findFirst()
+                    .orElse(null);
+            if (attraction1 != null) {
+                registerStampDTOS.add(new RegisterStampDTO(attraction1.getColorStamp(), attraction1.getAttractionName(), attraction1.getDescription()));
+            }
+        }
+        return registerStampDTOS;
+    }
 
     public List<MapStampDTO> findStampsByUserAndCountry(Long userId, String countryName) {
         List<Stamp> stamps = stampRepository.findByMemberId(userId);
