@@ -20,19 +20,7 @@ class AuroraViewModel : ViewModel() {
         get() = _clickedLocation
 
     fun setClickedLocation(location: LatLng) {
-        Log.d(TAG, "setClickedLocation: 2 $location")
         _clickedLocation.value = location
-    }
+    } // End of setClickedLocation
 
-    fun polylineClickAction(polyline: Polyline, map: GoogleMap, location: LatLng, kp: Float) {
-        viewModelScope.launch {
-            Log.d(TAG, "polylineClickActionC: ${clickedLocation.value}")
-            Log.d(TAG, "polylineClickActionL: $location")
-            if (clickedLocation.value != null) {
-                Log.d(TAG, "polylineClickAction: 4")
-                polyline.addInfoWindow(map, location, "KP 지수", "$kp")
-            }
-        }
-    }
-
-}
+} // End of AuroraViewModel
