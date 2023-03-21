@@ -16,8 +16,11 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.PolyUtil
+import com.google.maps.android.SphericalUtil
 import com.nassafy.aro.R
 import com.nassafy.aro.databinding.FragmentAuroraBinding
+import com.nassafy.aro.databinding.FragmentMainBinding
+import com.nassafy.aro.ui.view.BaseFragment
 import com.nassafy.aro.ui.view.dialog.DateHourSelectDialog
 import com.nassafy.aro.ui.view.main.MainActivity
 import com.nassafy.aro.util.*
@@ -28,9 +31,8 @@ import kotlin.math.sqrt
 
 private const val TAG = "AuroraFragment_sdr"
 
-class AuroraFragment : Fragment(), OnMapReadyCallback {
-    private var _binding: FragmentAuroraBinding? = null
-    private val binding get() = _binding!!
+class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding::inflate),
+    OnMapReadyCallback {
     private lateinit var googleMap: GoogleMap
     private var now = LocalDateTime.now()
     private var dateList = arrayListOf<String>()
@@ -38,58 +40,38 @@ class AuroraFragment : Fragment(), OnMapReadyCallback {
     private val auroraViewModel: AuroraViewModel by viewModels()
     var kpIndex = 3.0F
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentAuroraBinding.inflate(inflater, container, false)
-        return binding.root
-    } // End of onCreateView
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment: SupportMapFragment =
             childFragmentManager.findFragmentById(R.id.map_view) as SupportMapFragment
-        mapFragment.getMapAsync {
-            googleMap = it
-            setCustomMapStyle()
-            val polylineOptions = getKpPolylineOptions(kpIndex)
-            val polyline = googleMap.addPolyline(polylineOptions)
-            googleMap.setOnMapClickListener { latLng ->
-                Log.d(TAG, "onViewCreated: 1")
-                auroraViewModel.setClickedLocation(latLng)
-                Log.d(TAG, "onViewCreated: here")
-                if (PolyUtil.isLocationOnPath(latLng, polylineOptions.points, true, 90000000.0)) {
-                    Log.d(TAG, "onViewCreated: yes")
-                    polyline.addInfoWindow(googleMap, latLng, "KP 지수", "$kpIndex")
-                }
+        mapFragment.getMapAsync(this)
 
-
-            }
-        }
-
-        auroraViewModel.clickedLocation.observe(viewLifecycleOwner) { latLng ->
-            googleMap.setOnPolylineClickListener {
-
-                auroraViewModel.polylineClickAction(it, googleMap, latLng, kpIndex)
-
-            }
-        }
-
+//        auroraViewModel.clickedLocation.observe(viewLifecycleOwner) { latLng ->
+//            googleMap.setOnPolylineClickListener {
+//
+//            }
+//        }
         initView()
     } // End of onViewCreated
 
     override fun onMapReady(gMap: GoogleMap) {
         googleMap = gMap
+        googleMap.uiSettings.isMapToolbarEnabled = false
+        setCustomMapStyle()
+        val polylineOptions = getKpPolylineOptions(kpIndex)
+        val polyline = googleMap.addPolyline(polylineOptions)
+
+        googleMap.setOnMapClickListener { latLng ->
+            auroraViewModel.setClickedLocation(latLng)
+
+            // When Clicked Location is on Polyline, Google Map shows Info.
+            val tolerance = getKpPolylineTolerance(googleMap.cameraPosition.zoom)
+            if (PolyUtil.isLocationOnPath(latLng, polylineOptions.points, true, tolerance)) {
+                polyline.addInfoWindow(googleMap, latLng, "KP 지수", "$kpIndex")
+            }
+        } // End of setOnMapClickListener
 
     } // End of onMapReady
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    } // End of onDestroyView
-
 
     private fun initView() {
         dateList = getDateList(now)
@@ -115,13 +97,12 @@ class AuroraFragment : Fragment(), OnMapReadyCallback {
                 childFragmentManager, "DateHourSelectDialog"
             )
         }
-    }
-
+    } // End of initView
 
     fun setDateTimeLinearLayoutText(date: String, hour: String) {
         binding.dateTextview.text = date
         binding.hourTextview.text = hour
-    }
+    } // End of setDateTimeLinearLayoutText
 
     private fun setCustomMapStyle() {
         try {
@@ -140,4 +121,4 @@ class AuroraFragment : Fragment(), OnMapReadyCallback {
         }
     } // End of setCustomMapStyle
 
-}
+} // End of AuroraFragment
