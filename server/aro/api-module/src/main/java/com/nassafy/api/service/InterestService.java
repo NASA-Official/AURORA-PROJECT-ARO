@@ -9,6 +9,8 @@ import com.nassafy.core.respository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -33,6 +35,9 @@ public class InterestService {
             interestRepository.delete(interest);
         }
 
+        // 영속성 컨텍스트에 반영
+        member.clearInterest();
+
         // 새로운 관심 지역 등록
         for (Long attractionId : attractionIds) {
             Attraction attraction = attractionRepository.findById(attractionId)
@@ -41,8 +46,9 @@ public class InterestService {
             interest.setMember(member);
             interest.setAttraction(attraction);
             interestRepository.save(interest);
+            member.getInterests().add(interest);
         }
-
     }
+
 
 }
