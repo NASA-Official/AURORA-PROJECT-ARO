@@ -1,6 +1,7 @@
 package com.nassafy.api.service;
 
 import com.nassafy.api.dto.req.SignupReqDto;
+import com.nassafy.api.exception.DuplicateMemberException;
 import com.nassafy.core.entity.Member;
 import com.nassafy.core.respository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,21 +23,29 @@ public class MemberService {
 
     public Member create(SignupReqDto signupReqDto){
         logger.debug("\t create");
-        Member member = new Member();
 
-        member.setEmail(signupReqDto.getEmail());
-        member.setPassword(passwordEncoder.encode(signupReqDto.getPassword()));
-        member.setNickname(signupReqDto.getNickname());
-        member.setAuroraService(signupReqDto.isAuroraService());
-        member.setMeteorService(signupReqDto.isMeteorService());
+        if (memberRepository.findByEmail(signupReqDto.getEmail()).orElse(null) != null) {
+            throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
+        }
 
-//        member.builder()
-//                .email(signupReqDto.getEmail())
-//                .password(passwordEncoder.encode(signupReqDto.getPassword()))
-//                .nickname(signupReqDto.getNickname())
-//                .auroraService(signupReqDto.isAuroraService())
-//                .meteorService(signupReqDto.isMeteorService())
-//                .build();
+
+//        member.setEmail(signupReqDto.getEmail());
+//        member.setPassword(passwordEncoder.encode(signupReqDto.getPassword()));
+//        member.setNickname(signupReqDto.getNickname());
+//        member.setAuroraService(signupReqDto.isAuroraService());
+//        member.setMeteorService(signupReqDto.isMeteorService());
+//        member.setAlarm(true);
+//        member.setAuroraDisplay(true);
+
+        Member member = Member.builder()
+                .email(signupReqDto.getEmail())
+                .password(passwordEncoder.encode(signupReqDto.getPassword()))
+                .nickname(signupReqDto.getNickname())
+                .auroraService(signupReqDto.isAuroraService())
+                .meteorService(signupReqDto.isMeteorService())
+                .alarm(true)
+                .auroraDisplay(true)
+                .build();
 
         logger.debug("\t member " + member);
         memberRepository.save(member);
