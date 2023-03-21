@@ -92,6 +92,7 @@ public class SecurityConfig {
                 .antMatchers("/api/**").permitAll()
                 .antMatchers("/test").permitAll()
                 .antMatchers("/api/members/login").permitAll()
+                .antMatchers("/api/accounts/**").permitAll()
                 .antMatchers("/api/members/hello").permitAll()
                 .antMatchers("/api/test/**").permitAll()
                 .antMatchers("/api/stamps/nations").permitAll()
@@ -99,8 +100,13 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
 
                 .and()
-                .apply(new JwtSecurityConfig(jwtTokenProvider));
+                .apply(new JwtSecurityConfig(jwtTokenProvider))
 
+//                .and()
+//                .logout() // 로그아웃을 지원하는 메소드
+//                .logoutSuccessUrl("/") // 로그아웃 성공시 이동되는 페이지
+//                .invalidateHttpSession(true) // HTTP 세션을 초기화하는 작업
+            ;
         return httpSecurity.build();
     }
 
