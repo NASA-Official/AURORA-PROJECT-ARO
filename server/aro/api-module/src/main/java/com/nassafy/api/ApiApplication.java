@@ -20,7 +20,10 @@ public class ApiApplication {
         System.setProperty("com.amazonaws.sdk.disableEc2Metadata", "true");
     }
     public static void main(String[] args) {
+
         SpringApplication.run(ApiApplication.class, args);
+        // 다른 모듈의 yml 읽어오기 위해서 사용
+        System.setProperty("spring.config.name", "application, application-core");
     }
 
 }
