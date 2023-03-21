@@ -1,17 +1,24 @@
 package com.nassafy.api.service;
 
+import com.nassafy.api.dto.req.StampDiaryReqDTO;
+import com.nassafy.api.dto.req.StampDiaryResDTO;
+import com.nassafy.api.util.S3Util;
 import com.nassafy.core.DTO.MapStampDTO;
 import com.nassafy.core.entity.Attraction;
 import com.nassafy.core.entity.Member;
 import com.nassafy.core.entity.Stamp;
+import com.nassafy.core.entity.StampImage;
 import com.nassafy.core.respository.AttractionRepository;
 import com.nassafy.core.respository.MemberRepository;
+import com.nassafy.core.respository.StampImageRepository;
 import com.nassafy.core.respository.StampRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +32,12 @@ public class StampService {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private StampImageRepository stampImageRepository;
+
+    @Autowired
+    private S3Util s3Util;
 
     public List<MapStampDTO> findStampsByUserAndCountry(Long userId, String countryName) {
         List<Stamp> stamps = stampRepository.findByMemberId(userId);
@@ -63,5 +76,29 @@ public class StampService {
             stampRepository.save(stamp);
         }
         return attractions.size();
+    }
+
+    public StampDiaryResDTO createStampDiary(Long attractionId, Long memberId, StampDiaryReqDTO stampDiaryReqDTO) throws IllegalAccessException, IOException {
+
+        Stamp stamp = stampRepository.findByAttractionIdAndMemberId(attractionId, memberId).orElseThrow(IllegalAccessException::new);
+
+        stamp.editMemo(stampDiaryReqDTO.getMemo());
+
+        Stamp savedStamp = stampRepository.save(stamp);
+
+        List<String> imageUrls = new ArrayList<>();
+
+        for (MultipartFile file: stampDiaryReqDTO.getFiles()) {
+            String imageUrl = s3Util.upload(file, "diary/" + memberId.toString() + "/" + attractionId.toString());
+
+            StampImage stampImage = StampImage.builder().image(imageUrl).stamp(savedStamp).build();
+
+            stampImageRepository.save(stampImage);
+
+            savedStamp.getStampImages().add(stampImage);
+
+            imageUrls.add(imageUrl);
+        }
+        return StampDiaryResDTO.builder().memo(savedStamp.getMemo()).images(imageUrls).build();
     }
 }
