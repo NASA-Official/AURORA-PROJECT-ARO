@@ -92,7 +92,7 @@ public class SecurityConfig {
                 .antMatchers("/api/**").permitAll()
                 .antMatchers("/test").permitAll()
                 .antMatchers("/api/members/login").permitAll()
-                .antMatchers("/api/accounts/**").permitAll()
+                .antMatchers("/api/accounts/signup", "/api/accounts/emailcheck", "/api/accounts/codecheck").permitAll()
                 .antMatchers("/api/members/hello").permitAll()
                 .antMatchers("/api/test/**").permitAll()
                 .antMatchers("/api/stamps/nations").permitAll()
