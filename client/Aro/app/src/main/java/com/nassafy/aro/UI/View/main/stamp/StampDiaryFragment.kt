@@ -9,7 +9,9 @@ import com.nassafy.aro.data.dto.PlaceDiaryTest
 import com.nassafy.aro.databinding.FragmentStampDiaryBinding
 import com.nassafy.aro.ui.view.BaseFragment
 import com.nassafy.aro.util.showSnackBarMessage
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class StampDiaryFragment() :
     BaseFragment<FragmentStampDiaryBinding>(FragmentStampDiaryBinding::inflate) {
     private lateinit var mContext: Context
@@ -85,8 +87,10 @@ class StampDiaryFragment() :
     } // End of initAdapter
 
     private fun initEventListeners() {
+        // 저장 버튼 클릭
         binding.stampDiarySaveButton.setOnClickListener {
             requireView().showSnackBarMessage("저장 버튼 클릭됨")
         }
+
     } // End of eventListeners
 } // End of StampDiaryFragment

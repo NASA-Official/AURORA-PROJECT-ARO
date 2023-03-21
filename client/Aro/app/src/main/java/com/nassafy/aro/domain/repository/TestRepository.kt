@@ -5,12 +5,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nassafy.aro.domain.api.TestApi
 import com.nassafy.aro.util.NetworkResult
-import com.nassafy.aro.util.di.AuthInterceptorApi
-import com.nassafy.aro.util.di.OtherInterceptorApi
+import com.nassafy.aro.util.di.HeaderInterceptorApi
+import com.nassafy.aro.util.di.WithoutHeaderInterceptorApi
 import javax.inject.Inject
 
 private const val TAG = "TestRepository_싸피"
-class TestRepository @Inject constructor(@OtherInterceptorApi private val testApi: TestApi, @AuthInterceptorApi private val testHeaderApi: TestApi){
+
+class TestRepository @Inject constructor(
+    @WithoutHeaderInterceptorApi private val testApi: TestApi,
+    @HeaderInterceptorApi private val testHeaderApi: TestApi
+) {
     // 테스트 통신 LiveData
     private val _getServerCallTestResponseLiveData = MutableLiveData<NetworkResult<String>>()
     val getServerCallTestResponseLiveData: LiveData<NetworkResult<String>>
