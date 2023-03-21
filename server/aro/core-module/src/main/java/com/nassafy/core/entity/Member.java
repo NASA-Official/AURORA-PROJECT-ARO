@@ -1,7 +1,9 @@
 package com.nassafy.core.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -10,6 +12,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,10 +44,6 @@ public class Member {
         this.interests = new ArrayList<>();
     }
 
-    // 영속성 컨텍스트에 추가해주는 비지니스 메서드
-    public void addInterest(){
-        this.interests = interests;
-    }
 
     public boolean getAlarm(){
         return this.alarm;
@@ -78,5 +77,15 @@ public class Member {
         this.meteorService = !this.meteorService;
     }
 
+    @Builder
+    public Member(String email, String password, String nickname, boolean alarm, boolean auroraDisplay, boolean auroraService, boolean meteorService) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.alarm = alarm;
+        this.auroraDisplay = auroraDisplay;
+        this.auroraService = auroraService;
+        this.meteorService = meteorService;
+    }
 }
 
