@@ -127,7 +127,7 @@ object ApiModule {
     }
 
     @Provides
-    fun provideLoginApi(@OtherInterceptorOkHttpClient okHttpClient: OkHttpClient): UserAccessApi {
+    fun provideUserAccessApi(@OtherInterceptorOkHttpClient okHttpClient: OkHttpClient): UserAccessApi {
         return Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl(provideBaseUrl())

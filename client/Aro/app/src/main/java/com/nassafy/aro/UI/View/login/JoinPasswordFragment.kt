@@ -7,30 +7,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nassafy.aro.R
 import com.nassafy.aro.databinding.FragmentJoinPasswordBinding
+import com.nassafy.aro.ui.view.BaseFragment
+import com.nassafy.aro.ui.view.login.viewmodel.LoginActivityViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-class JoinPasswordFragment : Fragment() {
+@AndroidEntryPoint
+class JoinPasswordFragment : BaseFragment<FragmentJoinPasswordBinding>(FragmentJoinPasswordBinding::inflate) {
 
-    private var _binding: FragmentJoinPasswordBinding? = null
-    private val binding get() = _binding!!
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentJoinPasswordBinding.inflate(inflater)
-        return binding.root
-    }
+    private val loginActivityViewModel: LoginActivityViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-    }
+    } // End of onViewCreated
 
     private fun initView() {
         binding.nextButton.setOnClickListener {
@@ -71,11 +64,6 @@ class JoinPasswordFragment : Fragment() {
                 } // End of afterTextChanged
             }) // End of addTextChangedListener
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun passwordValidate(text: String): Boolean {

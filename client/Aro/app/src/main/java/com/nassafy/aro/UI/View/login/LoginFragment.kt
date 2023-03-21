@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.gson.JsonObject
 import com.nassafy.aro.Application
 import com.nassafy.aro.BuildConfig.*
 import com.nassafy.aro.R
@@ -36,7 +37,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Application.sharedPreferencesUtil.apply {
-            when(getUserAccessToken()) {
+            when (getUserAccessToken()) {
                 "" -> {}
                 else -> { //토큰이 있으면
                     // TODO 자동로그인
@@ -111,11 +112,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
     private fun initJoinObserve() {
         loginActivityViewModel.loginToken.observe(this.viewLifecycleOwner) {
-            when(it) {
+            when (it) {
                 is NetworkResult.Success -> {
                     val data = it.data
-                    Application.sharedPreferencesUtil.addUserAccessToken(data?.accessToken ?: "" )
-                    Application.sharedPreferencesUtil.addUserRefreshToken(data?.refreshToken ?: "" )
+                    Application.sharedPreferencesUtil.addUserAccessToken(data?.accessToken ?: "")
+                    Application.sharedPreferencesUtil.addUserRefreshToken(data?.refreshToken ?: "")
 
                     startMainActivity()
                 }
@@ -140,8 +141,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             githubLogin()
         }
         binding.loginButton.setOnClickListener {
-
-            // TODO loginByIdPassword
             CoroutineScope(Dispatchers.IO).launch {
                 loginActivityViewModel.loginByIdPassword(
                     binding.loginEmailIdEdittext.text.toString(),

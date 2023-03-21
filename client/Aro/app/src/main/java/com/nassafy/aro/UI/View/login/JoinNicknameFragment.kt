@@ -11,37 +11,17 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.nassafy.aro.R
 import com.nassafy.aro.databinding.FragmentJoinNicknameBinding
+import com.nassafy.aro.ui.view.BaseFragment
 import com.nassafy.aro.ui.view.custom.AroServiceSelectFragmentArgs
 import com.nassafy.aro.ui.view.custom.AroServiceSelectFragmentDirections
 
-class JoinNicknameFragment : Fragment() {
-
-
-    private var _binding: FragmentJoinNicknameBinding? = null
-    private val binding get() = _binding!!
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentJoinNicknameBinding.inflate(inflater)
-        return binding.root
-    }
+class JoinNicknameFragment : BaseFragment<FragmentJoinNicknameBinding>(FragmentJoinNicknameBinding::inflate) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         initView()
 
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun initView() {
