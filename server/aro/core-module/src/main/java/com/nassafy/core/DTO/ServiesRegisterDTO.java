@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Getter
 public class ServiesRegisterDTO {
-    private boolean auroraServise;
-    private boolean meteorServise;
+    private Boolean auroraServise;
+    private Boolean meteorServise;
 
-    public ServiesRegisterDTO(boolean auroraServise, boolean meteorServise){
+    public ServiesRegisterDTO(Boolean auroraServise, Boolean meteorServise){
         this.auroraServise = auroraServise;
         this.meteorServise = meteorServise;
     }
