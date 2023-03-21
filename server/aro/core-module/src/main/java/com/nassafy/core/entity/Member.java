@@ -6,6 +6,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -24,7 +26,8 @@ public class Member implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @Column(name = "member_id")
+    private Long id;
 
     @Column(updatable = false, unique = true, nullable = false)
     private String email;
@@ -35,40 +38,40 @@ public class Member implements UserDetails {
     @Column(nullable = false)
     private String nickname;
 
-    @Column(nullable = false)
-    @ColumnDefault("true")
-    private boolean alarm;
+    private boolean alarm = true;
 
-    @Column(nullable = false)
-    @ColumnDefault("true")
-    private boolean auroraDisplay;
+    private boolean auroraDisplay = true;
 
-    @Column(nullable = false)
-    @ColumnDefault("false")
-    private boolean auroraService;
+    private boolean auroraService = false;
 
-    @Column(nullable = false)
-    @ColumnDefault("false")
-    private boolean meteorService;
+    private boolean meteorService = false;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
-    @Builder
-    public Member(String email, String password, String nickname, boolean auroraService, boolean meteorService){
-        this.email = email;
-        this.password = password;
-        this.nickname = nickname;
-        this.auroraService = auroraService;
-        this.meteorService = meteorService;
-    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "member")
+    private List<Interest> interests = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Stamp> stamps = new ArrayList<>();
+
+    public void toggleAlarm(){
+        this.alarm = !this.alarm;
+    }
+
+    public void toggleAuroraDisplay(){
+        this.auroraDisplay = !this.auroraDisplay;
+    }
+
 
     @Override
     public String getUsername() {
