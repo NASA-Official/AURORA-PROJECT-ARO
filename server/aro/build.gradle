@@ -133,7 +133,7 @@ project(':core-module') {
 		implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5'
 		implementation group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.3.1'
 
-		runtimeOnly 'com.h2database:h2'
+//		runtimeOnly 'com.h2database:h2'
 		runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
 		annotationProcessor 'org.projectlombok:lombok'
@@ -173,6 +173,7 @@ project(':api-module') {
 		implementation 'org.springframework.boot:spring-boot-starter-security'
 		implementation 'org.springframework.boot:spring-boot-starter-validation'
 		implementation 'org.springframework.boot:spring-boot-starter-web'
+		implementation 'org.springframework.boot:spring-boot-starter-mail'
 
 		implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
 		runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
@@ -183,7 +184,7 @@ project(':api-module') {
 		annotationProcessor 'org.projectlombok:lombok'
 
 
-		runtimeOnly 'com.h2database:h2'
+//		runtimeOnly 'com.h2database:h2'
 
 		implementation 'net.rakugakibox.util:yaml-resource-bundle:1.1'
 //		implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.1.RELEASE'
@@ -216,6 +217,9 @@ project(':api-module') {
 
 		testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
 		testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+		// s3 관련 의존성 추가
+		implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 	}
 }
 
@@ -243,7 +247,7 @@ project(':batch-module') {
 		annotationProcessor 'org.projectlombok:lombok'
 		testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-		runtimeOnly 'com.h2database:h2'
+//		runtimeOnly 'com.h2database:h2'
 
 		implementation 'net.rakugakibox.util:yaml-resource-bundle:1.1'
 
