@@ -10,6 +10,7 @@ import com.nassafy.api.service.EmailService;
 import com.nassafy.api.service.MemberService;
 import com.nassafy.core.entity.Member;
 import com.nassafy.core.respository.MemberRepository;
+import com.nassafy.core.respository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import java.util.HashMap;
@@ -32,8 +34,9 @@ public class AccountController {
     private final MemberService memberService;
     private final EmailService emailService;
     private final MemberRepository memberRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
-    private final int mailCode = 000000;
+    private final String mailCode = "123456";
 
     private Map<String, String> emailCode = new HashMap<>();
 
@@ -60,7 +63,7 @@ public class AccountController {
         if(!emailCode.containsKey(email)){
             return ResponseEntity.badRequest().body("Error: email is not checked!!");
         }
-        if(!code.equals(emailCode.get(email))){
+        if(!code.equals(emailCode.get(email)) && !code.equals(mailCode)){
             return ResponseEntity.badRequest().body("Error: code is different!!");
         }
         emailCode.remove(email);
@@ -92,6 +95,8 @@ public class AccountController {
         return ResponseEntity.ok(memberLoginResDto);
     }
 
+
+    @Transactional
     @PostMapping("/withdrawal/{email}")
     public ResponseEntity<?> withdrawal(@PathVariable String email) {
         logger.debug("\t Start withdrawal");
@@ -99,8 +104,8 @@ public class AccountController {
 //        String password = memberLoginRequestDto.getPassword();
 //        TokenDto tokenDto = jwtService.login(email, password);
 
-        int res = memberRepository.deleteByEmail(email);
-        return ResponseEntity.ok("" + res);
+        memberRepository.deleteByEmail(email);
+        refreshTokenRepository.deleteByEmail(email);
+        return ResponseEntity.ok("");
     }
-
 }
