@@ -9,6 +9,7 @@ import com.nassafy.core.respository.MemberRepository;
 import com.nassafy.core.respository.StampRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
@@ -21,6 +22,9 @@ public class StampService {
 
     @Autowired
     private AttractionRepository attractionRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     public List<MapStampDTO> findStampsByUserAndCountry(Long userId, String countryName) {
         List<Stamp> stamps = stampRepository.findByMemberId(userId);
@@ -39,5 +43,25 @@ public class StampService {
         }
 
         return mapStamps;
+    }
+
+    // 자동으로 데이터를 추가하는 로직 회원 가입 이후 로직에서 호출 됨
+    @Transactional
+    public Integer makeStamp(Long memberId){
+        Member member = memberRepository.findById(memberId).
+                orElseThrow(
+                        () -> new EntityNotFoundException("회원이 없습니다.")
+                );
+        List<Attraction> attractions = attractionRepository.findAll();
+        for (Attraction attraction : attractions){
+            Stamp stamp = Stamp.builder()
+                    .member(member)
+                    .attraction(attraction)
+                    .certification(false)
+                    .memo("")
+                    .build();
+            stampRepository.save(stamp);
+        }
+        return attractions.size();
     }
 }
