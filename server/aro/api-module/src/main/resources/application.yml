@@ -4,6 +4,10 @@ server:
 # 기본 로그 레벨 설정
 logging:
   level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
     root: warn
     com.nassafy.api: trace
     org.hibernate.type.descriptor.sql: trace
@@ -12,17 +16,15 @@ logging:
 #    ccom.nassafy.api: info    # 로깅 레벨
 
 spring:
-
 #  h2:
 #    console:
 #      enabled: true
 
-
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://database:3306/nassafy  # local에서는 localhost로 사용, 코드 올릴 때는 서버 database로 변경
+    url: jdbc:mariadb://localhost:3306/nassafy  # local에서는 localhost로 사용, 코드 올릴 때는 서버 database로 변경
     username: root
-    password: ssafy1234!  # local에서는 각자 비밀번호로 변경하고, 올릴 때는 ssafy1234!로 변경하기
+    password: root  # local에서는 각자 비밀번호로 변경하고, 올릴 때는 ssafy1234!로 변경하기
 
   jpa:
     hibernate:
@@ -34,6 +36,16 @@ spring:
         dialect: org.hibernate.dialect.MariaDBDialect
     defer-datasource-initialization: true
 
+  servlet:
+    multipart:
+      max-file-size: 100MB  # 요청한 파일 한 개의 크기
+      max-request-size: 100MB  # 요청한 파일 전체의 크기
+
+  s3:
+    bucket: nassafy
+    access-key: AKIA6RPAGTVSDU7BCH4U
+    secret-key: 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
+
 jwt:
   header: Authorization
   #HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용해야 한다.
@@ -41,3 +53,9 @@ jwt:
   secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
   token-validity-in-seconds: 86400
 
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false

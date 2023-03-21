@@ -89,6 +89,7 @@ public class SecurityConfig {
 //                .requestMatchers("/api/hello", "/api/authenticate", "/api/signup").permitAll()
 //                .antMatchers("/api/hello", "/api/authenticate", "/api/signup").permitAll()
                 .antMatchers("/").permitAll()
+                .antMatchers("/article").permitAll()
                 .antMatchers("/test").permitAll()
                 .antMatchers("/api/members/login").permitAll()
                 .antMatchers("/api/members/hello").permitAll()
