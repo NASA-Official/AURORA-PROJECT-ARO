@@ -7,7 +7,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,11 +18,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Getter
+
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Getter
 @Builder
 @ToString
 public class Member implements UserDetails {
@@ -38,7 +42,7 @@ public class Member implements UserDetails {
     @Column(nullable = false)
     private String nickname;
 
-    private boolean alarm = true;
+    private Boolean alarm = true;
 
     private boolean auroraDisplay = true;
 
@@ -64,6 +68,20 @@ public class Member implements UserDetails {
     @OneToMany(mappedBy = "member")
     private List<Stamp> stamps = new ArrayList<>();
 
+    // 영속성 컨텍스트 비워주는 비지니스 메서드
+    public void clearInterest(){
+        this.interests = new ArrayList<>();
+    }
+
+
+    public boolean getAlarm(){
+        return this.alarm;
+    }
+
+    public boolean getAuroraDisplay(){
+        return this.auroraDisplay;
+    }
+
     public void toggleAlarm(){
         this.alarm = !this.alarm;
     }
@@ -72,6 +90,32 @@ public class Member implements UserDetails {
         this.auroraDisplay = !this.auroraDisplay;
     }
 
+    public boolean getAuroraService(){
+        return this.auroraService;
+    }
+
+    public boolean getMeteorService(){
+        return this.meteorService;
+    }
+
+    public void toggleAuroraService(){
+        this.auroraService = !this.auroraService;
+    }
+
+    public void toggleMeteorService(){
+        this.meteorService = !this.meteorService;
+    }
+
+    @Builder
+    public Member(String email, String password, String nickname, boolean alarm, boolean auroraDisplay, boolean auroraService, boolean meteorService) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.alarm = alarm;
+        this.auroraDisplay = auroraDisplay;
+        this.auroraService = auroraService;
+        this.meteorService = meteorService;
+    }
 
     @Override
     public String getUsername() {
