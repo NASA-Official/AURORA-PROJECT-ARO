@@ -33,7 +33,7 @@ public class StampTest {
     public void makeStamp() throws Exception {
 
         //given
-        Member member1 = memberRepository.save(Member.builder().build());
+        Member member1 = memberRepository.save(Member.builder().password("test").nickname("test").email("test@email.com").build());
 
         //when
         Integer cnt = stampService.makeStamp(member1.getId());
