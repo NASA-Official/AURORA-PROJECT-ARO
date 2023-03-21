@@ -5,8 +5,8 @@ server:
 logging:
   level:
     root: warn
-    com.nassafy.api: trace
-    org.hibernate.type.descriptor.sql: trace
+    com.nassafy.api: DEBUG
+    org.hibernate.type.descriptor.sql: DEBUG
 #logging:
 #  level:
 #    ccom.nassafy.api: info    # 로깅 레벨
