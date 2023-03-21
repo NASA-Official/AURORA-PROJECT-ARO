@@ -49,25 +49,9 @@ public class AccountController {
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody SignupReqDto signupReqDto) {
         logger.debug("\t Start singup");
-        logger.debug("\t SsignupReqDto " + signupReqDto);
         memberService.create(signupReqDto);
 
         return ResponseEntity.ok("singup is success!!!");
     }
 
-    @PostMapping("/test1")
-    public ResponseEntity<?> Test1() {
-        logger.debug("\t Start Test1");
-
-        return ResponseEntity.ok("test1 is success!!!");
-    }
-
-    @PostMapping("/test2")
-    public ResponseEntity<?> Test2(@RequestBody SignupReqDto signupReqDto) {
-        logger.debug("\t Start Test2");
-
-        memberService.create(signupReqDto);
-
-        return ResponseEntity.ok("test2 is success!!!");
-    }
 }
