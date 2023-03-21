@@ -2,10 +2,13 @@ package com.nassafy.api.controller;
 
 import com.nassafy.api.dto.req.CodeCheckDto;
 import com.nassafy.api.dto.req.EmailCheckDto;
+import com.nassafy.api.dto.req.MemberLoginReqDto;
 import com.nassafy.api.dto.req.SignupReqDto;
+import com.nassafy.api.dto.res.MemberLoginResDto;
 import com.nassafy.api.dto.res.SignupResDto;
 import com.nassafy.api.service.EmailService;
 import com.nassafy.api.service.MemberService;
+import com.nassafy.core.entity.Member;
 import com.nassafy.core.respository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +33,7 @@ public class AccountController {
     private final EmailService emailService;
     private final MemberRepository memberRepository;
 
-    private final int mailCode = 123456;
+    private final int mailCode = 000000;
 
     private Map<String, String> emailCode = new HashMap<>();
 
@@ -70,6 +73,34 @@ public class AccountController {
         memberService.create(signupReqDto);
 
         return ResponseEntity.ok("singup is success!!!");
+    }
+
+    @PostMapping("/memberInfo")
+    public ResponseEntity<?> memberInfo(@RequestBody MemberLoginReqDto memberLoginRequestDto) {
+        logger.debug("\t Start login");
+        String email = memberLoginRequestDto.getEmail();
+        Optional<Member> member = memberRepository.findByEmail(email);
+        if(member.isEmpty()){
+            return ResponseEntity.badRequest().body("Error: Member is not exist!!");
+        }
+
+        MemberLoginResDto memberLoginResDto = MemberLoginResDto.builder()
+                .email(member.get().getEmail())
+                .nickname(member.get().getNickname())
+                .build();
+
+        return ResponseEntity.ok(memberLoginResDto);
+    }
+
+    @PostMapping("/withdrawal/{email}")
+    public ResponseEntity<?> withdrawal(@PathVariable String email) {
+        logger.debug("\t Start withdrawal");
+//        String email = memberLoginRequestDto.getEmail();
+//        String password = memberLoginRequestDto.getPassword();
+//        TokenDto tokenDto = jwtService.login(email, password);
+
+        int res = memberRepository.deleteByEmail(email);
+        return ResponseEntity.ok("" + res);
     }
 
 }
