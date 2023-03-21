@@ -12,7 +12,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 public class Stamp {
     @Id
@@ -33,18 +32,18 @@ public class Stamp {
     @JoinColumn(name = "attraction_id")
     private Attraction attraction;
 
-    @OneToMany(mappedBy = "stamp")
-    private List<StampImage> stampImages = new ArrayList<>();
-
-    public void editMemo(String memo) {
-        this.memo = memo;
-    }
-
     @Builder
     public Stamp(Boolean certification, String memo, Member member, Attraction attraction) {
         this.certification = certification;
         this.memo = memo;
         this.member = member;
         this.attraction = attraction;
+    }
+
+    @OneToMany(mappedBy = "stamp")
+    private List<StampImage> stampImages = new ArrayList<>();
+
+    public void editMemo(String memo) {
+        this.memo = memo;
     }
 }

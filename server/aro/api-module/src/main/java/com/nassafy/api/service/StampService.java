@@ -4,6 +4,7 @@ import com.nassafy.api.dto.req.StampDiaryReqDTO;
 import com.nassafy.api.dto.req.StampDiaryResDTO;
 import com.nassafy.api.util.S3Util;
 import com.nassafy.core.DTO.MapStampDTO;
+import com.nassafy.core.DTO.RegisterStampDTO;
 import com.nassafy.core.entity.Attraction;
 import com.nassafy.core.entity.Member;
 import com.nassafy.core.entity.Stamp;
@@ -14,6 +15,7 @@ import com.nassafy.core.respository.StampImageRepository;
 import com.nassafy.core.respository.StampRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,6 +34,17 @@ public class StampService {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    // 회원 가입 때 스탬프 조회
+    public List<RegisterStampDTO> findStampsCountry(String countryName) {
+        List<Attraction> attractions = attractionRepository.findByNation(countryName);
+        List<RegisterStampDTO> registerStampDTOS = new ArrayList<>();
+
+        for (Attraction attraction : attractions) {
+            registerStampDTOS.add(new RegisterStampDTO(attraction.getColorStamp(), attraction.getAttractionName(), attraction.getDescription()));
+        }
+        return registerStampDTOS;
+    }
 
     @Autowired
     private StampImageRepository stampImageRepository;
