@@ -1,20 +1,20 @@
-package com.nassafy.aro.ui.view.sign
+package com.nassafy.aro.ui.view.login
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
-import com.nassafy.aro.databinding.ActivitySignBinding
+import com.nassafy.aro.databinding.ActivityLoginBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-class SignActivity : AppCompatActivity() {
+@AndroidEntryPoint
+class LoginActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivitySignBinding
+    lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySignBinding.inflate(layoutInflater)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
     }

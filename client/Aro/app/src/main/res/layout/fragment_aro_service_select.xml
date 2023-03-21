@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/join_background_color"
-    tools:context=".ui.view.sign.SignUpEmailFragment">
+    tools:context=".ui.view.login.JoinEmailFragment">
 
     <ImageButton
         android:id="@+id/cancel_button"
