@@ -74,6 +74,8 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <include layout="@layout/fragment_aurora_bottom_sheet" />
+    <include
+        layout="@layout/fragment_aurora_bottom_sheet"
+        android:id="@+id/bottom_sheet" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
