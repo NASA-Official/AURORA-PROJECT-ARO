@@ -16,6 +16,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan("com.nassafy.core")
 @EnableJpaRepositories("com.nassafy.core")
 public class ApiApplication {
+    static {
+        System.setProperty("com.amazonaws.sdk.disableEc2Metadata", "true");
+    }
     public static void main(String[] args) {
         SpringApplication.run(ApiApplication.class, args);
     }
