@@ -41,13 +41,7 @@ public class StampService {
         List<RegisterStampDTO> registerStampDTOS = new ArrayList<>();
 
         for (Attraction attraction : attractions) {
-            Attraction attraction1 = attractions.stream()
-                    .filter(s -> s.getNation().equals(countryName))
-                    .findFirst()
-                    .orElse(null);
-            if (attraction1 != null) {
-                registerStampDTOS.add(new RegisterStampDTO(attraction1.getColorStamp(), attraction1.getAttractionName(), attraction1.getDescription()));
-            }
+            registerStampDTOS.add(new RegisterStampDTO(attraction.getColorStamp(), attraction.getAttractionName(), attraction.getDescription()));
         }
         return registerStampDTOS;
     }
