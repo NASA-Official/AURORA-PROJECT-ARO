@@ -35,6 +35,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.viewpager.apply {
             adapter = ViewPagerAdapter(childFragmentManager, lifecycle)
             isUserInputEnabled = false
