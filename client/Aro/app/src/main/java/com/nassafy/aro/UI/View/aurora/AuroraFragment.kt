@@ -19,7 +19,9 @@ import com.google.maps.android.PolyUtil
 import com.google.maps.android.SphericalUtil
 import com.nassafy.aro.R
 import com.nassafy.aro.databinding.FragmentAuroraBinding
+import com.nassafy.aro.databinding.FragmentAuroraBottomSheetBinding
 import com.nassafy.aro.databinding.FragmentMainBinding
+import com.nassafy.aro.ui.adapter.DateHourSelectAdapter
 import com.nassafy.aro.ui.view.BaseFragment
 import com.nassafy.aro.ui.view.dialog.DateHourSelectDialog
 import com.nassafy.aro.ui.view.main.MainActivity
@@ -33,11 +35,12 @@ private const val TAG = "AuroraFragment_sdr"
 
 class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding::inflate),
     OnMapReadyCallback {
+    private val auroraViewModel: AuroraViewModel by viewModels()
     private lateinit var googleMap: GoogleMap
+//    private lateinit var favoriteAdapter: BottomSheetFavoriteAdapter
     private var now = LocalDateTime.now()
     private var dateList = arrayListOf<String>()
     private var hourList = arrayListOf<ArrayList<String>>()
-    private val auroraViewModel: AuroraViewModel by viewModels()
     var kpIndex = 3.0F
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,6 +55,11 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
 //            }
 //        }
         initView()
+
+//        favoriteAdapter = BottomSheetFavoriteAdapter
+
+        binding.bottomSheet.favoriteRecyclerview
+
     } // End of onViewCreated
 
     override fun onMapReady(gMap: GoogleMap) {
@@ -120,5 +128,11 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
             Log.e(TAG, "Can't find style. Error: ", e)
         }
     } // End of setCustomMapStyle
+
+
+    companion object {
+        var item1 = arrayListOf<String>("그리핀도르", "88", "")
+
+    }
 
 } // End of AuroraFragment
