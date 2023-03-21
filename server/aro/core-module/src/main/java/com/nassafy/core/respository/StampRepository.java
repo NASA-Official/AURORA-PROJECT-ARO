@@ -13,5 +13,7 @@ public interface StampRepository extends JpaRepository<Stamp, Long> {
 
     List<Stamp> findByAttractionNation(String nation);
 
+
+
     Optional<Stamp> findByAttractionIdAndMemberId(Long attractionId, Long memberId);
 }
