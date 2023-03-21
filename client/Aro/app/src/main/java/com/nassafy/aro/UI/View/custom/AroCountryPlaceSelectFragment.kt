@@ -21,20 +21,9 @@ import androidx.navigation.fragment.findNavController
 import com.nassafy.aro.R
 import com.nassafy.aro.databinding.FragmentAroCountryPlaceSelectBinding
 import com.nassafy.aro.ui.adapter.CountrySpinnerAdapter
+import com.nassafy.aro.ui.view.BaseFragment
 
-class AroCountryPlaceSelectFragment : Fragment() {
-    private var _binding: FragmentAroCountryPlaceSelectBinding? = null
-    private val binding get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentAroCountryPlaceSelectBinding.inflate(inflater)
-        val view = binding.root
-        return view
-    }
+class AroCountryPlaceSelectFragment : BaseFragment<FragmentAroCountryPlaceSelectBinding>(FragmentAroCountryPlaceSelectBinding::inflate) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -42,11 +31,6 @@ class AroCountryPlaceSelectFragment : Fragment() {
         initView()
         initSpinner()
     } // End of onViewCreated
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    } // End of onDestroyView
 
     private fun initView() {
         binding.countryPlaceComposeview.apply {
