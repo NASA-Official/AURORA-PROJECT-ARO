@@ -34,6 +34,18 @@ spring:
         dialect: org.hibernate.dialect.MariaDBDialect
     defer-datasource-initialization: true
 
+  mail:
+    # Google smtp server 사용
+    host: smtp.gmail.com
+    port: 587
+    username: ckstjr93@gmail.com #앱 비밀번호 발급받은 google 계정
+    password: isemeuihjvftkkwx #발급받은 앱 비밀번호
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
 jwt:
   header: Authorization
   #HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용해야 한다.
