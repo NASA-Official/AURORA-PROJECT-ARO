@@ -6,13 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nassafy.aro.domain.repository.TestRepository
 import com.nassafy.aro.util.NetworkResult
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 private const val TAG = "ServerCallTestViewModel_싸피"
-class ServerCallTestViewModel : ViewModel() {
-
-    // repository
-    private val testRepository = TestRepository()
+@HiltViewModel
+class ServerCallTestViewModel @Inject constructor(private val testRepository: TestRepository) : ViewModel()  {
 
     // ======================== 서버 호출 테스트 ========================
     val getServerCallTestResponseLiveData: LiveData<NetworkResult<String>>

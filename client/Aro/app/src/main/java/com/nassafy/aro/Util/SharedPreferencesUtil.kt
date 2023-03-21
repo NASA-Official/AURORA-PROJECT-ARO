@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 
 class SharedPreferencesUtil(context: Context) {
-    var preferences: SharedPreferences =
+    private var preferences: SharedPreferences =
         context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
     fun addUserRefreshToken(refresh_token: String) {
