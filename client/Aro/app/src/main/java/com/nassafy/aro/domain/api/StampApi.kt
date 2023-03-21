@@ -8,7 +8,19 @@ import retrofit2.http.*
 
 interface StampApi {
 
-    // 테스트 api
+    // ======================================= 테스트 api =======================================
+    @GET("/api/stamps/nations")
+    suspend fun getCountryTest() : Response<List<String>>
+
+
+
+
+
+
+
+
+    // ======================================= 테스트 api =======================================
+
     @JvmSuppressWildcards
     @GET("/test")
     suspend fun getUserStampGroupByCountryStampData(userId: String, country: String): Response<Void>

@@ -23,10 +23,6 @@ class TestRepository {
     // 테스트 통신
     suspend fun getServerCallTest() {
         val response = testApi.serveerCallTest()
-        Log.d(TAG, "response.code : ${response.code()}")
-        Log.d(TAG, "response.message: ${response.message()}")
-        Log.d(TAG, "response.headers: ${response.headers()}")
-        Log.d(TAG, "response.body: ${response.body()}")
 
         _getServerCallTestResponseLiveData.postValue(NetworkResult.Loading())
 

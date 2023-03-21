@@ -54,7 +54,7 @@ class StampCountryPlacesFragment :
                 // 해당 명소에 해당하는 일기 데이터를 가져옴.
                 Navigation.findNavController(binding.stampCountryCustomViewpager2.findViewById(R.id.stamp_country_custom_make_diary_button))
                     .navigate(
-                        R.id.action_stampHomeFragment_to_stampDiaryFragment,
+                        R.id.action_stampCountryPlacesFragment_to_stampDiaryFragment,
                         bundle
                     )
             }
