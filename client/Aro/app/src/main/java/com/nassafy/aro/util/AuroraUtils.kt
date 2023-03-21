@@ -32,10 +32,11 @@ fun getKpPolylineOptions(kpIndex: Float) : PolylineOptions {
               LatLng(39.0, -100.0),
               LatLng(38.0, -80.0)
           )
-              .color(Color.RED)
-              .width(8.0F)
-              .clickable(true)
+              .color(Color.BLUE)
+              .width(10.0F)
+              .clickable(false)
               .geodesic(true)
+              .zIndex(-1.0F)
       }
       kpIndex >= 7 -> {
           polylineOptions.add(
@@ -59,10 +60,11 @@ fun getKpPolylineOptions(kpIndex: Float) : PolylineOptions {
               LatLng(42.5, -100.0),
               LatLng(42.0, -80.0),
               )
-              .color(Color.YELLOW)
-              .width(8.0F)
-              .clickable(true)
+              .color(Color.BLUE)
+              .width(10.0F)
+              .clickable(false)
               .geodesic(true)
+              .zIndex(-1.0F)
       }
       kpIndex >= 5 -> {
           polylineOptions.add(
@@ -86,10 +88,11 @@ fun getKpPolylineOptions(kpIndex: Float) : PolylineOptions {
               LatLng(47.0, -100.0),
               LatLng(46.0, -80.0),
           )
-              .color(Color.GREEN)
-              .width(8.0F)
-              .clickable(true)
+              .color(Color.BLUE)
+              .width(10.0F)
+              .clickable(false)
               .geodesic(true)
+              .zIndex(-1.0F)
       }
       else -> {
           polylineOptions
@@ -113,9 +116,10 @@ fun getKpPolylineOptions(kpIndex: Float) : PolylineOptions {
               .add(LatLng(51.5, -100.0))
               .add(LatLng(50.1, -80.0))
               .color(Color.BLUE)
-              .width(8.0F)
-              .clickable(true)
-              .geodesic(false)
+              .width(10.0F)
+              .clickable(false)
+              .geodesic(true)
+              .zIndex(-1.0F)
       }
     }
     return polylineOptions
