@@ -3,6 +3,7 @@ package com.nassafy.api.controller;
 
 import com.nassafy.api.service.StampService;
 import com.nassafy.core.DTO.MapStampDTO;
+import com.nassafy.core.DTO.RegisterStampDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,4 +25,9 @@ public class StampController {
         return ResponseEntity.ok(mapStamps);
     }
 
+    @GetMapping("accounts/{nations}/attrations")
+    public ResponseEntity<List<RegisterStampDTO>> getStampCountry(@PathVariable String nations) {
+        List<RegisterStampDTO> registerStampDTOS = stampService.findStampsCountry(nations);
+        return ResponseEntity.ok(registerStampDTOS);
+    }
 }
