@@ -42,7 +42,7 @@ public class Member implements UserDetails {
     @Column(nullable = false)
     private String nickname;
 
-    private boolean alarm = true;
+    private Boolean alarm = true;
 
     private boolean auroraDisplay = true;
 

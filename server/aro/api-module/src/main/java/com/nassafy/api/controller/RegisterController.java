@@ -20,40 +20,42 @@ public class RegisterController {
 
     // 알람 서비스 등록 여부 조회
     @GetMapping("toggleAlarm/{member_id}")
-    public boolean getAlarm(@PathVariable Long member_id){
+    public ResponseEntity<Boolean> getAlarm(@PathVariable Long member_id){
         Member member = memberRepository.findById(member_id).orElseThrow(
                 () -> new EntityNotFoundException("회원이 없습니다")
         );
-        return member.getAlarm();
+        return ResponseEntity.ok(member.getAlarm());
     }
 
     // 오로라 표시 여부 조회
     @GetMapping("auroraDisplay/{member_id}")
-    public boolean getAuroraDisplay(@PathVariable Long member_id){
+    public ResponseEntity<Boolean> getAuroraDisplay(@PathVariable Long member_id){
         Member member = memberRepository.findById(member_id).orElseThrow(
                 () -> new EntityNotFoundException("회원이 없습니다")
         );
-        return member.getAuroraDisplay();
+        return ResponseEntity.ok(member.getAuroraDisplay());
     }
 
 
     // 오로라 서비스 등록 여부 조회
     @GetMapping("servies/aurora/{member_id}")
-    public boolean getAuroraService(@PathVariable Long member_id) {
+    public ResponseEntity<Boolean> getAuroraService(@PathVariable Long member_id) {
         Member member = memberRepository.findById(member_id).orElseThrow(
                 () -> new EntityNotFoundException("회원이 없습니다.")
         );
-        return member.getAuroraService();
+        return ResponseEntity.ok(member.getAuroraService());
     }
 
     // 유성우 서비스 등록 여부 조회
     @GetMapping("servies/meteor/{member_id}")
-    public boolean getMeteorService(@PathVariable Long member_id){
+    public ResponseEntity<Boolean> getMeteorService(@PathVariable Long member_id){
         Member member = memberRepository.findById(member_id).orElseThrow(
                 () -> new EntityNotFoundException("회원이 없습니다")
         );
-        return member.getMeteorService();
+        return ResponseEntity.ok(member.getMeteorService());
     }
+
+
 
     @PutMapping("/toggleAlarm/{member_id}")
     public ResponseEntity<Void> toggleAlarm(@PathVariable Long member_id) {
