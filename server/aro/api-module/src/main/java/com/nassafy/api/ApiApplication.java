@@ -17,7 +17,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories("com.nassafy.core")
 public class ApiApplication {
     public static void main(String[] args) {
+
         SpringApplication.run(ApiApplication.class, args);
+        // 다른 모듈의 yml 읽어오기 위해서 사용
+        System.setProperty("spring.config.name", "application, application-core");
     }
 
 }
