@@ -3,7 +3,7 @@
     <string name="hello_blank_fragment">MADE BY NASSAFY</string>
 
     <!-- 로그인 및 회원가입 -->
-    <string name="join_already_exist_email_text">이미 사용 중인 이메일입니다.</string>
+    <string name="join_already_exist_email_text">사용 중이거나 적절하지 않은 이메일입니다</string>
     <string name="join_button_text">처음 오셨나요? 회원가입하기</string>
     <string name="start_naver_textview_text">네이버로 시작하기</string>
     <string name="start_github_textview_text">깃허브로 시작하기</string>
@@ -18,7 +18,7 @@
 
     <string name="password_edittext_text">비밀번호</string>
     <string name="password_validate_edittext_text">비밀번호 확인</string>
-    <string name="password_rule_fail_textview_text">비밀번호는 특수문자 포함 8글자 이상어야 합니다!</string>
+    <string name="password_rule_fail_textview_text">비밀번호는 특수문자 포함 8 에서 15 글자 사이여야만 합니다!</string>
     <string name="password_validate_fail_textview_text">비밀번호와 비밀번호 확인 내용이 다릅니다</string>
 
     <string name="nickname_edittext_text">닉네임</string>

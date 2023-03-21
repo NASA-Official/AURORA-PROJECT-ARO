@@ -30,17 +30,17 @@ class JoinEmailFragment :
 
     override fun onResume() {
         super.onResume()
-        setNextButtonAvailable(false)
+        setNextButtonAvailable(false) // TODO ACITVE
     } // End of onResume
 
     private fun initObserve() {
         initEmailValidateObserve()
     } // End of initObserve
 
-    private fun setNextButtonAvailable(isAvalable: Boolean) {
-        binding.nextButton.isSelected = isAvalable
-        binding.nextButton.isEnabled = isAvalable
-        binding.nextButton.isClickable = isAvalable
+    private fun setNextButtonAvailable(isAvailable: Boolean) {
+        binding.nextButton.isSelected = isAvailable
+        binding.nextButton.isEnabled = isAvailable
+        binding.nextButton.isClickable = isAvailable
     } // End of setNextButtonAvalable
 
     private fun initEmailValidateObserve() {
@@ -66,12 +66,14 @@ class JoinEmailFragment :
                             setNextButtonAvailable(true)
                         }
                         else -> {
-                            setNextButtonAvailable(false)
+//                            setNextButtonAvailable(true)//TODO DELETE
+                            setNextButtonAvailable(false) // TODO ACTIVE
                         }
                     } // End of when
                 } // End of true
                 false -> {
-                    setNextButtonAvailable(false)
+//                    setNextButtonAvailable(true)//TODO DELETE
+                    setNextButtonAvailable(false) // TODO ACTIVE
                     binding.verificationEmailCodeTextfield.error =
                         getString(R.string.email_validate_number_fail_textview_text)
                 } // End of false
@@ -81,9 +83,9 @@ class JoinEmailFragment :
 
     private fun initView() {
         binding.nextButton.apply {
-            isEnabled = false
             setOnClickListener {
-                loginActivityViewModel.email = binding.joinEmailIdTextfield.editText?.text.toString()
+                loginActivityViewModel.email =
+                    binding.joinEmailIdTextfield.editText?.text.toString()
                 findNavController().navigate(R.id.action_joinEmailFragment_to_joinPasswordFragment)
             } // End of nextButton.setOnClickListener
         } // End of nextButton.apply
