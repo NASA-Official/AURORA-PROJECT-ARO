@@ -1,7 +1,9 @@
 package com.nassafy.core.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,6 +13,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class Stamp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +22,7 @@ public class Stamp {
 
     private Boolean certification = false;
 
+    @Column(columnDefinition = "TEXT")
     private String memo;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -34,5 +38,13 @@ public class Stamp {
 
     public void editMemo(String memo) {
         this.memo = memo;
+    }
+
+    @Builder
+    public Stamp(Boolean certification, String memo, Member member, Attraction attraction) {
+        this.certification = certification;
+        this.memo = memo;
+        this.member = member;
+        this.attraction = attraction;
     }
 }
