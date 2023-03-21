@@ -32,10 +32,6 @@ fun View.showSnackBarMessage(message: String) {
 } // End of showSnackBarMessage
 
 fun Polyline.addInfoWindow(map: GoogleMap, location: LatLng, title: String, message: String) {
-//    val pointsOnLine = this.points.size
-//    Log.d("sdr", "pointsOnLine: ${this.points}")
-//    val infoLatLng = this.points[(pointsOnLine / 2)]
-//    Log.d("sdr", "infoLatLng: $pointsOnLine")
     val invisibleMarker =
         BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888))
     val marker = map.addMarker(
