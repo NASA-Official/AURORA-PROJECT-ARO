@@ -5,11 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nassafy.aro.domain.repository.StampRepository
 import com.nassafy.aro.util.NetworkResult
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class StampViewModel : ViewModel() {
-
-    private val stampRepository = StampRepository()
+@HiltViewModel
+class StampViewModel @Inject constructor(private val stampRepository: StampRepository) :
+    ViewModel() {
 
     // ================================= 테스트 통신 =================================
     val getCountryTestResponseLiveData: LiveData<NetworkResult<List<String>>>

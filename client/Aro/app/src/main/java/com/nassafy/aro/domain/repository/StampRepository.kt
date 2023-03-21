@@ -1,21 +1,21 @@
 package com.nassafy.aro.domain.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.nassafy.aro.Application
 import com.nassafy.aro.data.dto.StampTest
 import com.nassafy.aro.domain.api.StampApi
 import com.nassafy.aro.util.NetworkResult
+import com.nassafy.aro.util.di.HeaderInterceptorApi
+import com.nassafy.aro.util.di.WithoutHeaderInterceptorApi
+import javax.inject.Inject
 
+// provideStampApi
 private const val TAG = "StampRepository_싸피"
 
-class StampRepository {
-    // 일반 retrofit
-    private val stampApi = Application.retrofit.create(StampApi::class.java)
-
-    // 헤더가 담긴 retrofit
-    private val headerStampApi = Application.retrofit.create(StampApi::class.java)
+class StampRepository @Inject constructor(
+    @WithoutHeaderInterceptorApi private val stampApi: StampApi,
+    @HeaderInterceptorApi private val headerStampApi: StampApi
+) {
 
     // ================================= 테스트 통신 =================================
     private val _getCountryTestResponseLiveData = MutableLiveData<NetworkResult<List<String>>>()
@@ -24,7 +24,6 @@ class StampRepository {
 
     suspend fun getCountryTest() {
         val response = stampApi.getCountryTest()
-        Log.d(TAG, "getCountryTest: ${response.body()}")
 
         _getCountryTestResponseLiveData.postValue(NetworkResult.Loading())
 
@@ -70,8 +69,5 @@ class StampRepository {
 
         }
 
-
     }  // End of getUserStampDataGroupByCountry
-
-
 } // End of StampRepository class

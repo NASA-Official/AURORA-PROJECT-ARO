@@ -17,11 +17,13 @@ import com.nassafy.aro.ui.view.BaseFragment
 import com.nassafy.aro.util.NetworkResult
 import com.nassafy.aro.util.showSnackBarMessage
 import com.squareup.picasso.Picasso
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 
 
 private const val TAG = "StampHomeFragment_싸피"
 
+@AndroidEntryPoint
 class StampHomeFragment :
     BaseFragment<FragmentStampHomeBinding>(FragmentStampHomeBinding::inflate) {
     private lateinit var mContext: Context
