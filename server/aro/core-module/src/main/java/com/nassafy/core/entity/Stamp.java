@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -26,4 +28,11 @@ public class Stamp {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "attraction_id")
     private Attraction attraction;
+
+    @OneToMany(mappedBy = "stamp")
+    private List<StampImage> stampImages = new ArrayList<>();
+
+    public void editMemo(String memo) {
+        this.memo = memo;
+    }
 }
