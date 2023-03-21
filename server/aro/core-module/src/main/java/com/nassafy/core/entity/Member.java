@@ -36,6 +36,24 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Stamp> stamps = new ArrayList<>();
 
+    // 영속성 컨텍스트 비워주는 비지니스 메서드
+    public void clearInterest(){
+        this.interests = new ArrayList<>();
+    }
+
+    // 영속성 컨텍스트에 추가해주는 비지니스 메서드
+    public void addInterest(){
+        this.interests = interests;
+    }
+
+    public boolean getAlarm(){
+        return this.alarm;
+    }
+
+    public boolean getAuroraDisplay(){
+        return this.auroraDisplay;
+    }
+
     public void toggleAlarm(){
         this.alarm = !this.alarm;
     }
@@ -50,6 +68,14 @@ public class Member {
 
     public boolean getMeteorService(){
         return this.meteorService;
+    }
+
+    public void toggleAuroraService(){
+        this.auroraService = !this.auroraService;
+    }
+
+    public void toggleMeteorService(){
+        this.meteorService = !this.meteorService;
     }
 
 }
