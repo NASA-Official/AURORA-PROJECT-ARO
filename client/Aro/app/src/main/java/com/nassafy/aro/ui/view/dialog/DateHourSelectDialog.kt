@@ -49,7 +49,7 @@ class DateHourSelectDialog(
             val dateIdx = binding.dateRecyclerview.getSelectedPosition()
             val hourIdx = binding.hourRecyclerview.getSelectedPosition()
             val auroraFragment = parentFragment as AuroraFragment
-            auroraFragment.setDateTimeLinearLayoutText(dateList[dateIdx], hourList[dateIdx][hourIdx])
+//            auroraFragment.setDateTimeLinearLayoutText(dateList[dateIdx], hourList[dateIdx][hourIdx])
             dismiss()
         }
     } // End of onViewCreated
