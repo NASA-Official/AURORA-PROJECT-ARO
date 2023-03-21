@@ -2,11 +2,14 @@ package com.nassafy.aro.ui.view.main.stamp
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.nassafy.aro.R
 import com.nassafy.aro.databinding.FragmentStampHomeBinding
 import com.nassafy.aro.ui.adapter.CountrySpinnerAdapter
@@ -16,6 +19,8 @@ import com.nassafy.aro.util.showSnackBarMessage
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.*
 
+
+private const val TAG = "StampHomeFragment_싸피"
 
 class StampHomeFragment :
     BaseFragment<FragmentStampHomeBinding>(FragmentStampHomeBinding::inflate) {
@@ -36,11 +41,11 @@ class StampHomeFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        getUserStampDataGroupByCountryResponseLiveDataObserve()
+        getCountryTestResponseLiveData()
 
         CoroutineScope(Dispatchers.IO).launch {
             val result: Deferred<Int> = async {
-                stampViewModel.getUserStampDataGroupByCountry()
+                stampViewModel.getCountryTest()
                 0
             }
 
@@ -55,14 +60,27 @@ class StampHomeFragment :
                 spinner에 선택한 텍스트를 기반으로 해당 국가의 유저 스탬프 데이터를 가져옴.
          */
 
-        initSpinner()
+        initEventListeners()
 
         Picasso.get().load(R.drawable.idaho_test_image3).fit().centerCrop()
             .into(binding.stampHomeImageview)
     } // End of onViewCreated
 
-    private fun initSpinner() {
-        val countryList: ArrayList<String> = arrayListOf("아이슬란드", "미국")
+    private fun initEventListeners() {
+        // 뒤로가기 버튼 클릭 이벤트
+        binding.stampHomeBackButton.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        // 국가별 명소 상세보기 버튼 클릭 이벤트
+        binding.stampHomeDetailButtonTextview.setOnClickListener {
+            Navigation.findNavController(binding.stampHomeDetailButtonTextview)
+                .navigate(R.id.action_stampHomeFragment_to_stampCountryPlacesFragment)
+        }
+
+    } // End of initEventListeners
+
+    private fun initSpinner(countryList: ArrayList<String>) {
         arrayAdapter = CountrySpinnerAdapter(mContext, R.layout.item_country_spinner, countryList)
         binding.stampHomeSpinner.adapter = arrayAdapter
 
@@ -85,15 +103,18 @@ class StampHomeFragment :
             }
     } // End of initSpinner
 
-    private fun getUserStampDataGroupByCountryResponseLiveDataObserve() {
-        stampViewModel.getUserStampDataGroupByCountryResponseLiveData.observe(this.viewLifecycleOwner) {
+    private fun getCountryTestResponseLiveData() {
+        stampViewModel.getCountryTestResponseLiveData.observe(this.viewLifecycleOwner) {
             binding.stampHomeProgressbar.visibility = View.GONE
             binding.stampHomeProgressbar.isVisible = false
 
+            Log.d(TAG, "getCountryTestResponseLiveData: 여기 돌음?")
 
             when (it) {
                 is NetworkResult.Success -> {
-                    initSpinner()
+                    Log.d(TAG, "getCountryTestResponseLiveData: ${it.data}")
+
+                    initSpinner(it.data as ArrayList<String>)
                 }
 
                 is NetworkResult.Error -> {
@@ -107,6 +128,5 @@ class StampHomeFragment :
             }
 
         }
-    }
-
+    } // End of getUserStampDataGroupByCountryResponseLiveDataObserve
 } // End of StampHomeFragment class

@@ -11,6 +11,17 @@ class StampViewModel : ViewModel() {
 
     private val stampRepository = StampRepository()
 
+    // ================================= 테스트 통신 =================================
+    val getCountryTestResponseLiveData: LiveData<NetworkResult<List<String>>>
+        get() = stampRepository.getCountryTestResponseLiveData
+
+    suspend fun getCountryTest() {
+        viewModelScope.launch {
+            stampRepository.getCountryTest()
+        }
+    } // End of getCountryTest
+
+
     private val _countryList: MutableList<String> = arrayListOf()
     val countryList: List<String>
         get() = _countryList
