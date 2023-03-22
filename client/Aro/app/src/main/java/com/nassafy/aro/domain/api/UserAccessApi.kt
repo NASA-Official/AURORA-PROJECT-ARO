@@ -1,21 +1,32 @@
 package com.nassafy.aro.domain.api
 
+import com.google.gson.JsonObject
 import com.nassafy.aro.data.dto.LoginToken
-import com.nassafy.aro.data.dto.user.request.LoginRequest
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.Path
 
 
 interface UserAccessApi {
     @POST("api/members/login")
     suspend fun login(
-        @Body loginRequest: LoginRequest
+        @Body loginBody: JsonObject
     ): Response<LoginToken> // End of login
 
-    @POST("api/accounts/codecheck/{code}")
-    suspend fun validateEmialAuthCode(
-        @Path("code") authCode: Int
+    @POST("api/accounts/codecheck")
+    suspend fun validateEmailAuthenticationCode(
+        @Body validateEmailAuthenticationCodeBody: JsonObject
     ): Response<Unit>
+
+    @POST("api/accounts/emailcheck")
+    suspend fun validateEmail(
+        @Body validateEmailBody: JsonObject
+    ): Response<Unit>
+
+    @GET("/api/stamps/nations")
+    suspend fun getCountryList(): Response<List<String>>
+
+
+
 } // End of UserAccessApi

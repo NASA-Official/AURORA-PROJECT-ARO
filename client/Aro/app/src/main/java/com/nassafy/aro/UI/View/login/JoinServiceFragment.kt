@@ -1,48 +1,38 @@
 package com.nassafy.aro.ui.view.login
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.nassafy.aro.R
-import com.nassafy.aro.databinding.FragmentJoinServiceBinding
+import com.nassafy.aro.databinding.FragmentAroServiceSelectBinding
+import com.nassafy.aro.ui.view.BaseFragment
+import com.nassafy.aro.ui.view.login.viewmodel.LoginActivityViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-class JoinServiceFragment : Fragment() {
+@AndroidEntryPoint
+class JoinServiceFragment : BaseFragment<FragmentAroServiceSelectBinding>(FragmentAroServiceSelectBinding::inflate) {
 
-    private var _binding: FragmentJoinServiceBinding? = null
-    private val binding get() = _binding!!
+    private val loginActivityViewModel: LoginActivityViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        _binding = FragmentJoinServiceBinding.inflate(inflater)
-        return binding.root
+    override fun onResume() {
+        super.onResume()
+        binding.auroraServiceCardview.isSelected = loginActivityViewModel.isAuroraServiceSelected
+        binding.meteorServiceCardview.isSelected = loginActivityViewModel.isMeteorServiceSelected
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initView()
-
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun initView() {
         binding.nextButton.setOnClickListener {
-            findNavController().navigate(R.id.action_joinServiceFragment_to_joinFavoriteFragment)
+            loginActivityViewModel.apply {
+                isAuroraServiceSelected = binding.auroraServiceCardview.isSelected
+                isMeteorServiceSelected = binding.meteorServiceCardview.isSelected
+            }
+            findNavController().navigate(R.id.action_joinServiceFragment_to_joinCountryPlaceSelectFragment)
         }
         binding.cancelButton.setOnClickListener {
             findNavController().popBackStack()
