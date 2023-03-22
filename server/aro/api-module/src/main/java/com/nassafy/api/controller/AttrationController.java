@@ -52,15 +52,10 @@ public class AttrationController {
         return ResponseEntity.ok(attractionDTOS);
     }
 
-    // api test용 코드입니다. 클라용
-    @GetMapping("/test/{nation}")
-    public List<MapStampDTO> testCode(@PathVariable String nation){
-        List<Attraction> attractions = attractionRepository.findByNation(nation);
-        List<MapStampDTO> mapStamps = new ArrayList<>();
-            for (Attraction attraction : attractions) {
-            MapStampDTO mapStampDTO = new MapStampDTO(attraction.getColorStamp(), false);
-            mapStamps.add(mapStampDTO);
-        }
-            return mapStamps;
+    // 30번 api
+    @GetMapping("attractions/{nation}/{memberId}")
+    public List<MapStampDTO> getStampsFormember(@PathVariable String nation, @PathVariable Long memberId){
+        List<MapStampDTO> mapStampDTOS = attrationService.getStampsFormember(nation, memberId);
+        return mapStampDTOS;
     }
 }
