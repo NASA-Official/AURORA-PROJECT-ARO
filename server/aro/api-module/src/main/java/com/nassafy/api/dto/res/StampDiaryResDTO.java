@@ -11,9 +11,18 @@ public class StampDiaryResDTO {
 
     String memo;
 
+    String nation;
+
+    String attractionName;
+
+    String description;
+
     @Builder
-    public StampDiaryResDTO(List<String> images, String memo) {
+    public StampDiaryResDTO(List<String> images, String memo, String nation, String attractionName, String description) {
         this.images = images;
         this.memo = memo;
+        this.nation = nation;
+        this.attractionName = attractionName;
+        this.description = description;
     }
 }
