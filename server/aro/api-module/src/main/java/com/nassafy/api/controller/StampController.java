@@ -1,5 +1,7 @@
 package com.nassafy.api.controller;
 
+
+import com.nassafy.api.dto.req.SingupAttractionDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,19 +24,19 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/stamps/")
 @Slf4j
 public class StampController {
     @Autowired
     private StampService stampService;
 
-    @GetMapping("stamps/{memberId}/{nation}")
+    @GetMapping("{memberId}/{nation}")
     public ResponseEntity<List<MapStampDTO>> getStampMemberAndCountry(@PathVariable Long memberId, @PathVariable String nation){
         List<MapStampDTO> mapStamps = stampService.findStampsByUserAndCountry(memberId, nation);
         return ResponseEntity.ok(mapStamps);
     }
 
-    @PostMapping(value = "stamps/diary/{nation}/{attraction}/{memberId}",
+    @PostMapping(value = "diary/{nation}/{attraction}/{memberId}",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> createStampDiary (
             @RequestPart("files") List<MultipartFile> files,
@@ -59,7 +61,7 @@ public class StampController {
         }
     }
 
-    @PutMapping(value = "stamps/diary/{nation}/{attraction}/{memberId}",
+    @PutMapping(value = "diary/{nation}/{attraction}/{memberId}",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> editStampDiary (
             @RequestPart("newImageLists") List<MultipartFile> newImageLists,
@@ -81,11 +83,12 @@ public class StampController {
         }
     }
 
-    @GetMapping(value = "stamps/diary/{nation}/{attraction}/{memberId}")
+    @GetMapping(value = "diary/{nation}/{attraction}/{memberId}")
     public ResponseEntity<?> getStampDiary (
             @PathVariable String nation,
             @PathVariable String attraction,
             @PathVariable Long memberId) {
+
         try {
             StampDiaryResDTO result = stampService.getStampDiary(nation, attraction, memberId);
             return new ResponseEntity<>(result,HttpStatus.OK);
@@ -97,11 +100,11 @@ public class StampController {
     }
 
     /**
-     * 36번 api, 명소로 위치 옮겨야 함.
+     * 36번 api
      */
-    @GetMapping("attractions/stamp/{nations}")
-    public ResponseEntity<List<SingupAttractionDTO>> getStampCountry(@PathVariable String nations) {
-        List<SingupAttractionDTO> singupAttractionDTOS = stampService.findStampsCountry(nations);
+    @GetMapping("signup/{nation}")
+    public ResponseEntity<List<SingupAttractionDTO>> getStampCountry(@PathVariable String nation) {
+        List<SingupAttractionDTO> singupAttractionDTOS = stampService.findStampsCountry(nation);
         return ResponseEntity.ok(singupAttractionDTOS);
     }
 }
