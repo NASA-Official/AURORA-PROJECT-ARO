@@ -1,95 +1,79 @@
 package com.nassafy.aro.ui.view.aurora
 
 import android.content.res.Resources
-import android.graphics.Point
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.maps.android.PolyUtil
 import com.nassafy.aro.R
 import com.nassafy.aro.databinding.FragmentAuroraBinding
+import com.nassafy.aro.ui.adapter.BottomSheetFavoriteAdapter
+import com.nassafy.aro.ui.view.BaseFragment
 import com.nassafy.aro.ui.view.dialog.DateHourSelectDialog
 import com.nassafy.aro.ui.view.main.MainActivity
 import com.nassafy.aro.util.*
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.math.sqrt
+
 
 private const val TAG = "AuroraFragment_sdr"
 
-class AuroraFragment : Fragment(), OnMapReadyCallback {
-    private var _binding: FragmentAuroraBinding? = null
-    private val binding get() = _binding!!
+class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding::inflate),
+    OnMapReadyCallback {
+    private val auroraViewModel: AuroraViewModel by viewModels()
     private lateinit var googleMap: GoogleMap
+    private lateinit var favoriteAdapter: BottomSheetFavoriteAdapter
     private var now = LocalDateTime.now()
     private var dateList = arrayListOf<String>()
     private var hourList = arrayListOf<ArrayList<String>>()
-    private val auroraViewModel: AuroraViewModel by viewModels()
     var kpIndex = 3.0F
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentAuroraBinding.inflate(inflater, container, false)
-        return binding.root
-    } // End of onCreateView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment: SupportMapFragment =
             childFragmentManager.findFragmentById(R.id.map_view) as SupportMapFragment
-        mapFragment.getMapAsync {
-            googleMap = it
-            setCustomMapStyle()
-            val polylineOptions = getKpPolylineOptions(kpIndex)
-            val polyline = googleMap.addPolyline(polylineOptions)
-            googleMap.setOnMapClickListener { latLng ->
-                Log.d(TAG, "onViewCreated: 1")
-                auroraViewModel.setClickedLocation(latLng)
-                Log.d(TAG, "onViewCreated: here")
-                if (PolyUtil.isLocationOnPath(latLng, polylineOptions.points, true, 90000000.0)) {
-                    Log.d(TAG, "onViewCreated: yes")
-                    polyline.addInfoWindow(googleMap, latLng, "KP 지수", "$kpIndex")
-                }
+        mapFragment.getMapAsync(this)
 
-
-            }
-        }
-
-        auroraViewModel.clickedLocation.observe(viewLifecycleOwner) { latLng ->
-            googleMap.setOnPolylineClickListener {
-
-                auroraViewModel.polylineClickAction(it, googleMap, latLng, kpIndex)
-
-            }
-        }
-
+//        auroraViewModel.clickedLocation.observe(viewLifecycleOwner) { latLng ->
+//            googleMap.setOnPolylineClickListener {
+//
+//            }
+//        }
         initView()
+
+        initBottomSheetRecyclerView()
+
     } // End of onViewCreated
 
     override fun onMapReady(gMap: GoogleMap) {
         googleMap = gMap
+        googleMap.uiSettings.isMapToolbarEnabled = false
+        setCustomMapStyle()
+        val polylineOptions = getKpPolylineOptions(kpIndex)
+        val polyline = googleMap.addPolyline(polylineOptions)
+
+        googleMap.setOnMapClickListener { latLng ->
+            auroraViewModel.setClickedLocation(latLng)
+
+            // When Clicked Location is on Polyline, Google Map shows Info.
+            val tolerance = getKpPolylineTolerance(googleMap.cameraPosition.zoom)
+            if (PolyUtil.isLocationOnPath(latLng, polylineOptions.points, true, tolerance)) {
+                polyline.addInfoWindow(googleMap, latLng, "KP 지수", "$kpIndex")
+            }
+        } // End of setOnMapClickListener
 
     } // End of onMapReady
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    } // End of onDestroyView
-
 
     private fun initView() {
         dateList = getDateList(now)
@@ -115,13 +99,49 @@ class AuroraFragment : Fragment(), OnMapReadyCallback {
                 childFragmentManager, "DateHourSelectDialog"
             )
         }
-    }
+    } // End of initView
+
+    private fun initBottomSheetRecyclerView() {
+        favoriteAdapter = BottomSheetFavoriteAdapter(itemList)
+
+        val dividerItemDecoration = DividerItemDecoration(
+            requireContext(),
+            LinearLayoutManager(requireContext()).orientation
+        )
+        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.line_divider)!!)
+
+        val behavior = BottomSheetBehavior.from(binding.bottomSheet.root)
+
+        binding.bottomSheet.favoriteRecyclerview.apply {
+            adapter = favoriteAdapter
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            addItemDecoration(dividerItemDecoration)
+            addOnScrollListener(
+                object : RecyclerView.OnScrollListener() {
+                    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                        when (newState) {
+                            RecyclerView.SCROLL_STATE_IDLE -> {
+                                behavior.isDraggable = true
+                            }
+                            RecyclerView.SCROLL_STATE_DRAGGING -> {
+                                behavior.isDraggable = false
+                            }
+                            RecyclerView.SCROLL_STATE_SETTLING -> {
+                                behavior.isDraggable = false
+                            }
+                        }
+                        super.onScrollStateChanged(recyclerView, newState)
+                    } // End of onScrollStateChanged
+                })
+        }
+
+    } // End of initBottomSheetRecyclerView
 
 
     fun setDateTimeLinearLayoutText(date: String, hour: String) {
         binding.dateTextview.text = date
         binding.hourTextview.text = hour
-    }
+    } // End of setDateTimeLinearLayoutText
 
     private fun setCustomMapStyle() {
         try {
@@ -140,4 +160,17 @@ class AuroraFragment : Fragment(), OnMapReadyCallback {
         }
     } // End of setCustomMapStyle
 
-}
+
+    companion object {
+        var item1 = arrayListOf<String>("그리핀도르", "88", "Thunderstorm")
+        var item2 = arrayListOf<String>("슬리데린", "40", "Drizzle")
+        var item3 = arrayListOf<String>("레벤클로", "20", "Rain")
+        var item4 = arrayListOf<String>("후플프푸", "10", "Snow")
+        var item5 = arrayListOf<String>("레이캬비크", "50", "Atmosphere")
+        var item6 = arrayListOf<String>("신도림", "49", "Clear")
+        var item7 = arrayListOf<String>("구미", "100", "Clouds")
+        var itemList =
+            arrayListOf<MutableList<String>>(item1, item2, item3, item4, item5, item6, item7)
+    }
+
+} // End of AuroraFragment
