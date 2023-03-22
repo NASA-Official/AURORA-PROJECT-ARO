@@ -88,12 +88,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
 //                .requestMatchers("/api/hello", "/api/authenticate", "/api/signup").permitAll()
 //                .antMatchers("/api/hello", "/api/authenticate", "/api/signup").permitAll()
-                .antMatchers("/**").permitAll()
-                .antMatchers("/api/**").permitAll()
+//                .antMatchers("/**").permitAll()
+//                .antMatchers("/api/**").permitAll()
                 .antMatchers("/article").permitAll()
                 .antMatchers("/test").permitAll()
                 .antMatchers("/api/members/login").permitAll()
-                .antMatchers("/api/accounts/**").permitAll()
+                .antMatchers("/api/accounts/signup", "/api/accounts/emailcheck", "/api/accounts/codecheck").permitAll()
                 .antMatchers("/api/members/hello").permitAll()
                 .antMatchers("/api/test/**").permitAll()
                 .antMatchers("/api/stamps/nations").permitAll()
@@ -107,7 +107,7 @@ public class SecurityConfig {
 //                .logout() // 로그아웃을 지원하는 메소드
 //                .logoutSuccessUrl("/") // 로그아웃 성공시 이동되는 페이지
 //                .invalidateHttpSession(true) // HTTP 세션을 초기화하는 작업
-            ;
+        ;
         return httpSecurity.build();
     }
 

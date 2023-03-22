@@ -36,7 +36,7 @@ public class StampTest {
         Member member1 = memberRepository.save(Member.builder().password("test").nickname("test").email("test@email.com").build());
 
         //when
-        Integer cnt = stampService.makeStamp(member1.getId());
+        Integer cnt = stampService.makeStamp(member1.getEmail());
         Integer countstamp = stampRepository.findByMemberId(member1.getId()).size();
 
         //then
