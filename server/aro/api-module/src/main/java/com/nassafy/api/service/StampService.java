@@ -27,6 +27,7 @@ import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,6 +43,12 @@ public class StampService {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private StampImageRepository stampImageRepository;
+
+    @Autowired
+    private S3Util s3Util;
+
     /**
      * 회원 가입 시 명소 리스트 제공
      * @param countryName 국가 명
@@ -56,12 +63,6 @@ public class StampService {
         }
         return singupAttractionDTOS;
     }
-
-    @Autowired
-    private StampImageRepository stampImageRepository;
-
-    @Autowired
-    private S3Util s3Util;
 
     public List<MapStampDTO> findStampsByUserAndCountry(Long userId, String countryName) {
         List<Stamp> stamps = stampRepository.findByMemberId(userId);
@@ -108,7 +109,7 @@ public class StampService {
         log.info("start create stamp diary service");
 
         Stamp stamp = stampRepository
-                .findByAttraction_nationAndAttraction_attractionNameAndMemberId(nation, attraction, memberId)
+                .findByAttraction_attractionNameAndMemberId(attraction, memberId)
                 .orElseThrow(IllegalArgumentException::new);
 
         log.info("find stamp success");
@@ -124,18 +125,60 @@ public class StampService {
             StampImage stampImage = StampImage.builder().image(imageUrl).stamp(savedStamp).build();
 
             stampImageRepository.save(stampImage);
-
-            savedStamp.getStampImages().add(stampImage);
         }
         log.info("image upload stop");
     }
 
-    public StampDiaryResDTO getStampDiary(String nation, String attraction, Long memberId) {
+    public StampDiaryResDTO getStampDiary(String nation, String attractionName, Long memberId) {
         Stamp stamp = stampRepository
-                .findByAttraction_nationAndAttraction_attractionNameAndMemberId(nation, attraction, memberId)
+                .findByAttraction_attractionNameAndMemberId(attractionName, memberId)
                 .orElseThrow(IllegalArgumentException::new);
-        List<String> stampImages = stamp.getStampImages().stream().map(StampImage::getImage).collect(Collectors.toList());
+        List<String> stampImages = stampImageRepository.findByStampId(stamp.getId()).stream().map(StampImage::getImage).collect(Collectors.toList());
+        Attraction attraction = attractionRepository.findById(stamp.getAttraction().getId()).orElseThrow(IllegalArgumentException::new);
 
-        return StampDiaryResDTO.builder().images(stampImages).memo(stamp.getMemo()).build();
+        return StampDiaryResDTO.builder()
+                .images(stampImages).memo(stamp.getMemo())
+                .attractionName(attractionName)
+                .description(attraction.getDescription())
+                .nation(nation)
+                .build();
+    }
+
+    public void editStampDiary(String nation, String attractionName, Long memberId,
+                               List<MultipartFile> newImageLists, List<String> deleteImageLists, String memo)
+            throws IOException {
+        Stamp stamp = stampRepository
+                .findByAttraction_attractionNameAndMemberId(attractionName, memberId)
+                .orElseThrow(IllegalArgumentException::new);
+
+        // memo에 변경 사항이 있는 경우 memo 수정
+        if (memo != null) {
+            stamp.editMemo(memo);
+            stampRepository.save(stamp);
+        }
+
+        // 삭제 요청이 들어온 이미지 삭제하기
+        int deleteCnt = 0;
+        for (String url: deleteImageLists) {
+            String result = s3Util.delete(url.substring(48));  // s3에서 이미지 삭제
+
+            if (result.equals("success")) {
+                deleteCnt += 1;
+            }
+
+            StampImage stampImage = stampImageRepository.findByImage(url).orElseThrow(IllegalArgumentException::new);
+            stampImageRepository.delete(stampImage);
+        }
+
+        log.debug(String.valueOf(deleteCnt) + "개의 사진이 삭제되었습니다.");
+
+        // 추가된 이미지 저장하기
+        for (MultipartFile file: newImageLists) {
+            String imageUrl = s3Util.upload(file, "diary/" + memberId.toString() + "/" + nation + "/" + attractionName);
+
+            StampImage stampImage = StampImage.builder().image(imageUrl).stamp(stamp).build();
+
+            stampImageRepository.save(stampImage);
+        }
     }
 }
