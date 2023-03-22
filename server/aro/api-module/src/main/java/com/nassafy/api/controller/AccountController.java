@@ -107,15 +107,30 @@ public class AccountController {
     @PostMapping("/withdrawal")
     public ResponseEntity<?> withdrawal() {
         logger.debug("\t Start withdrawal");
-//        String email = memberLoginRequestDto.getEmail();
-//        String password = memberLoginRequestDto.getPassword();
-//        TokenDto tokenDto = jwtService.login(email, password);
+
         String email = jwtService.getUserEmailFromJwt();
         logger.debug("\t " + email);
 
         memberRepository.deleteByEmail(email);
         refreshTokenRepository.deleteByEmail(email);
         return ResponseEntity.ok("");
+    }
+
+    @Transactional
+    @PostMapping("/changenickname/{nickname}")
+    public ResponseEntity<?> changeNickname(@PathVariable String nickname) {
+        logger.debug("\t Start changeNickname");
+
+        String email = jwtService.getUserEmailFromJwt();
+        logger.debug("\t " + email);
+
+        Member member = memberService.updateUserNickname(email, nickname);
+        if(member == null)
+        {
+            return ResponseEntity.badRequest().body("Error: Member is not exist!!");
+        }
+
+        return ResponseEntity.ok(member);
     }
 
     @PostMapping("/parseInfo")
