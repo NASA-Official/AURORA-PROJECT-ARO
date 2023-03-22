@@ -1,12 +1,18 @@
 package com.nassafy.api.service;
 
 import com.nassafy.api.dto.req.MapAttractionDTO;
+import com.nassafy.core.DTO.MapStampDTO;
 import com.nassafy.core.entity.Attraction;
+import com.nassafy.core.entity.Member;
+import com.nassafy.core.entity.Stamp;
 import com.nassafy.core.respository.AttractionRepository;
+import com.nassafy.core.respository.MemberRepository;
+import com.nassafy.core.respository.StampRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +21,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AttrationService {
     private final AttractionRepository attractionRepository;
+    private final MemberRepository memberRepository;
+    private final StampRepository stampRepository;
 
     public List<String> getAllNation(){
         return attractionRepository.findAllNation();
@@ -36,5 +44,29 @@ public class AttrationService {
             mapAttractionDTOS.add(new MapAttractionDTO(attraction.getId(), attraction.getAttractionName(), attraction.getMapImage(), attraction.getLatitude(), attraction.getLongitude()));
         }
         return mapAttractionDTOS;
+    }
+
+    /**
+     * 30번 api
+     * @param nation 국가 이름
+     * @param memberId 유저 id
+     * @return 스탬프 이미지, 인증여부
+     */
+    public List<MapStampDTO> getStampsFormember(String nation, Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new EntityNotFoundException("회원이 없습니다")
+        );
+        List<Attraction> attractions = attractionRepository.findByNation(nation);
+        List<Stamp> stamps = stampRepository.findByMemberId(memberId);
+        List<MapStampDTO> mapStampDTOS = new ArrayList<>();
+
+        for (Attraction attraction : attractions){
+            for (Stamp stamp : stamps){
+                if (attraction.getAttractionName().equals(stamp.getAttraction().getAttractionName())){
+                    mapStampDTOS.add(new MapStampDTO(attraction.getColorStamp(), stamp.getCertification()));
+                }
+            }
+        }
+        return mapStampDTOS;
     }
 }
