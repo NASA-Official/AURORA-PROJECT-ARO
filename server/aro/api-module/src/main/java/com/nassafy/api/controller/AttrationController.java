@@ -46,7 +46,7 @@ public class AttrationController {
     }
 
     // 21번 api
-    @GetMapping("/attraction/all")
+    @GetMapping("/attractions/all")
     public ResponseEntity<List<MapAttractionDTO>> getAttrationForMap(){
         List<MapAttractionDTO> attractionDTOS = attrationService.getAttrationForMap();
         return ResponseEntity.ok(attractionDTOS);
