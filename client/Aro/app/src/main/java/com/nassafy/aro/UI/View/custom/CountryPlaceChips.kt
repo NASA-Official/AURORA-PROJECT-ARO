@@ -18,14 +18,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.nassafy.aro.data.dto.PlaceItem
 import com.nassafy.aro.data.dto.PlaceTest
+import com.nassafy.aro.ui.view.ServiceViewModel
+import com.nassafy.aro.ui.view.login.viewmodel.LoginActivityViewModel
 
 @Composable
-fun CountryPlaceChips(selectedPlaceList: MutableList<PlaceTest>) {
+fun CountryPlaceChips(selectedPlaceList: List<PlaceItem>, viewModel: ServiceViewModel) {
     LazyRow(
         Modifier
             .wrapContentHeight()
             .fillMaxWidth(1f)
+            .height(50.dp)
     ) {
         //TODO change items
         items(selectedPlaceList) {
@@ -35,7 +39,7 @@ fun CountryPlaceChips(selectedPlaceList: MutableList<PlaceTest>) {
                     .padding(8.dp)
                     .height(40.dp)
             ) {
-                ChipHasCancelButton("Chip ${it.placeName}")
+                ChipHasCancelButton(it, viewModel)
             } // End of RowScope
         } // End of items
     } // End of LazyRows

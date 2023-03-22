@@ -33,9 +33,9 @@ class JoinNicknameFragment : BaseFragment<FragmentJoinNicknameBinding>(FragmentJ
 
     private fun setNextButtonAvailable(isAvailable: Boolean) {
         //TODO ACTIVATE
-//        binding.nextButton.isSelected = isAvailable
-//        binding.nextButton.isEnabled = isAvailable
-//        binding.nextButton.isClickable = isAvailable
+        binding.nextButton.isSelected = isAvailable
+        binding.nextButton.isEnabled = isAvailable
+        binding.nextButton.isClickable = isAvailable
     } // End of setNextButtonAvalable
 
     override fun onResume() {

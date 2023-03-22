@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.JsonObject
 import com.nassafy.aro.data.dto.LoginToken
+import com.nassafy.aro.data.dto.PlaceItem
+import com.nassafy.aro.data.dto.UserTest
 import com.nassafy.aro.domain.api.UserAccessApi
 import com.nassafy.aro.util.NetworkResult
 import javax.inject.Inject
@@ -21,6 +23,24 @@ class UserAccessRepository @Inject constructor(private val userAccessApi: UserAc
 
     private val _countryListLiveData = MutableLiveData<NetworkResult<List<String>>>()
     val countryListLiveData get() = _countryListLiveData
+
+    private val _placeListLiveData = MutableLiveData<NetworkResult<List<PlaceItem>>>()
+    val placeListLiveData get() = _placeListLiveData
+
+    private val _selectedAuraraPlaceListLiveData = MutableLiveData<MutableList<PlaceItem>>()
+    val selectedAuraraPlaceListLiveData get() = _selectedAuraraPlaceListLiveData
+
+    private val _selectedMeteorPlaceListLiveData = MutableLiveData<MutableList<PlaceItem>>()
+    val selectedMeteorPlaceListLiveData get() = _selectedMeteorPlaceListLiveData
+
+    private val _userJoinNetworkResultLiveData = MutableLiveData<NetworkResult<Unit>>()
+    val userJoinNetworkResultLiveData get() = _userJoinNetworkResultLiveData
+
+    init {
+        _placeListLiveData.value = NetworkResult.Loading()
+        _selectedAuraraPlaceListLiveData.value = mutableListOf()
+        _selectedMeteorPlaceListLiveData.value = mutableListOf()
+    }
 
     fun setIsEmailValidatedFalse() {
         _isEmailValidated.postValue(false)
@@ -101,6 +121,56 @@ class UserAccessRepository @Inject constructor(private val userAccessApi: UserAc
             }
         } catch (e: java.lang.Exception) {
             Log.e("ssafy", "getServerCallTest: ${e.message}")
-        }
+        } // End of try-catch
     } // End of getNations
+
+    suspend fun getPlaceList(nation: String) {
+        val response = userAccessApi.getPlaceList(nation)
+        Log.d("ssafy_pcs", response.toString())
+        _placeListLiveData.postValue(NetworkResult.Loading())
+        try {
+            when {
+                response.isSuccessful -> {
+                    _placeListLiveData.postValue(NetworkResult.Success(
+                        response.body()!!
+                    ))
+                }
+                response.errorBody() != null -> _countryListLiveData.postValue(NetworkResult.Error(response.errorBody().toString()))
+            }
+        } catch (e: java.lang.Exception) {
+            Log.e("ssafy", "getServerCallTest: ${e.message}")
+        } // End of try-catch
+    }
+
+    suspend fun join(user: UserTest) {
+        val response = userAccessApi.join(user)
+        Log.d("ssafy_pcs", response.toString())
+        _userJoinNetworkResultLiveData.postValue(NetworkResult.Loading())
+        try {
+            when {
+                response.isSuccessful -> {
+                    _userJoinNetworkResultLiveData.postValue(NetworkResult.Success(response.body()!!))
+                }
+                response.errorBody() != null -> _userJoinNetworkResultLiveData.postValue(NetworkResult.Error(response.errorBody().toString()))
+            }
+        } catch (e: java.lang.Exception) {
+            Log.e("ssafy", "getServerCallTest: ${e.message}")
+        } // End of try-catch
+    }
+
+    suspend fun selectAuroraPlace(place: PlaceItem) {
+        val temp = mutableListOf<PlaceItem>()
+        temp.addAll(_selectedAuraraPlaceListLiveData.value!!)
+        temp.add(place)
+        _selectedAuraraPlaceListLiveData.value = temp
+    }
+
+    fun unSelectAuroraPlace(place: PlaceItem) {
+        val temp = mutableListOf<PlaceItem>()
+        temp.addAll(_selectedAuraraPlaceListLiveData.value!!)
+        temp.remove(place)
+        _selectedAuraraPlaceListLiveData.value = temp
+    }
+
+
 }

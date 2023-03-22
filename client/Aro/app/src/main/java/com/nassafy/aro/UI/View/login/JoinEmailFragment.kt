@@ -31,7 +31,7 @@ class JoinEmailFragment :
 
     override fun onResume() {
         super.onResume()
-//        setNextButtonAvailable(false) // TODO ACITVE
+        setNextButtonAvailable(false) // TODO ACITVE
     } // End of onResume
 
     private fun initObserve() {
@@ -67,14 +67,14 @@ class JoinEmailFragment :
                             setNextButtonAvailable(true)
                         }
                         else -> {
-                            setNextButtonAvailable(true)//TODO DELETE
-//                            setNextButtonAvailable(false) // TODO ACTIVE
+//                            setNextButtonAvailable(true)//TODO DELETE
+                            setNextButtonAvailable(false) // TODO ACTIVE
                         }
                     } // End of when
                 } // End of true
                 false -> {
-                    setNextButtonAvailable(true)//TODO DELETE
-//                    setNextButtonAvailable(false) // TODO ACTIVE
+//                    setNextButtonAvailable(true)//TODO DELETE
+                    setNextButtonAvailable(false) // TODO ACTIVE
                     binding.verificationEmailCodeTextfield.error =
                         getString(R.string.email_validate_number_fail_textview_text)
                 } // End of false

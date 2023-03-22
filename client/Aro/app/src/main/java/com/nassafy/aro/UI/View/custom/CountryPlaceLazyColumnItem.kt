@@ -12,21 +12,29 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nassafy.aro.R
-import com.nassafy.aro.data.dto.PlaceTest
+import com.nassafy.aro.data.dto.PlaceItem
+import com.nassafy.aro.ui.view.ServiceViewModel
+import com.skydoves.landscapist.ImageOptions
+import com.skydoves.landscapist.glide.GlideImage
 
 
 @Composable
-fun CountryPlaceLazyColumnItem(place: PlaceTest, selectedPlaceList: MutableList<PlaceTest>) {
+fun CountryPlaceLazyColumnItem(place: PlaceItem, selectedPlaceList: MutableList<PlaceItem>, viewModel: ServiceViewModel) {
     //TODO change isSelected to DTO's boolean type var
+
     var isSelected by remember { mutableStateOf(false) }
-    //TODO change order to DTO
+
+    DisposableEffect(place) {
+        isSelected = selectedPlaceList.contains(place)
+        onDispose {  }
+    }
     Card(
         shape = RoundedCornerShape(4.dp),
         modifier = Modifier
@@ -37,10 +45,10 @@ fun CountryPlaceLazyColumnItem(place: PlaceTest, selectedPlaceList: MutableList<
                 isSelected = !isSelected
                 when (isSelected) {
                     true -> {
-                        selectedPlaceList.add(place)
+                        viewModel.selectAuroraPlace(place)
                     }
                     false -> {
-                        selectedPlaceList.remove(place)
+                        viewModel.unSelectAuroraPlace(place)
                     }
                 }
             },
@@ -56,13 +64,19 @@ fun CountryPlaceLazyColumnItem(place: PlaceTest, selectedPlaceList: MutableList<
                 modifier = Modifier.fillMaxHeight(0.95f),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Image(
-                    //TODO change painter
-                    painter = painterResource(id = com.nassafy.aro.R.drawable.green_logo),
-                    contentDescription = "A country place stamp",
+                GlideImage( // CoilImage, FrescoImage
+                    imageModel = { place.stamp },
+                    imageOptions = ImageOptions(
+                        contentScale = ContentScale.Crop,
+                        alignment = Alignment.Center
+                    ),
                     modifier = Modifier
-                        .weight(2f)
-                ) // End of Image
+                        .weight(2f),
+                    // shows an error text if fail to load an image.
+                    failure = {
+                        Text(text = "image request failed.")
+                    })
+
                 Column(
                     modifier = Modifier
                         .weight(7f),
@@ -72,7 +86,7 @@ fun CountryPlaceLazyColumnItem(place: PlaceTest, selectedPlaceList: MutableList<
                     //TODO change text
                     Box(contentAlignment = Alignment.Center) {
                         Text(
-                            text = "Place", fontSize = 20.sp,
+                            text = place.placeName, fontSize = 20.sp,
                             color = when (isSelected) {
                                 false -> colorResource(id = R.color.dark_gray)
                                 true -> colorResource(id = R.color.light_dark_gray)
@@ -82,7 +96,7 @@ fun CountryPlaceLazyColumnItem(place: PlaceTest, selectedPlaceList: MutableList<
                     Spacer(modifier = Modifier.height(4.dp))
                     Box(contentAlignment = Alignment.Center) {
                         Text(
-                            text = "description",
+                            text = place.description,
                             fontSize = 12.sp,
                             color = when (isSelected) {
                                 false -> colorResource(id = R.color.dark_gray)
