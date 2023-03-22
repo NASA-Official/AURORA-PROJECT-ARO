@@ -109,9 +109,7 @@ class StampHomeFragment :
         stampViewModel.getCountryTestResponseLiveData.observe(this.viewLifecycleOwner) {
             binding.stampHomeProgressbar.visibility = View.GONE
             binding.stampHomeProgressbar.isVisible = false
-
-            Log.d(TAG, "getCountryTestResponseLiveData: 여기 돌음?")
-
+            
             when (it) {
                 is NetworkResult.Success -> {
                     Log.d(TAG, "getCountryTestResponseLiveData: ${it.data}")

@@ -32,8 +32,7 @@ class StampViewModel @Inject constructor(private val stampRepository: StampRepos
         _countryList.clear()
         _countryList.addAll(newCountryList)
     } // End of setCountryList
-
-
+    
     // ================================= 유저별 국가 스탬프 데이터 가져오기 =================================
     // getUserStampDataGroupByCountry
 

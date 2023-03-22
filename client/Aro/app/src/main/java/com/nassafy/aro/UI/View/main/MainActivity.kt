@@ -1,5 +1,6 @@
 package com.nassafy.aro.ui.view.main
 
+import android.Manifest
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -8,6 +9,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.fragment.NavHostFragment

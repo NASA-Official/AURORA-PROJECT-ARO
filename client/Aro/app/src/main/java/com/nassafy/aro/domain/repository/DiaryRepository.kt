@@ -1,5 +1,6 @@
 package com.nassafy.aro.domain.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nassafy.aro.domain.api.DiaryApi
@@ -25,15 +26,26 @@ class DiaryRepository @Inject constructor(
         get() = _createPlaceDiaryResponseLiveData
 
     suspend fun createPlaceDiary(
+        countryName: String,
         placeName: String,
         userId: Long,
         imageList: List<MultipartBody.Part?>,
         diaryContent: HashMap<String, RequestBody>
 
     ) {
-        val response = diaryApi.createStampDiary(
-            placeName, userId, imageList, diaryContent
+        Log.d(TAG, "일기생성 Repositroy : 여기 까지오나? ")
+
+        val response = headerDiaryApi.createStampDiary(
+            countryName,
+            placeName,
+            userId,
+            imageList,
+            diaryContent
         )
+
+        Log.d(TAG, "일기 생성 response: ${response}")
+        Log.d(TAG, "일기 생성 response: ${response.body()}")
+        Log.d(TAG, "일기 생성 response: ${response.code()}")
 
         _createPlaceDiaryResponseLiveData.postValue(NetworkResult.Loading())
 
