@@ -12,4 +12,5 @@ public interface MemberRepository extends JpaRepository<Member, String> {
 
     Optional<Member> findById(Long id);
 
+    int deleteByEmail(String email);
 }
