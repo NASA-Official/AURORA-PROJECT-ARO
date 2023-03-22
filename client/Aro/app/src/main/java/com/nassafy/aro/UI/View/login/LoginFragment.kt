@@ -117,7 +117,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                     Application.sharedPreferencesUtil.addUserAccessToken(data?.accessToken ?: "" )
                     Application.sharedPreferencesUtil.addUserRefreshToken(data?.refreshToken ?: "" )
 
-                    startMainActivity()
+//                    startMainActivity()
                 }
                 is NetworkResult.Error -> {
 
