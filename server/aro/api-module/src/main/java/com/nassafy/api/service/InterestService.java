@@ -1,6 +1,7 @@
 package com.nassafy.api.service;
 
 import com.amazonaws.services.kms.model.NotFoundException;
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.nassafy.api.dto.req.AttractionInterestOrNotDTO;
 import com.nassafy.core.entity.Attraction;
 import com.nassafy.core.entity.Interest;

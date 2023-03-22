@@ -38,9 +38,6 @@ public class Stamp {
         this.attraction = attraction;
     }
 
-    @OneToMany(mappedBy = "stamp")
-    private List<StampImage> stampImages = new ArrayList<>();
-
     public void editMemo(String memo) {
         this.memo = memo;
     }
