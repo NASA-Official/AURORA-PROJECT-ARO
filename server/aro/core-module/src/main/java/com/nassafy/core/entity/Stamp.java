@@ -7,10 +7,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 public class Stamp {
     @Id
@@ -37,5 +38,12 @@ public class Stamp {
         this.memo = memo;
         this.member = member;
         this.attraction = attraction;
+    }
+
+    @OneToMany(mappedBy = "stamp")
+    private List<StampImage> stampImages = new ArrayList<>();
+
+    public void editMemo(String memo) {
+        this.memo = memo;
     }
 }
