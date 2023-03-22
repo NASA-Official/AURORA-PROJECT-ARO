@@ -47,6 +47,12 @@ public class AccountController {
 
     private Map<String, String> emailCode = new HashMap<>();
 
+    /***
+     * API 4
+     * @param emailCheckDto
+     * @return
+     * @throws Exception
+     */
     @PostMapping("/emailcheck")
     public ResponseEntity<?> emailCheck(@RequestBody EmailCheckDto emailCheckDto) throws Exception {
         String email = emailCheckDto.getEmail();
@@ -61,6 +67,11 @@ public class AccountController {
         return ResponseEntity.ok("email is not used!");
     }
 
+    /***
+     * API 5
+     * @param codeCheckDto
+     * @return
+     */
     @PostMapping("/codecheck")
     public ResponseEntity<?> codeCheck(@RequestBody CodeCheckDto codeCheckDto) {
         String email = codeCheckDto.getEmail();
@@ -77,6 +88,11 @@ public class AccountController {
         return ResponseEntity.ok("code is same!!!");
     }
 
+    /***
+     * API 3
+     * @param signupReqDto
+     * @return
+     */
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody SignupReqDto signupReqDto) {
         logger.debug("\t Start singup");
@@ -86,6 +102,11 @@ public class AccountController {
         return ResponseEntity.ok("singup is success!!!");
     }
 
+    /***
+     * API 2
+     * @param memberLoginRequestDto
+     * @return memberLoginResDto
+     */
     @PostMapping("/memberInfo")
     public ResponseEntity<?> memberInfo(@RequestBody MemberLoginReqDto memberLoginRequestDto) {
         logger.debug("\t Start login");
@@ -103,6 +124,10 @@ public class AccountController {
         return ResponseEntity.ok(memberLoginResDto);
     }
 
+    /***
+     * API 6
+     * @return
+     */
     @Transactional
     @PostMapping("/withdrawal")
     public ResponseEntity<?> withdrawal() {
@@ -116,10 +141,15 @@ public class AccountController {
         return ResponseEntity.ok("");
     }
 
+    /***
+     * API 7
+     * @param nickname
+     * @return
+     */
     @Transactional
     @PostMapping("/changenickname/{nickname}")
     public ResponseEntity<?> changeNickname(@PathVariable String nickname) {
-        logger.debug("\t Start changeNickname");
+        logger.debug("\t Start changeNickname : " + nickname);
 
         String email = jwtService.getUserEmailFromJwt();
         logger.debug("\t " + email);
@@ -130,7 +160,7 @@ public class AccountController {
             return ResponseEntity.badRequest().body("Error: Member is not exist!!");
         }
 
-        return ResponseEntity.ok(member);
+        return ResponseEntity.ok(member.getNickname());
     }
 
     @PostMapping("/parseInfo")
