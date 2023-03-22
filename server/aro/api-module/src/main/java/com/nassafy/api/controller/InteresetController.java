@@ -25,10 +25,11 @@ public class InteresetController {
         return ResponseEntity.ok("success");
     }
 
-//    @GetMapping("stampas/interests/{nationName}/{memberId}")
-//    public ResponseEntity<AttractionInterestOrNotDTO> getAttreactionInterestOrNot(@PathVariable String nationName, @PathVariable Long memberId) {
-//
-//    }
+    @GetMapping("stamps/interests/{nationName}/{memberId}")
+    public ResponseEntity<List<AttractionInterestOrNotDTO>> getAttreactionInterestOrNot(@PathVariable String nationName, @PathVariable Long memberId) {
+        List<AttractionInterestOrNotDTO> attractionInterestOrNotDTOList = interestService.getAttractionInterestOrNot(nationName,memberId);
+        return ResponseEntity.ok(attractionInterestOrNotDTOList);
+    }
 
 //    @GetMapping("stamps/{memberId}")
 //    public ResponseEntity<List<Interest>> findInterest(@RequestParam Long memberId) {
