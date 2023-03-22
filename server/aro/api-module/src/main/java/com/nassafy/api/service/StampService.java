@@ -13,6 +13,8 @@ import com.nassafy.core.respository.AttractionRepository;
 import com.nassafy.core.respository.MemberRepository;
 import com.nassafy.core.respository.StampImageRepository;
 import com.nassafy.core.respository.StampRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class StampService {
+    private static final Logger logger = LoggerFactory.getLogger(StampService.class);
     @Autowired
     private StampRepository stampRepository;
 
@@ -73,13 +76,14 @@ public class StampService {
 
     // 자동으로 데이터를 추가하는 로직 회원 가입 이후 로직에서 호출 됨
     @Transactional
-    public Integer makeStamp(Long memberId){
-        Member member = memberRepository.findById(memberId).
+    public Integer makeStamp(String memberEmail){
+        Member member = memberRepository.findByEmail(memberEmail).
                 orElseThrow(
                         () -> new EntityNotFoundException("회원이 없습니다.")
                 );
         List<Attraction> attractions = attractionRepository.findAll();
         for (Attraction attraction : attractions){
+
             Stamp stamp = Stamp.builder()
                     .member(member)
                     .attraction(attraction)
