@@ -74,8 +74,17 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+<!--    <include-->
+<!--        layout="@layout/fragment_aurora_bottom_sheet"-->
+<!--        android:id="@+id/bottom_sheet"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:paddingTop="?attr/actionBarSize"-->
+<!--        app:behavior_hideable="false"-->
+<!--        app:behavior_peekHeight="96dp"-->
+<!--        app:layout_behavior="@string/bottom_sheet_behavior" />-->
     <include
-        layout="@layout/fragment_aurora_bottom_sheet"
-        android:id="@+id/bottom_sheet" />
+        android:id="@+id/bottom_sheet"
+        layout="@layout/fragment_aurora_bottom_sheet"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
