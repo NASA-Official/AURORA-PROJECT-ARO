@@ -22,11 +22,14 @@ public class Stamp {
     @Column(columnDefinition = "TEXT")
     private String memo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy ="stamp", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    private List<StampImage> stampImage;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @JoinColumn(name = "attraction_id")
     private Attraction attraction;
 
