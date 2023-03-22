@@ -7,6 +7,7 @@ import com.nassafy.api.dto.req.SignupReqDto;
 import com.nassafy.api.dto.res.MemberLoginResDto;
 import com.nassafy.api.dto.res.SignupResDto;
 import com.nassafy.api.service.EmailService;
+import com.nassafy.api.service.JwtService;
 import com.nassafy.api.service.MemberService;
 import com.nassafy.api.service.StampService;
 import com.nassafy.core.entity.Member;
@@ -35,6 +36,7 @@ import java.util.Optional;
 @RequestMapping("/api/accounts")
 public class AccountController {
     private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
+    private final JwtService jwtService;
     private final MemberService memberService;
     private final EmailService emailService;
     private final StampService stampService;
@@ -102,28 +104,28 @@ public class AccountController {
     }
 
     @Transactional
-    @PostMapping("/withdrawal/{email}")
-    public ResponseEntity<?> withdrawal(@PathVariable String email) {
+    @PostMapping("/withdrawal")
+    public ResponseEntity<?> withdrawal() {
         logger.debug("\t Start withdrawal");
 //        String email = memberLoginRequestDto.getEmail();
 //        String password = memberLoginRequestDto.getPassword();
 //        TokenDto tokenDto = jwtService.login(email, password);
+        String email = jwtService.getUserEmailFromJwt();
+        logger.debug("\t " + email);
 
         memberRepository.deleteByEmail(email);
         refreshTokenRepository.deleteByEmail(email);
         return ResponseEntity.ok("");
     }
 
-    @PostMapping("/test")
-    public ResponseEntity<?> test() {
-        logger.debug("\t Start test");
+    @PostMapping("/parseInfo")
+    public ResponseEntity<?> parseInfo() {
+        logger.debug("\t Start parseInfo");
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
+        String email = jwtService.getUserEmailFromJwt();
+        logger.debug("\t " + email);
 
-        logger.debug("\t Member : " + user );
-
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(email);
     }
 
 }
