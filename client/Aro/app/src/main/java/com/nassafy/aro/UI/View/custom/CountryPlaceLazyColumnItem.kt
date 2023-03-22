@@ -19,10 +19,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nassafy.aro.R
+import com.nassafy.aro.data.dto.PlaceTest
 
 
 @Composable
-fun CountryPlaceLazyColumnItem(order: Int) {
+fun CountryPlaceLazyColumnItem(place: PlaceTest, selectedPlaceList: MutableList<PlaceTest>) {
     //TODO change isSelected to DTO's boolean type var
     var isSelected by remember { mutableStateOf(false) }
     //TODO change order to DTO
@@ -34,6 +35,14 @@ fun CountryPlaceLazyColumnItem(order: Int) {
             .height(100.dp)
             .clickable {
                 isSelected = !isSelected
+                when (isSelected) {
+                    true -> {
+                        selectedPlaceList.add(place)
+                    }
+                    false -> {
+                        selectedPlaceList.remove(place)
+                    }
+                }
             },
         colors = CardDefaults.cardColors(
             containerColor = Color.Transparent,
@@ -63,7 +72,7 @@ fun CountryPlaceLazyColumnItem(order: Int) {
                     //TODO change text
                     Box(contentAlignment = Alignment.Center) {
                         Text(
-                            text = "Place $order", fontSize = 20.sp,
+                            text = "Place", fontSize = 20.sp,
                             color = when (isSelected) {
                                 false -> colorResource(id = R.color.dark_gray)
                                 true -> colorResource(id = R.color.light_dark_gray)
@@ -73,7 +82,7 @@ fun CountryPlaceLazyColumnItem(order: Int) {
                     Spacer(modifier = Modifier.height(4.dp))
                     Box(contentAlignment = Alignment.Center) {
                         Text(
-                            text = "description $order",
+                            text = "description",
                             fontSize = 12.sp,
                             color = when (isSelected) {
                                 false -> colorResource(id = R.color.dark_gray)
@@ -101,8 +110,8 @@ fun CountryPlaceLazyColumnItem(order: Int) {
     } // End of Card
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultCountryPlaceLazyColumnItemPreview() {
-    CountryPlaceLazyColumnItem(order = 1)
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun DefaultCountryPlaceLazyColumnItemPreview() {
+//    CountryPlaceLazyColumnItem(order = 1)
+//}

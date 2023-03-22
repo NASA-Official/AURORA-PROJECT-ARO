@@ -7,7 +7,6 @@ import com.google.gson.JsonObject
 import com.nassafy.aro.data.dto.LoginToken
 import com.nassafy.aro.domain.api.UserAccessApi
 import com.nassafy.aro.util.NetworkResult
-import com.navercorp.nid.oauth.NidOAuthPreferencesManager.code
 import javax.inject.Inject
 
 class UserAccessRepository @Inject constructor(private val userAccessApi: UserAccessApi) { // End of UserAccessRepository
@@ -19,6 +18,9 @@ class UserAccessRepository @Inject constructor(private val userAccessApi: UserAc
     val isEmailValidated get() = _isEmailValidated
     private val _isEmailAuthCodeValidated = MutableLiveData<Boolean>()
     val isEmailAuthCodeValidated get() = _isEmailAuthCodeValidated
+
+    private val _countryListLiveData = MutableLiveData<NetworkResult<List<String>>>()
+    val countryListLiveData get() = _countryListLiveData
 
     fun setIsEmailValidatedFalse() {
         _isEmailValidated.postValue(false)
@@ -84,4 +86,21 @@ class UserAccessRepository @Inject constructor(private val userAccessApi: UserAc
             Log.e("ssafy", "getServerCallTest: ${e.message}")
         } // End of try-catch
     } // End of validateEmail
+
+    suspend fun getCountryList() {
+        val response = userAccessApi.getCountryList()
+        _countryListLiveData.postValue(NetworkResult.Loading())
+        try {
+            when {
+                response.isSuccessful -> {
+                    _countryListLiveData.postValue(NetworkResult.Success(
+                        response.body()!!
+                    ))
+                }
+                response.errorBody() != null -> _countryListLiveData.postValue(NetworkResult.Error(response.errorBody().toString()))
+            }
+        } catch (e: java.lang.Exception) {
+            Log.e("ssafy", "getServerCallTest: ${e.message}")
+        }
+    } // End of getNations
 }

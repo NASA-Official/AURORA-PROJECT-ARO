@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nassafy.aro.R
@@ -20,7 +21,7 @@ import kotlinx.coroutines.*
 class JoinEmailFragment :
     BaseFragment<FragmentJoinEmailBinding>(FragmentJoinEmailBinding::inflate) {
 
-    private val loginActivityViewModel: LoginActivityViewModel by viewModels()
+    private val loginActivityViewModel: LoginActivityViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -30,7 +31,7 @@ class JoinEmailFragment :
 
     override fun onResume() {
         super.onResume()
-        setNextButtonAvailable(false) // TODO ACITVE
+//        setNextButtonAvailable(false) // TODO ACITVE
     } // End of onResume
 
     private fun initObserve() {
@@ -66,14 +67,14 @@ class JoinEmailFragment :
                             setNextButtonAvailable(true)
                         }
                         else -> {
-//                            setNextButtonAvailable(true)//TODO DELETE
-                            setNextButtonAvailable(false) // TODO ACTIVE
+                            setNextButtonAvailable(true)//TODO DELETE
+//                            setNextButtonAvailable(false) // TODO ACTIVE
                         }
                     } // End of when
                 } // End of true
                 false -> {
-//                    setNextButtonAvailable(true)//TODO DELETE
-                    setNextButtonAvailable(false) // TODO ACTIVE
+                    setNextButtonAvailable(true)//TODO DELETE
+//                    setNextButtonAvailable(false) // TODO ACTIVE
                     binding.verificationEmailCodeTextfield.error =
                         getString(R.string.email_validate_number_fail_textview_text)
                 } // End of false

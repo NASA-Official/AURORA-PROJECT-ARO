@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.nassafy.aro.R
@@ -14,8 +16,13 @@ import com.nassafy.aro.databinding.FragmentJoinNicknameBinding
 import com.nassafy.aro.ui.view.BaseFragment
 import com.nassafy.aro.ui.view.custom.AroServiceSelectFragmentArgs
 import com.nassafy.aro.ui.view.custom.AroServiceSelectFragmentDirections
+import com.nassafy.aro.ui.view.login.viewmodel.LoginActivityViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class JoinNicknameFragment : BaseFragment<FragmentJoinNicknameBinding>(FragmentJoinNicknameBinding::inflate) {
+
+    private val loginActivityViewModel: LoginActivityViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -24,10 +31,22 @@ class JoinNicknameFragment : BaseFragment<FragmentJoinNicknameBinding>(FragmentJ
 
     }
 
+    private fun setNextButtonAvailable(isAvailable: Boolean) {
+        //TODO ACTIVATE
+//        binding.nextButton.isSelected = isAvailable
+//        binding.nextButton.isEnabled = isAvailable
+//        binding.nextButton.isClickable = isAvailable
+    } // End of setNextButtonAvalable
+
+    override fun onResume() {
+        super.onResume()
+    }
+
     private fun initView() {
 
         binding.nextButton.setOnClickListener {
-            findNavController().navigate(R.id.action_joinNicknameFragment_to_aroServiceSelectFragment)
+            loginActivityViewModel.nickname = binding.joinNicknameIdTextfield.editText?.text.toString()
+            findNavController().navigate(R.id.action_joinNicknameFragment_to_joinServiceFragment)
         }
         binding.cancelButton.setOnClickListener {
             findNavController().popBackStack()
@@ -37,14 +56,19 @@ class JoinNicknameFragment : BaseFragment<FragmentJoinNicknameBinding>(FragmentJ
                 override fun beforeTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {}
                 override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {}
                 override fun afterTextChanged(text: Editable?) {
-                    when (text.toString().length in 3..10) {
+                    var result: Boolean = when (text.toString().length in 3..10 || text.toString().isEmpty()) {
                         true -> {
-                            error = ""
+                            error = null
+                            true
                         } // End of case true
                         false -> {
-                            error = getString(R.string.password_validate_fail_textview_text)
+                            error = getString(R.string.my_page_nickname_modify_error_dialog_inform_textview_text)
+                            false
                         } // End of case false
                     } // End of when
+                    if (text.toString().isEmpty())
+                        result = false
+                    setNextButtonAvailable(result)
                 } // End of afterTextChanged
             }) // End of addTextChangedListener
         }
