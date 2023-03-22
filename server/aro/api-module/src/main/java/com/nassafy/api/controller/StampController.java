@@ -39,6 +39,11 @@ public class StampController {
             @PathVariable String attraction,
             @PathVariable Long memberId) {
 
+        log.info("start create stamp diary");
+        log.info("memo:" + memo);
+        log.info("file size: " + files.size());
+        log.info(String.valueOf(files.getClass()));
+
         try {
             stampService.createStampDiary(nation, attraction, memberId,
                     StampDiaryReqDTO.builder().memo(memo).files(files).build());
