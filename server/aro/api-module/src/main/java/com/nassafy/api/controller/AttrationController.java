@@ -1,5 +1,6 @@
 package com.nassafy.api.controller;
 
+import com.nassafy.api.dto.req.MapAttractionDTO;
 import com.nassafy.api.service.AttrationService;
 import com.nassafy.core.DTO.MapStampDTO;
 import com.nassafy.core.entity.Attraction;
@@ -42,6 +43,13 @@ public class AttrationController {
     public ResponseEntity<List<Attraction>> getAttrationsByNation(@PathVariable String nation){
         List<Attraction> attractionList = attrationService.getAttractionByNation(nation);
         return ResponseEntity.ok(attractionList);
+    }
+
+    // 21번 api
+    @GetMapping("/attractions/all")
+    public ResponseEntity<List<MapAttractionDTO>> getAttrationForMap(){
+        List<MapAttractionDTO> attractionDTOS = attrationService.getAttrationForMap();
+        return ResponseEntity.ok(attractionDTOS);
     }
 
     // api test용 코드입니다. 클라용

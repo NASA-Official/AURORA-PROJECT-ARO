@@ -96,7 +96,7 @@ public class SecurityConfig {
                 .antMatchers("/api/accounts/signup", "/api/accounts/emailcheck", "/api/accounts/codecheck").permitAll()
                 .antMatchers("/api/members/hello").permitAll()
                 .antMatchers("/api/test/**").permitAll()
-                .antMatchers("/api/stamps/nations").permitAll()
+                .antMatchers("/api/stamps/**").permitAll()
 //                .requestMatchers(PathRequest.toH2Console()).permitAll()
                 .anyRequest().authenticated()
 
@@ -107,7 +107,7 @@ public class SecurityConfig {
 //                .logout() // 로그아웃을 지원하는 메소드
 //                .logoutSuccessUrl("/") // 로그아웃 성공시 이동되는 페이지
 //                .invalidateHttpSession(true) // HTTP 세션을 초기화하는 작업
-            ;
+        ;
         return httpSecurity.build();
     }
 
