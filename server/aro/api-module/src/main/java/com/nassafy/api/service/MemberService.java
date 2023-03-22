@@ -11,6 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
 public class MemberService {
@@ -40,6 +42,27 @@ public class MemberService {
         member.getRoles().add("USER");
         logger.debug("\t member " + member);
         memberRepository.save(member);
+
+        return member;
+    }
+
+    public Member updateUserNickname(String email, String nickname){
+        logger.debug("\t updateUserNickname");
+
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+        logger.debug("\t findByEmail : " + optionalMember.get());
+        if(optionalMember.isEmpty()){
+            return null;
+        }
+        Member member = optionalMember.get();
+        logger.debug("\t before update member : " + member);
+
+
+        member.setNickname(nickname);
+        memberRepository.save(member);
+
+        member = memberRepository.findByEmail(email).get();
+        logger.debug("\t after update member : " + member);
 
         return member;
     }
