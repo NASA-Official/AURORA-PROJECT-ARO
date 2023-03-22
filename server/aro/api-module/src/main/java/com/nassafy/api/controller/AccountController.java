@@ -8,6 +8,7 @@ import com.nassafy.api.dto.res.MemberLoginResDto;
 import com.nassafy.api.dto.res.SignupResDto;
 import com.nassafy.api.service.EmailService;
 import com.nassafy.api.service.MemberService;
+import com.nassafy.api.service.StampService;
 import com.nassafy.core.entity.Member;
 import com.nassafy.core.respository.MemberRepository;
 import com.nassafy.core.respository.RefreshTokenRepository;
@@ -36,6 +37,7 @@ public class AccountController {
     private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
     private final MemberService memberService;
     private final EmailService emailService;
+    private final StampService stampService;
     private final MemberRepository memberRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
@@ -77,6 +79,7 @@ public class AccountController {
     public ResponseEntity<?> signup(@RequestBody SignupReqDto signupReqDto) {
         logger.debug("\t Start singup");
         memberService.create(signupReqDto);
+        stampService.makeStamp(signupReqDto.getEmail());
 
         return ResponseEntity.ok("singup is success!!!");
     }
