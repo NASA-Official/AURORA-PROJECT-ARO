@@ -32,8 +32,8 @@ fun getKpPolylineOptions(kpIndex: Float) : PolylineOptions {
               LatLng(39.0, -100.0),
               LatLng(38.0, -80.0)
           )
-              .color(Color.BLUE)
-              .width(10.0F)
+              .color(Color.RED)
+              .width(12.0F)
               .clickable(false)
               .geodesic(true)
               .zIndex(-1.0F)
@@ -60,8 +60,8 @@ fun getKpPolylineOptions(kpIndex: Float) : PolylineOptions {
               LatLng(42.5, -100.0),
               LatLng(42.0, -80.0),
               )
-              .color(Color.BLUE)
-              .width(10.0F)
+              .color(Color.YELLOW)
+              .width(12.0F)
               .clickable(false)
               .geodesic(true)
               .zIndex(-1.0F)
@@ -88,8 +88,8 @@ fun getKpPolylineOptions(kpIndex: Float) : PolylineOptions {
               LatLng(47.0, -100.0),
               LatLng(46.0, -80.0),
           )
-              .color(Color.BLUE)
-              .width(10.0F)
+              .color(Color.GREEN)
+              .width(12.0F)
               .clickable(false)
               .geodesic(true)
               .zIndex(-1.0F)
@@ -116,7 +116,7 @@ fun getKpPolylineOptions(kpIndex: Float) : PolylineOptions {
               .add(LatLng(51.5, -100.0))
               .add(LatLng(50.1, -80.0))
               .color(Color.BLUE)
-              .width(10.0F)
+              .width(12.0F)
               .clickable(false)
               .geodesic(true)
               .zIndex(-1.0F)
@@ -124,3 +124,17 @@ fun getKpPolylineOptions(kpIndex: Float) : PolylineOptions {
     }
     return polylineOptions
 } // End of getKpPolylineOptions
+
+fun getKpPolylineTolerance(zoom: Float) : Double {
+    var tolerance : Double = 0.0
+    tolerance = when {
+        zoom <= 2 -> {
+            250000.0
+        }
+        else -> {
+            val divide = (zoom - 2.0F) * 5
+            (250000.0F / divide).toDouble()
+        }
+    }
+    return tolerance
+} // End of getKpPolylineTolerance

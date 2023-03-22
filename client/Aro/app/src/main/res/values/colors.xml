@@ -49,4 +49,10 @@
 
     <color name="white">#FFFFFF</color>
 
+    <!-- Bottom Sheet RecyclerView Item -->
+    <color name="over_70">#FF5757</color>
+    <color name="over_50">#FFA944</color>
+    <color name="under_50">#ADADAD</color>
+    <color name="under_20">#738A6B</color>
+
 </resources>

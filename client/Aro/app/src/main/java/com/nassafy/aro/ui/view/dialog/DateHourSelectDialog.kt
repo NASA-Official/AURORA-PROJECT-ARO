@@ -16,6 +16,7 @@ import com.nassafy.aro.ui.adapter.DateHourSelectAdapter
 import com.nassafy.aro.ui.view.aurora.AuroraFragment
 
 private const val TAG = "DateHourSelectDialog_sdr"
+
 class DateHourSelectDialog(
     var dateList: ArrayList<String>,
     var hourList: ArrayList<ArrayList<String>>
@@ -23,8 +24,8 @@ class DateHourSelectDialog(
     DialogFragment() {
     private var _binding: DialogDateHourSelectBinding? = null
     private val binding get() = _binding!!
-    private lateinit var dateAdapter : DateHourSelectAdapter
-    private lateinit var hourAdapter : DateHourSelectAdapter
+    private lateinit var dateAdapter: DateHourSelectAdapter
+    private lateinit var hourAdapter: DateHourSelectAdapter
 
 
     override fun onCreateView(
@@ -49,7 +50,10 @@ class DateHourSelectDialog(
             val dateIdx = binding.dateRecyclerview.getSelectedPosition()
             val hourIdx = binding.hourRecyclerview.getSelectedPosition()
             val auroraFragment = parentFragment as AuroraFragment
-//            auroraFragment.setDateTimeLinearLayoutText(dateList[dateIdx], hourList[dateIdx][hourIdx])
+            auroraFragment.setDateTimeLinearLayoutText(
+                dateList[dateIdx],
+                hourList[dateIdx][hourIdx]
+            )
             dismiss()
         }
     } // End of onViewCreated
@@ -81,6 +85,4 @@ class DateHourSelectDialog(
             setOrientation(RecyclerView.VERTICAL)
         }
     } // End of initRecyclerView
-
-
-}
+} // End of DateHourSelectDialog

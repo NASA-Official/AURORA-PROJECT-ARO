@@ -40,7 +40,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                 "" -> {}
                 else -> { //토큰이 있으면
                     // TODO 자동로그인
-//                    startMainActivity()
+                    startMainActivity()
                 } // End of else
             } // End of when
         } // End of apply
@@ -117,7 +117,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                     Application.sharedPreferencesUtil.addUserAccessToken(data?.accessToken ?: "" )
                     Application.sharedPreferencesUtil.addUserRefreshToken(data?.refreshToken ?: "" )
 
-                    startMainActivity()
+//                    startMainActivity()
                 }
                 is NetworkResult.Error -> {
 
