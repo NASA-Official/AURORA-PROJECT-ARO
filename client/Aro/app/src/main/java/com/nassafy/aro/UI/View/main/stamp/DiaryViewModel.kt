@@ -1,7 +1,6 @@
 package com.nassafy.aro.ui.view.main.stamp
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +11,7 @@ import com.nassafy.aro.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.util.*
@@ -29,6 +29,11 @@ class DiaryViewModel @Inject constructor(private val diaryRepository: DiaryRepos
     val diaryData: Diary
         get() = _diaryData
 
+    // 유저가 선택한 이미지
+    private val _selectImageLiveData = MutableLiveData<Uri>()
+    val selectImageLiveData: LiveData<Uri>
+        get() = _selectImageLiveData
+
 
     // 선택한 이미지 리스트
     private val _selectImageListLiveData = MutableLiveData<LinkedList<Uri>>()
@@ -43,6 +48,17 @@ class DiaryViewModel @Inject constructor(private val diaryRepository: DiaryRepos
         selectImageListLiveData.value!!.removeAt(index)
     }
 
+    // ===================================== 명소별 유저 diary 데이터 가져오기 =====================================
+    val getPlaceDiaryUserDataResponseLiveData: LiveData<NetworkResult<Diary>>
+        get() = diaryRepository.getPlaceDiaryUserDataResponseLiveData
+
+    suspend fun getPlaceDiaryUserData(
+        countryName: String, placeName: String, userId: Long
+    ) {
+        viewModelScope.launch {
+            diaryRepository.getPlaceDiaryUserData(countryName, placeName, userId)
+        }
+    }
 
     // ===================================== 명소별 다이어리 생성 =====================================
     val createPlaceDiaryResponseLiveData: LiveData<NetworkResult<Int>>
@@ -52,21 +68,18 @@ class DiaryViewModel @Inject constructor(private val diaryRepository: DiaryRepos
         countryName: String,
         placeName: String,
         userId: Long,
+        deleteImageList: List<String>,
+        newImageList: List<MultipartBody.Part?>,
+        memo: String
     ) {
-        val requestHashMap: HashMap<String, RequestBody> = HashMap()
-
-        requestHashMap["memo"] =
-            diaryData.diaryContent.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-
-        Log.d(
-            TAG,
-            "일기 생성 ViewModel : $countryName, $placeName, $userId, ${diaryData.imageList}, $requestHashMap"
-        )
+        var requestHashMap: HashMap<String, RequestBody> = HashMap()
+        requestHashMap["memo"] = memo.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        requestHashMap["deleteImageList"] = deleteImageList.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull())
 
 
         viewModelScope.launch {
             diaryRepository.createPlaceDiary(
-                countryName, placeName, userId, diaryData.imageList, requestHashMap
+                countryName, placeName, userId, newImageList, requestHashMap
             )
         }
     } // End of createPlaceDiary

@@ -20,7 +20,7 @@ class SharedPreferencesUtil(context: Context) {
     fun addUserAccessToken(access_token: String) {
         val editor = preferences.edit()
         val temp =
-            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzZGZzZGZAbmFzc2FmeS5jb20iLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjc5NTUxMDE1fQ.5GTA3sBRLS34z5-k-a-VlbUKps_cKRMkaxkp0ZZz6vc"
+            "Bearer $to"
         editor.putString(ACCESS_TOKEN, temp)
         editor.apply()
     } // End of addUserAccessToken
@@ -33,5 +33,8 @@ class SharedPreferencesUtil(context: Context) {
         const val SHARED_PREFERENCES_NAME = "aro_preference"
         const val ACCESS_TOKEN = "access_token"
         const val REFRESH_TOKEN = "refresh_token"
+
+        const val to =
+            "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzZGZzZGZAbmFzc2FmeS5jb20iLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjc5NTcxMjY5fQ.70HGB3z02NDLWo0oLBMFoz_R1thwp22PMcC0wKzCMac"
     }
 } // End of SharedPreferencesUtil class
