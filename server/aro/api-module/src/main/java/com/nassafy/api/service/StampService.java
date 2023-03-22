@@ -1,5 +1,6 @@
 package com.nassafy.api.service;
 
+import com.nassafy.api.dto.req.SingupAttractionDTO;
 import com.nassafy.api.dto.req.StampDiaryReqDTO;
 import com.nassafy.api.dto.res.StampDiaryResDTO;
 import com.nassafy.api.util.S3Util;
@@ -18,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,15 +49,19 @@ public class StampService {
     @Autowired
     private S3Util s3Util;
 
-    // 회원 가입 때 스탬프 조회
-    public List<RegisterStampDTO> findStampsCountry(String countryName) {
+    /**
+     * 회원 가입 시 명소 리스트 제공
+     * @param countryName 국가 명
+     * @return 명소 id, 명소 명, 스탬프 이미지, 명소 설명
+     */
+    public List<SingupAttractionDTO> findStampsCountry(String countryName) {
         List<Attraction> attractions = attractionRepository.findByNation(countryName);
-        List<RegisterStampDTO> registerStampDTOS = new ArrayList<>();
+        List<SingupAttractionDTO> singupAttractionDTOS = new ArrayList<>();
 
         for (Attraction attraction : attractions) {
-            registerStampDTOS.add(new RegisterStampDTO(attraction.getColorStamp(), attraction.getAttractionName(), attraction.getDescription()));
+            singupAttractionDTOS.add(new SingupAttractionDTO(attraction.getId(), attraction.getAttractionName(), attraction.getColorStamp() ,attraction.getDescription()));
         }
-        return registerStampDTOS;
+        return singupAttractionDTOS;
     }
 
     public List<MapStampDTO> findStampsByUserAndCountry(Long userId, String countryName) {
@@ -100,14 +106,19 @@ public class StampService {
 
     public void createStampDiary(String nation, String attraction, Long memberId, StampDiaryReqDTO stampDiaryReqDTO) throws IllegalArgumentException, IOException {
 
+        log.info("start create stamp diary service");
+
         Stamp stamp = stampRepository
                 .findByAttraction_attractionNameAndMemberId(attraction, memberId)
                 .orElseThrow(IllegalArgumentException::new);
+
+        log.info("find stamp success");
 
         stamp.editMemo(stampDiaryReqDTO.getMemo());
 
         Stamp savedStamp = stampRepository.save(stamp);
 
+        log.info("image upload start");
         for (MultipartFile file: stampDiaryReqDTO.getFiles()) {
             String imageUrl = s3Util.upload(file, "diary/" + memberId.toString() + "/" + nation + "/" + attraction);
 
@@ -115,6 +126,7 @@ public class StampService {
 
             stampImageRepository.save(stampImage);
         }
+        log.info("image upload stop");
     }
 
     public StampDiaryResDTO getStampDiary(String nation, String attractionName, Long memberId) {

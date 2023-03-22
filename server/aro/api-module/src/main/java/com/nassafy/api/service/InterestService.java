@@ -1,5 +1,6 @@
 package com.nassafy.api.service;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.nassafy.core.entity.Attraction;
 import com.nassafy.core.entity.Interest;
 import com.nassafy.core.entity.Member;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 

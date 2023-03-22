@@ -1,9 +1,9 @@
 package com.nassafy.api.controller;
 
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nassafy.api.dto.req.SingupAttractionDTO;
 import com.nassafy.api.dto.req.StampDiaryReqDTO;
 import com.nassafy.api.dto.res.StampDiaryResDTO;
 import com.nassafy.api.service.StampService;
@@ -42,6 +42,11 @@ public class StampController {
             @PathVariable String nation,
             @PathVariable String attraction,
             @PathVariable Long memberId) {
+
+        log.info("start create stamp diary");
+        log.info("memo:" + memo);
+        log.info("file size: " + files.size());
+        log.info(String.valueOf(files.getClass()));
 
         try {
             stampService.createStampDiary(nation, attraction, memberId,
@@ -91,9 +96,12 @@ public class StampController {
         }
     }
 
-    @GetMapping("accounts/{nations}/attrations")
-    public ResponseEntity<List<RegisterStampDTO>> getStampCountry(@PathVariable String nations) {
-        List<RegisterStampDTO> registerStampDTOS = stampService.findStampsCountry(nations);
-        return ResponseEntity.ok(registerStampDTOS);
+    /**
+     * 36번 api, 명소로 위치 옮겨야 함.
+     */
+    @GetMapping("attractions/stamp/{nations}")
+    public ResponseEntity<List<SingupAttractionDTO>> getStampCountry(@PathVariable String nations) {
+        List<SingupAttractionDTO> singupAttractionDTOS = stampService.findStampsCountry(nations);
+        return ResponseEntity.ok(singupAttractionDTOS);
     }
 }
