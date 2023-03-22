@@ -5,8 +5,9 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class PlaceDiaryTest @JvmOverloads constructor(
+    var countryName: String?,
     var placeName: String?,
     var placeExplanation: String?,
     var diaryContent: String?,
-    var diaryImageList: List<Int>?,
+    var placeImageList: List<Int>
 ) : Parcelable

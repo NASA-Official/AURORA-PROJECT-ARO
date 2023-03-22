@@ -9,21 +9,29 @@ import com.nassafy.aro.domain.api.UserAccessApi
 import com.nassafy.aro.util.NetworkResult
 import javax.inject.Inject
 
-class UserAccessRepositoryImpl @Inject constructor(private val userAccessApi: UserAccessApi) : UserAccessRepository { // End of UserAccessRepositoryImpl
+
+private const val TAG = "UserAccessRepositoryImp_싸피"
+
+class UserAccessRepositoryImpl @Inject constructor(private val userAccessApi: UserAccessApi) :
+    UserAccessRepository { // End of UserAccessRepositoryImpl
 
     private val _loginToken = MutableLiveData<NetworkResult<LoginToken>>()
     val loginToken: LiveData<NetworkResult<LoginToken>> get() = _loginToken
 
     override suspend fun loginByIdPassword(id: String, password: String) {
         val response = userAccessApi.login(LoginRequest(id, password))
+        Log.d(TAG, "loginByIdPassword: ${response.body()}")
+
         _loginToken.postValue(NetworkResult.Loading())
 
         try {
             when {
                 response.isSuccessful -> {
-                    _loginToken.postValue(NetworkResult.Success(
-                        response.body()!!
-                    )) // End of postValue
+                    _loginToken.postValue(
+                        NetworkResult.Success(
+                            response.body()!!
+                        )
+                    ) // End of postValue
                 } // End of response.isSuccessful
                 response.errorBody() != null -> {
                     _loginToken.postValue(NetworkResult.Error(response.errorBody()!!.string()))

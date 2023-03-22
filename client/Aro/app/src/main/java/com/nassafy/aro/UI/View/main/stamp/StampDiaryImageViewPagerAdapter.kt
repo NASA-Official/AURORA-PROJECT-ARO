@@ -1,20 +1,19 @@
 package com.nassafy.aro.ui.view.main.stamp
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.nassafy.aro.R
 import com.nassafy.aro.data.dto.CountryTest
-import com.nassafy.aro.data.dto.PlaceDiaryTest
 import com.nassafy.aro.databinding.StampDiaryImageListItemBinding
 import com.squareup.picasso.Picasso
+import java.util.*
 
 private const val TAG = "StampDiaryImageViewPage_싸피"
 
 class StampDiaryImageViewPagerAdapter(
-    private val placeDiaryImageList: List<Int>
+    private val placeDiaryImageList: LinkedList<Uri>
 ) : RecyclerView.Adapter<StampDiaryImageViewPagerAdapter.StampDiaryPlaceHolder>() {
     private lateinit var binding: StampDiaryImageListItemBinding
 
@@ -32,7 +31,8 @@ class StampDiaryImageViewPagerAdapter(
     } // End of onCreateViewHolder
 
     override fun onBindViewHolder(holder: StampDiaryPlaceHolder, position: Int) {
-        Picasso.get().load(placeDiaryImageList[position]).fit().centerCrop().into(binding.stampDiaryImageListImageview)
+        Picasso.get().load(placeDiaryImageList[position].toString()).fit().centerCrop()
+            .into(binding.stampDiaryImageListImageview)
 
         binding.stampDiaryHistoryImageDeleteButton.setOnClickListener {
             itemClickListener.imageRemoveButtonClick(position)
@@ -41,6 +41,10 @@ class StampDiaryImageViewPagerAdapter(
     } // End of onBindViewHolder
 
     override fun getItemCount(): Int = placeDiaryImageList.size
+
+    fun refreshAdapter() {
+        notifyDataSetChanged()
+    } // End of refreshAdapter
 
     interface ItemClickListener {
         fun imageRemoveButtonClick(position: Int)
