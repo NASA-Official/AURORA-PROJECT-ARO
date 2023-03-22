@@ -1,4 +1,5 @@
 package com.nassafy.api.controller;
+import com.nassafy.api.dto.req.AttractionInterestOrNotDTO;
 import com.nassafy.api.service.InterestService;
 import com.nassafy.core.entity.Interest;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,11 @@ public class InteresetController {
         interestService.registerInterest(memberId, attractionIds);
         return ResponseEntity.ok("success");
     }
+
+//    @GetMapping("stampas/interests/{nationName}/{memberId}")
+//    public ResponseEntity<AttractionInterestOrNotDTO> getAttreactionInterestOrNot(@PathVariable String nationName, @PathVariable Long memberId) {
+//
+//    }
 
 //    @GetMapping("stamps/{memberId}")
 //    public ResponseEntity<List<Interest>> findInterest(@RequestParam Long memberId) {
