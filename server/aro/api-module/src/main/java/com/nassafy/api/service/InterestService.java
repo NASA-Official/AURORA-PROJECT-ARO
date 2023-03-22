@@ -1,6 +1,8 @@
 package com.nassafy.api.service;
 
 import com.amazonaws.services.kms.model.NotFoundException;
+import com.amazonaws.services.kms.model.NotFoundException;
+import com.nassafy.api.dto.req.AttractionInterestOrNotDTO;
 import com.nassafy.core.entity.Attraction;
 import com.nassafy.core.entity.Interest;
 import com.nassafy.core.entity.Member;
@@ -52,5 +54,11 @@ public class InterestService {
         }
     }
 
-
+//    public List<AttractionInterestOrNotDTO> getAttractionInterestOrNot(String nationName, Long memberId) {
+//        Member member = memberRepository.findById(memberId)
+//                .orElseThrow(() -> new EntityNotFoundException("회원이 없습니다."));
+//        List<Attraction> attractionList = attractionRepository.findAll();
+//        List<Interest> interestList = interestRepository.findAllByMemberId(memberId);
+//
+//    }
 }
