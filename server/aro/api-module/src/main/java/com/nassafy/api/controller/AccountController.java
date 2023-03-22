@@ -16,6 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -95,7 +98,6 @@ public class AccountController {
         return ResponseEntity.ok(memberLoginResDto);
     }
 
-
     @Transactional
     @PostMapping("/withdrawal/{email}")
     public ResponseEntity<?> withdrawal(@PathVariable String email) {
@@ -108,4 +110,17 @@ public class AccountController {
         refreshTokenRepository.deleteByEmail(email);
         return ResponseEntity.ok("");
     }
+
+    @PostMapping("/test")
+    public ResponseEntity<?> test() {
+        logger.debug("\t Start test");
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+
+        logger.debug("\t Member : " + user );
+
+        return ResponseEntity.ok(user);
+    }
+
 }
