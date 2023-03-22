@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -25,7 +26,6 @@ public class InterestService {
     private final InterestRepository interestRepository;
     private final MemberRepository memberRepository;
     private final AttractionRepository attractionRepository;
-
 
 
     @Transactional(readOnly = false)
@@ -54,11 +54,39 @@ public class InterestService {
         }
     }
 
-//    public List<AttractionInterestOrNotDTO> getAttractionInterestOrNot(String nationName, Long memberId) {
-//        Member member = memberRepository.findById(memberId)
-//                .orElseThrow(() -> new EntityNotFoundException("회원이 없습니다."));
-//        List<Attraction> attractionList = attractionRepository.findAll();
-//        List<Interest> interestList = interestRepository.findAllByMemberId(memberId);
-//
-//    }
+    public List<AttractionInterestOrNotDTO> getAttractionInterestOrNot(String nationName, Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("회원이 없습니다."));
+
+        List<Attraction> attractionList = attractionRepository.findAll();
+        System.out.println(attractionList);
+        List<Interest> interestList = interestRepository.findAllByMemberId(memberId)
+                .orElse(new ArrayList<>());
+        System.out.println(interestList);
+        List<AttractionInterestOrNotDTO> attractionInterestOrNotDTOList = new ArrayList<>();
+        for (Attraction attraction : attractionList) {
+            if (!attraction.getNation().equals(nationName)) {
+                continue;
+            }
+            boolean isInterest = false;
+            for (Interest interest : interestList) {
+                System.out.println(attraction.getId().equals(interest.getAttraction().getId()));
+                if (attraction.getId().equals(interest.getAttraction().getId())) {
+                    isInterest = true;
+                    break;
+                }
+            }
+            AttractionInterestOrNotDTO dto = new AttractionInterestOrNotDTO(
+                    attraction.getId(),
+                    attraction.getColorStamp(),
+                    attraction.getAttractionName(),
+                    attraction.getDescription(),
+                    isInterest
+            );
+            System.out.println(dto);
+            attractionInterestOrNotDTOList.add(dto);
+        }
+        return attractionInterestOrNotDTOList;
+    }
+
 }
