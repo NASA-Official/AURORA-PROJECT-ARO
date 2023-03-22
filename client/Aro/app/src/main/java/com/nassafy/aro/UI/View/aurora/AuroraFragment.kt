@@ -1,6 +1,7 @@
 package com.nassafy.aro.ui.view.aurora
 
 import android.content.res.Resources
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,6 +10,11 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -25,6 +31,8 @@ import com.nassafy.aro.util.*
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.math.roundToInt
+import kotlin.random.Random
 
 
 private const val TAG = "AuroraFragment_sdr"
@@ -51,6 +59,51 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
 //            }
 //        }
         initView()
+
+        var kpLineChart = binding.bottomSheet.kpLinechart
+
+        // End - Now  < 23
+        // Start = Now - (End - Now)
+        var kpValues = arrayListOf<Entry>()
+        val min = 0.0f
+        val max = 9.0f
+
+        for (i: Int in 0..23) {
+            val randomFloat = min + (max - min) * Random.nextFloat()
+            val temp = (randomFloat * 1000.0).roundToInt() / 1000.0
+            Log.d(TAG, "onViewCreated: $temp")
+            kpValues.add(Entry(i.toFloat(), temp.toFloat()))
+        }
+
+        var kpDataSet = LineDataSet(kpValues, "DataSet")
+        var kpDataSets = arrayListOf<ILineDataSet>(kpDataSet)
+        var lineData = LineData(kpDataSets)
+
+        kpDataSet.apply {
+            lineWidth = 2.5F
+            circleRadius = 4.5F
+            circleHoleRadius = 1.5F
+//            color = ColorTemplate.VORDIPLOM_COLORS[0]
+//            setCircleColor(ColorTemplate.VORDIPLOM_COLORS[0])
+//            highLightColor = Color.rgb(244, 117, 117)
+            color = Color.rgb(75, 181, 117)
+            setCircleColor(Color.rgb(75, 181, 117))
+            highLightColor = Color.rgb(244, 117, 117)
+            setDrawValues(false)
+        }
+
+        kpLineChart.apply {
+            data = lineData
+            description.isEnabled = false
+//            setDrawGridBackground(false)
+            setGridBackgroundColor(ColorTemplate.COLOR_NONE)
+            setPinchZoom(false)
+            isDragEnabled = false
+            isDoubleTapToZoomEnabled = false
+            legend.isEnabled = false
+        }
+
+
 
         initBottomSheetRecyclerView()
 
@@ -95,6 +148,7 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
 
         binding.dateHourLinearlayout.setOnClickListener {
             val dateHourSelectDialog = DateHourSelectDialog(dateList, hourList)
+            closeBottomSheet()
             dateHourSelectDialog.show(
                 childFragmentManager, "DateHourSelectDialog"
             )
@@ -102,6 +156,8 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
     } // End of initView
 
     private fun initBottomSheetRecyclerView() {
+        val behavior = BottomSheetBehavior.from(binding.bottomSheet.root)
+
         favoriteAdapter = BottomSheetFavoriteAdapter(itemList)
 
         val dividerItemDecoration = DividerItemDecoration(
@@ -109,8 +165,6 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
             LinearLayoutManager(requireContext()).orientation
         )
         dividerItemDecoration.setDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.line_divider)!!)
-
-        val behavior = BottomSheetBehavior.from(binding.bottomSheet.root)
 
         binding.bottomSheet.favoriteRecyclerview.apply {
             adapter = favoriteAdapter
@@ -137,11 +191,15 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
 
     } // End of initBottomSheetRecyclerView
 
-
     fun setDateTimeLinearLayoutText(date: String, hour: String) {
         binding.dateTextview.text = date
         binding.hourTextview.text = hour
     } // End of setDateTimeLinearLayoutText
+
+    private fun closeBottomSheet() {
+        val behavior = BottomSheetBehavior.from(binding.bottomSheet.root)
+        behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
 
     private fun setCustomMapStyle() {
         try {
