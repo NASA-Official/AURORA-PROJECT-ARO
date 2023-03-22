@@ -62,10 +62,10 @@ public class Member implements UserDetails {
     }
 
     @JsonIgnore
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
     private List<Interest> interests = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
     private List<Stamp> stamps = new ArrayList<>();
 
     // 영속성 컨텍스트 비워주는 비지니스 메서드
