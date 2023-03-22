@@ -51,20 +51,6 @@ public class MemberController {
         return ResponseEntity.ok(tokenDto);
     }
 
-    @PostMapping("/memberInfo")
-    public ResponseEntity<?> memberInfo(@RequestBody MemberLoginReqDto memberLoginRequestDto) {
-        logger.debug("\t Start login");
-        String email = memberLoginRequestDto.getEmail();
-        Optional<Member> member = memberRepository.findByEmail(email);
-        if(member.isEmpty()){
-            return ResponseEntity.badRequest().body("Error: Member is not exist!!");
-        }
 
-        MemberLoginResDto memberLoginResDto = MemberLoginResDto.builder()
-                .email(member.get().getEmail())
-                .nickname(member.get().getNickname())
-                .build();
 
-        return ResponseEntity.ok(memberLoginResDto);
-    }
 }
