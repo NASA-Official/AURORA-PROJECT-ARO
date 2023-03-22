@@ -1,4 +1,4 @@
-package com.nassafy.api.dto.req;
+package com.nassafy.api.dto.res;
 
 import lombok.Builder;
 import lombok.Getter;
