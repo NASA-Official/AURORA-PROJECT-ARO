@@ -1,6 +1,7 @@
 package com.nassafy.api.controller;
 
 
+import com.nassafy.api.dto.req.SingupAttractionDTO;
 import com.nassafy.api.dto.req.StampDiaryReqDTO;
 import com.nassafy.api.dto.req.StampDiaryResDTO;
 import com.nassafy.api.service.StampService;
@@ -42,9 +43,13 @@ public class StampController {
                 StampDiaryReqDTO.builder().memo(memo).files(files).build());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    @GetMapping("accounts/{nations}/attrations")
-    public ResponseEntity<List<RegisterStampDTO>> getStampCountry(@PathVariable String nations) {
-        List<RegisterStampDTO> registerStampDTOS = stampService.findStampsCountry(nations);
-        return ResponseEntity.ok(registerStampDTOS);
+
+    /**
+     * 36번 api, 명소로 위치 옮겨야 함.
+     */
+    @GetMapping("attractions/stamp/{nations}")
+    public ResponseEntity<List<SingupAttractionDTO>> getStampCountry(@PathVariable String nations) {
+        List<SingupAttractionDTO> singupAttractionDTOS = stampService.findStampsCountry(nations);
+        return ResponseEntity.ok(singupAttractionDTOS);
     }
 }
