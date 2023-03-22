@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nassafy.aro.R
@@ -21,7 +22,7 @@ import kotlinx.coroutines.*
 class JoinPasswordFragment :
     BaseFragment<FragmentJoinPasswordBinding>(FragmentJoinPasswordBinding::inflate) {
 
-    private val loginActivityViewModel: LoginActivityViewModel by viewModels()
+    private val loginActivityViewModel: LoginActivityViewModel by activityViewModels()
     private var password: String = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,13 +36,15 @@ class JoinPasswordFragment :
     }
 
     private fun setNextButtonAvailable(isAvailable: Boolean) {
-        binding.nextButton.isSelected = isAvailable
-        binding.nextButton.isEnabled = isAvailable
-        binding.nextButton.isClickable = isAvailable
+        //TODO ACTIVATE
+//        binding.nextButton.isSelected = isAvailable
+//        binding.nextButton.isEnabled = isAvailable
+//        binding.nextButton.isClickable = isAvailable
     } // End of setNextButtonAvalable
 
     private fun initView() {
         binding.nextButton.setOnClickListener {
+            loginActivityViewModel.password = binding.joinPasswordTextfield.editText?.text.toString()
             findNavController().navigate(R.id.action_joinPasswordFragment_to_joinNicknameFragment)
         }
         binding.cancelButton.setOnClickListener {

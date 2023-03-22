@@ -1,27 +1,27 @@
 package com.nassafy.aro.ui.view.login.viewmodel
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.gson.JsonObject
 import com.nassafy.aro.data.dto.LoginToken
 import com.nassafy.aro.domain.repository.UserAccessRepository
+import com.nassafy.aro.ui.view.ServiceViewModel
 import com.nassafy.aro.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.scopes.ViewModelScoped
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginActivityViewModel @Inject constructor(private val loginRepository: UserAccessRepository) :
-    ViewModel() {
+class LoginActivityViewModel @Inject constructor(
+    private val loginRepository: UserAccessRepository
+) : ServiceViewModel() {
 
     var email: String = ""
     var password: String = ""
     var nickname: String = ""
+    override var isAuroraServiceSelected: Boolean = false
+    override var isMeteorServiceSelected: Boolean = false
+    override var selectedAuroraPlaces: List<Int> = mutableListOf()
+    override var selectedMeteorPlaces: List<Int> = mutableListOf()
 
     val loginToken: LiveData<NetworkResult<LoginToken>>
         get() = loginRepository.loginToken
@@ -29,6 +29,8 @@ class LoginActivityViewModel @Inject constructor(private val loginRepository: Us
         get() = loginRepository.isEmailValidated
     val isEmailAuthCodeValidated: LiveData<Boolean>
         get() = loginRepository.isEmailAuthCodeValidated
+    val countryListLiveData: LiveData<NetworkResult<List<String>>>
+        get() = loginRepository.countryListLiveData
 
     suspend fun loginByIdPassword(email: String, password: String) {
         viewModelScope.launch {
@@ -53,6 +55,12 @@ class LoginActivityViewModel @Inject constructor(private val loginRepository: Us
     fun validateEmialAuthCode(email: String, code: String) {
         viewModelScope.launch {
             loginRepository.validateEmialAuthenticationCode(email, code)
+        }
+    }
+
+    fun getCountryList() {
+        viewModelScope.launch {
+            loginRepository.getCountryList()
         }
     }
 
