@@ -2,6 +2,7 @@ package com.nassafy.core.entity;
 
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
 @Entity
 @Getter
 @Builder
-@ToString
+@DynamicUpdate
 public class Member implements UserDetails {
 
     @Id
