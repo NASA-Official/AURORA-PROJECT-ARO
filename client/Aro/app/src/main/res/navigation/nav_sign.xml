@@ -60,16 +60,16 @@
             app:destination="@id/nav_service" />
     </fragment>
     <fragment
-        android:id="@+id/joinFavoriteFragment"
-        android:name="com.nassafy.aro.ui.view.login.JoinFavoriteFragment"
+        android:id="@+id/joinCountryPlaceSelectFragment"
+        android:name="com.nassafy.aro.ui.view.login.joinCountryPlaceSelectFragment"
         android:label="SignUpFavoriteFragment" />
     <fragment
         android:id="@+id/joinServiceFragment"
         android:name="com.nassafy.aro.ui.view.login.JoinServiceFragment"
         android:label="SignUpServiceFragment" >
         <action
-            android:id="@+id/action_joinServiceFragment_to_joinFavoriteFragment"
-            app:destination="@id/joinFavoriteFragment"
+            android:id="@+id/action_joinServiceFragment_to_joinCountryPlaceSelectFragment"
+            app:destination="@id/joinCountryPlaceSelectFragment"
             app:enterAnim="@anim/from_right"
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
@@ -84,7 +84,7 @@
             android:label="AroServiceSelectFragment">
             <action
                 android:id="@+id/action_aroServiceSelectFragment_to_joinFavoriteFragment"
-                app:destination="@id/joinFavoriteFragment"
+                app:destination="@id/joinCountryPlaceSelectFragment"
                 app:enterAnim="@anim/from_right"
                 app:exitAnim="@anim/to_left"
                 app:popEnterAnim="@anim/from_left"

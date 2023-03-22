@@ -10,5 +10,6 @@ data class PlaceTest @JvmOverloads constructor(
     var placeImage : Int,
     var placeExplanation: String?,
     var placeDiary: PlaceDiaryTest?,
+    var isChecked: Boolean? = false
 ) : Parcelable { // End of PlaceTest
 }

@@ -23,64 +23,8 @@ class Application : Application() {
         super.onCreate()
 
         sharedPreferencesUtil = SharedPreferencesUtil(applicationContext)
-//        initRetrofit(AppInterceptor())
 
     } // End of onCreate
-
-//    private fun initRetrofit(interceptor: AppInterceptor) {
-//        val logging = HttpLoggingInterceptor()
-//        if (BuildConfig.DEBUG) {
-//            logging.level = HttpLoggingInterceptor.Level.BODY
-//        } else {
-//            logging.level = HttpLoggingInterceptor.Level.NONE
-//        }
-//
-//        val okHttpClient = OkHttpClient.Builder()
-//            .readTimeout(30, TimeUnit.SECONDS)
-//            .writeTimeout(15, TimeUnit.SECONDS)
-//            .addNetworkInterceptor(HttpLoggingInterceptor())
-//            .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-//            .connectTimeout(1, TimeUnit.MINUTES)
-//            .build()
-//
-//        val gson: Gson = GsonBuilder() //날짜 데이터 포맷
-//            .setDateFormat("yyyy-MM-dd HH:mm:ss")
-//            //.setLenient()
-//            .create()
-//
-//        retrofit = Retrofit.Builder()
-//            .baseUrl(SERVER_URL)
-//            .addConverterFactory(GsonConverterFactory.create(gson))
-//            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-//            .client(okHttpClient)
-//            .build()
-//
-//        val headerOkHttpClient = OkHttpClient.Builder()
-//            .readTimeout(30, TimeUnit.SECONDS)
-//            .writeTimeout(15, TimeUnit.SECONDS)
-//            .addNetworkInterceptor(HttpLoggingInterceptor())
-//            .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-//            .connectTimeout(1, TimeUnit.MINUTES)
-//            .addInterceptor(interceptor)
-//            .build()
-//
-//        headerRetrofit = Retrofit.Builder()
-//            .baseUrl(SERVER_URL)
-//            .addConverterFactory(GsonConverterFactory.create(gson))
-//            .client(headerOkHttpClient)
-//            .build()
-//    } // End of initRetrofit
-//
-//    inner class AppInterceptor : Interceptor {
-//        @Throws(IOException::class)
-//        override fun intercept(chain: Interceptor.Chain): Response = with(chain) {
-//            val newRequest = request().newBuilder()
-//                .addHeader("Authorization", sharedPreferencesUtil.getUserAccessToken())
-//                .build()
-//            proceed(newRequest)
-//        }
-//    } // End of AppInterceptor inner class
-
 
     companion object {
         lateinit var retrofit: Retrofit
