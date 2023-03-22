@@ -2,6 +2,7 @@ package com.nassafy.core.entity;
 
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
 @Entity
 @Getter
 @Builder
-@ToString
+@DynamicUpdate
 public class Member implements UserDetails {
 
     @Id
@@ -62,10 +63,10 @@ public class Member implements UserDetails {
     }
 
     @JsonIgnore
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
     private List<Interest> interests = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
     private List<Stamp> stamps = new ArrayList<>();
 
     // 영속성 컨텍스트 비워주는 비지니스 메서드

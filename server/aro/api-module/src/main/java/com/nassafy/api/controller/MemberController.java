@@ -41,6 +41,12 @@ public class MemberController {
         return "get success";
     }
 
+
+    /***
+     * API 1
+     * @param memberLoginRequestDto
+     * @return tokenDto
+     */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody MemberLoginReqDto memberLoginRequestDto) {
         logger.debug("\t Start login");
