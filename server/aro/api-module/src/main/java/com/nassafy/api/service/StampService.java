@@ -1,6 +1,7 @@
 package com.nassafy.api.service;
 
 import com.nassafy.api.dto.req.SingupAttractionDTO;
+import com.nassafy.api.dto.req.StampDTO;
 import com.nassafy.api.dto.req.StampDiaryReqDTO;
 import com.nassafy.api.dto.res.StampDiaryResDTO;
 import com.nassafy.api.util.S3Util;
@@ -181,5 +182,27 @@ public class StampService {
 
             stampImageRepository.save(stampImage);
         }
+    }
+
+    /**
+     * 31번 API
+     * @param attractionId 명소Id
+     * @param memberId 맴버Id
+     * @return 국가명, 명소명, 명소설명, 인증여부, 명소컬러사진, 명소흑백사진, 명소 스탬프 사진
+     */
+
+    public StampDTO getStampDetail(Long attractionId, Long memberId) {
+        System.out.println(memberId + "*********************************************************");
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new EntityNotFoundException("회원이 없습니다")
+        );
+        Attraction attraction = attractionRepository.findById(attractionId).orElseThrow(
+                () -> new EntityNotFoundException("해당하는 명소가 없습니다.")
+        );
+        Stamp stamp = stampRepository.findByAttraction_attractionNameAndMemberId(attraction.getAttractionName(), memberId).orElseThrow(
+                () -> new EntityNotFoundException("스탬프가 없습니다.")
+        );
+        StampDTO stampDTO = new StampDTO(attraction.getNation(), attraction.getAttractionName(), attraction.getDescription(), stamp.getCertification(), attraction.getColorAuth(), attraction.getGrayAuth(), attraction.getColorStamp());
+        return stampDTO;
     }
 }

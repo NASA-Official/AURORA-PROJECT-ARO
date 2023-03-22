@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nassafy.api.dto.req.SingupAttractionDTO;
+import com.nassafy.api.dto.req.StampDTO;
 import com.nassafy.api.dto.req.StampDiaryReqDTO;
 import com.nassafy.api.dto.res.StampDiaryResDTO;
 import com.nassafy.api.service.StampService;
@@ -20,6 +21,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.plaf.PanelUI;
 import java.io.IOException;
 import java.util.List;
 
@@ -98,6 +100,17 @@ public class StampController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+
+    /**
+     *  31번 API
+     */
+    @GetMapping("detail/{attractionId}/{memberId}")
+    public ResponseEntity<StampDTO> getStampDetail(@PathVariable Long attractionId, @PathVariable Long memberId) {
+        StampDTO stampDTO = stampService.getStampDetail(attractionId, memberId);
+        return ResponseEntity.ok(stampDTO);
+    }
+
 
     /**
      * 36번 api
