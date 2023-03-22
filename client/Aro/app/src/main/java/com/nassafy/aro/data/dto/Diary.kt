@@ -1,8 +1,11 @@
 package com.nassafy.aro.data.dto
 
-import okhttp3.MultipartBody
+import java.util.*
 
 data class Diary @JvmOverloads constructor(
-    var imageList: List<MultipartBody.Part?> = emptyList(),
-    var diaryContent: String = "",
+    var imageList: LinkedList<String> = LinkedList(),
+    var memeo: String = "",
+    var nation: String? = "",
+    var placeName: String? = "",
+    var description: String? = "",
 ) : java.io.Serializable
