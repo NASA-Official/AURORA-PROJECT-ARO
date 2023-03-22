@@ -171,4 +171,7 @@ dependencies {
 
     // MPAndroidChart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    // Compose Glide
+    implementation "com.github.skydoves:landscapist-glide:2.1.8"
 }

@@ -3,6 +3,8 @@ package com.nassafy.aro.ui.view.login.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.nassafy.aro.data.dto.LoginToken
+import com.nassafy.aro.data.dto.PlaceItem
+import com.nassafy.aro.data.dto.UserTest
 import com.nassafy.aro.domain.repository.UserAccessRepository
 import com.nassafy.aro.ui.view.ServiceViewModel
 import com.nassafy.aro.util.NetworkResult
@@ -12,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginActivityViewModel @Inject constructor(
-    private val loginRepository: UserAccessRepository
+    private val userAccessRepository: UserAccessRepository
 ) : ServiceViewModel() {
 
     var email: String = ""
@@ -20,47 +22,75 @@ class LoginActivityViewModel @Inject constructor(
     var nickname: String = ""
     override var isAuroraServiceSelected: Boolean = false
     override var isMeteorServiceSelected: Boolean = false
-    override var selectedAuroraPlaces: List<Int> = mutableListOf()
-    override var selectedMeteorPlaces: List<Int> = mutableListOf()
+    override val selectedAuroraPlaces: LiveData<MutableList<PlaceItem>> get() = userAccessRepository.selectedAuraraPlaceListLiveData
+    override val selectedMeteorPlaces: LiveData<MutableList<PlaceItem>> get() = userAccessRepository.selectedMeteorPlaceListLiveData
 
     val loginToken: LiveData<NetworkResult<LoginToken>>
-        get() = loginRepository.loginToken
+        get() = userAccessRepository.loginToken
     val isEmailValidated: LiveData<Boolean>
-        get() = loginRepository.isEmailValidated
+        get() = userAccessRepository.isEmailValidated
     val isEmailAuthCodeValidated: LiveData<Boolean>
-        get() = loginRepository.isEmailAuthCodeValidated
+        get() = userAccessRepository.isEmailAuthCodeValidated
     val countryListLiveData: LiveData<NetworkResult<List<String>>>
-        get() = loginRepository.countryListLiveData
+        get() = userAccessRepository.countryListLiveData
+    val placeListLiveData: LiveData<NetworkResult<List<PlaceItem>>>
+        get() = userAccessRepository.placeListLiveData
+    val userJoinNetworkResultLiveData: LiveData<NetworkResult<Unit>>
+        get() = userAccessRepository.userJoinNetworkResultLiveData
 
     suspend fun loginByIdPassword(email: String, password: String) {
         viewModelScope.launch {
-            loginRepository.loginByIdPassword(email, password)
+            userAccessRepository.loginByIdPassword(email, password)
         }
     }
 
     fun validateEmail(email: String) {
         viewModelScope.launch {
-            loginRepository.validateEmail(email)
+            userAccessRepository.validateEmail(email)
         }
     }
 
     fun setIsEmailValidatedFalse() {
-        loginRepository.setIsEmailValidatedFalse()
+        userAccessRepository.setIsEmailValidatedFalse()
     }
 
     fun setisEmailAuthCodeValidatedFalse() {
-        loginRepository.setisEmailAuthCodeValidatedFalse()
+        userAccessRepository.setisEmailAuthCodeValidatedFalse()
     }
 
     fun validateEmialAuthCode(email: String, code: String) {
         viewModelScope.launch {
-            loginRepository.validateEmialAuthenticationCode(email, code)
+            userAccessRepository.validateEmialAuthenticationCode(email, code)
         }
     }
 
     fun getCountryList() {
         viewModelScope.launch {
-            loginRepository.getCountryList()
+            userAccessRepository.getCountryList()
+        }
+    }
+
+    fun getPlaceList(nation: String) {
+        viewModelScope.launch {
+            userAccessRepository.getPlaceList(nation)
+        }
+    }
+
+    fun join(user: UserTest) {
+        viewModelScope.launch {
+            userAccessRepository.join(user)
+        }
+    }
+
+    override fun selectAuroraPlace(place: PlaceItem) {
+        viewModelScope.launch {
+            userAccessRepository.selectAuroraPlace(place)
+        }
+    }
+
+    override fun unSelectAuroraPlace(place: PlaceItem) {
+        viewModelScope.launch {
+            userAccessRepository.unSelectAuroraPlace(place)
         }
     }
 
