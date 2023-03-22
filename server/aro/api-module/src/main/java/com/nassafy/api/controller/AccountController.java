@@ -7,6 +7,7 @@ import com.nassafy.api.dto.req.SignupReqDto;
 import com.nassafy.api.dto.res.MemberLoginResDto;
 import com.nassafy.api.dto.res.SignupResDto;
 import com.nassafy.api.service.EmailService;
+import com.nassafy.api.service.JwtService;
 import com.nassafy.api.service.MemberService;
 import com.nassafy.api.service.StampService;
 import com.nassafy.core.entity.Member;
@@ -35,6 +36,7 @@ import java.util.Optional;
 @RequestMapping("/api/accounts")
 public class AccountController {
     private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
+    private final JwtService jwtService;
     private final MemberService memberService;
     private final EmailService emailService;
     private final StampService stampService;
@@ -45,6 +47,12 @@ public class AccountController {
 
     private Map<String, String> emailCode = new HashMap<>();
 
+    /***
+     * API 4
+     * @param emailCheckDto
+     * @return
+     * @throws Exception
+     */
     @PostMapping("/emailcheck")
     public ResponseEntity<?> emailCheck(@RequestBody EmailCheckDto emailCheckDto) throws Exception {
         String email = emailCheckDto.getEmail();
@@ -59,6 +67,11 @@ public class AccountController {
         return ResponseEntity.ok("email is not used!");
     }
 
+    /***
+     * API 5
+     * @param codeCheckDto
+     * @return
+     */
     @PostMapping("/codecheck")
     public ResponseEntity<?> codeCheck(@RequestBody CodeCheckDto codeCheckDto) {
         String email = codeCheckDto.getEmail();
@@ -75,6 +88,11 @@ public class AccountController {
         return ResponseEntity.ok("code is same!!!");
     }
 
+    /***
+     * API 3
+     * @param signupReqDto
+     * @return
+     */
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody SignupReqDto signupReqDto) {
         logger.debug("\t Start singup");
@@ -84,6 +102,11 @@ public class AccountController {
         return ResponseEntity.ok("singup is success!!!");
     }
 
+    /***
+     * API 2
+     * @param memberLoginRequestDto
+     * @return memberLoginResDto
+     */
     @PostMapping("/memberInfo")
     public ResponseEntity<?> memberInfo(@RequestBody MemberLoginReqDto memberLoginRequestDto) {
         logger.debug("\t Start login");
@@ -101,29 +124,53 @@ public class AccountController {
         return ResponseEntity.ok(memberLoginResDto);
     }
 
+    /***
+     * API 6
+     * @return
+     */
     @Transactional
-    @PostMapping("/withdrawal/{email}")
-    public ResponseEntity<?> withdrawal(@PathVariable String email) {
+    @PostMapping("/withdrawal")
+    public ResponseEntity<?> withdrawal() {
         logger.debug("\t Start withdrawal");
-//        String email = memberLoginRequestDto.getEmail();
-//        String password = memberLoginRequestDto.getPassword();
-//        TokenDto tokenDto = jwtService.login(email, password);
+
+        String email = jwtService.getUserEmailFromJwt();
+        logger.debug("\t " + email);
 
         memberRepository.deleteByEmail(email);
         refreshTokenRepository.deleteByEmail(email);
         return ResponseEntity.ok("");
     }
 
-    @PostMapping("/test")
-    public ResponseEntity<?> test() {
-        logger.debug("\t Start test");
+    /***
+     * API 7
+     * @param nickname
+     * @return
+     */
+    @Transactional
+    @PostMapping("/changenickname/{nickname}")
+    public ResponseEntity<?> changeNickname(@PathVariable String nickname) {
+        logger.debug("\t Start changeNickname : " + nickname);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
+        String email = jwtService.getUserEmailFromJwt();
+        logger.debug("\t " + email);
 
-        logger.debug("\t Member : " + user );
+        Member member = memberService.updateUserNickname(email, nickname);
+        if(member == null)
+        {
+            return ResponseEntity.badRequest().body("Error: Member is not exist!!");
+        }
 
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(member.getNickname());
+    }
+
+    @PostMapping("/parseInfo")
+    public ResponseEntity<?> parseInfo() {
+        logger.debug("\t Start parseInfo");
+
+        String email = jwtService.getUserEmailFromJwt();
+        logger.debug("\t " + email);
+
+        return ResponseEntity.ok(email);
     }
 
 }
