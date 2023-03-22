@@ -14,6 +14,7 @@ import com.nassafy.core.respository.AttractionRepository;
 import com.nassafy.core.respository.MemberRepository;
 import com.nassafy.core.respository.StampImageRepository;
 import com.nassafy.core.respository.StampRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class StampService {
     private static final Logger logger = LoggerFactory.getLogger(StampService.class);
     @Autowired
@@ -103,14 +105,19 @@ public class StampService {
 
     public void createStampDiary(String nation, String attraction, Long memberId, StampDiaryReqDTO stampDiaryReqDTO) throws IllegalArgumentException, IOException {
 
+        log.info("start create stamp diary service");
+
         Stamp stamp = stampRepository
                 .findByAttraction_nationAndAttraction_attractionNameAndMemberId(nation, attraction, memberId)
                 .orElseThrow(IllegalArgumentException::new);
+
+        log.info("find stamp success");
 
         stamp.editMemo(stampDiaryReqDTO.getMemo());
 
         Stamp savedStamp = stampRepository.save(stamp);
 
+        log.info("image upload start");
         for (MultipartFile file: stampDiaryReqDTO.getFiles()) {
             String imageUrl = s3Util.upload(file, "diary/" + memberId.toString() + "/" + nation + "/" + attraction);
 
@@ -120,6 +127,7 @@ public class StampService {
 
             savedStamp.getStampImages().add(stampImage);
         }
+        log.info("image upload stop");
     }
 
     public StampDiaryResDTO getStampDiary(String nation, String attraction, Long memberId) {
