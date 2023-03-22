@@ -34,5 +34,4 @@ class SharedPreferencesUtil(context: Context) {
         const val ACCESS_TOKEN = "access_token"
         const val REFRESH_TOKEN = "refresh_token"
     }
-
 } // End of SharedPreferencesUtil class
