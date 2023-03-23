@@ -96,6 +96,7 @@ public class SecurityConfig {
                 .antMatchers("/api/members/signup", "/api/members/emailcheck", "/api/members/codecheck").permitAll()
                 .antMatchers("/api/test/**").permitAll()
                 .antMatchers("/api/stamps/signup/**").permitAll()
+                .antMatchers("/api/attractions/all/nations").permitAll()
 //                .requestMatchers(PathRequest.toH2Console()).permitAll()
                 .anyRequest().authenticated()
 
