@@ -1,17 +1,21 @@
 package com.nassafy.aro.ui.view.login
 
+import android.content.res.Resources.Theme
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.map
 import androidx.navigation.fragment.findNavController
@@ -42,6 +46,7 @@ class JoinCountryPlaceSelectFragment : BaseFragment<FragmentAroCountryPlaceSelec
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.nextButton.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.sign_up_button))
         CoroutineScope(Dispatchers.IO).launch {
             val result: Deferred<Int> = async {
                 loginActivityViewModel.getCountryList()
@@ -178,11 +183,14 @@ class JoinCountryPlaceSelectFragment : BaseFragment<FragmentAroCountryPlaceSelec
                 MaterialTheme {
                     Column(
                         modifier = Modifier
-                            .height(this.height.dp)
+                            .height(this.height.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         CountryPlaceChips(selectedAuroraPlaceList , loginActivityViewModel)
                         Divider(
-                            modifier = Modifier.height(2.dp),
+                            modifier = Modifier
+                                .height(2.dp)
+                                .padding(horizontal = 24.dp),
                             color = Color.White
                         ) // End of Divider
                         CountryPlaceLazyColumn(placeList, selectedAuroraPlaceList, loginActivityViewModel)
@@ -191,6 +199,9 @@ class JoinCountryPlaceSelectFragment : BaseFragment<FragmentAroCountryPlaceSelec
             }
         }
         binding.cancelButton.setOnClickListener {
+            loginActivityViewModel.isAuroraServiceSelected = false
+            loginActivityViewModel.isMeteorServiceSelected = false
+            loginActivityViewModel.clearSelectedAuroraPlaceList()
             findNavController().popBackStack()
         }
     } // End of initView

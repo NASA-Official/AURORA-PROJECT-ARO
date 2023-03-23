@@ -47,35 +47,3 @@ fun Polyline.addInfoWindow(map: GoogleMap, location: LatLng, title: String, mess
     marker?.showInfoWindow()
 } // End of addInfoWindow
 
-fun convertImageToBlurImage(context: Context?, image: Bitmap): Bitmap? {
-    val BITMAP_SCALE = 0.1f
-    val BLUR_RADIUS = 25f
-
-    val width = Math.round(image.width * BITMAP_SCALE)
-    val height = Math.round(image.height * BITMAP_SCALE)
-    val inputBitmap = Bitmap.createScaledBitmap(image, width, height, false)
-    val outputBitmap = Bitmap.createBitmap(inputBitmap)
-    val rs: RenderScript = RenderScript.create(context)
-    val intrinsicBlur: ScriptIntrinsicBlur = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs))
-    val tmpIn: Allocation = Allocation.createFromBitmap(rs, inputBitmap)
-    val tmpOut: Allocation = Allocation.createFromBitmap(rs, outputBitmap)
-    intrinsicBlur.setRadius(BLUR_RADIUS)
-    intrinsicBlur.setInput(tmpIn)
-    intrinsicBlur.forEach(tmpOut)
-    tmpOut.copyTo(outputBitmap)
-    return outputBitmap
-}
-
-fun setImageWithGrayScale(image: Bitmap?, imageView: ImageView): Int {
-    //image is null
-    image ?: return -1;
-
-    //grayScale
-    val matrix = ColorMatrix()
-    matrix.setSaturation(0f)
-    val filter = ColorMatrixColorFilter(matrix)
-    imageView.colorFilter = filter
-
-    imageView.setImageBitmap(image)
-    return 0;
-} // End of setImageWithGrayScale

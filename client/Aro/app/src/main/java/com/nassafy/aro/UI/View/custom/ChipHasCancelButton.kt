@@ -25,18 +25,19 @@ fun ChipHasCancelButton(place: PlaceItem, viewModel: ServiceViewModel) {
     Row(
         modifier = Modifier
             .background(
-                color = Color.LightGray,
+                color = Color.White,
                 shape = RoundedCornerShape(16.dp)
             ),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
-            Modifier.height(40.dp), contentAlignment = Alignment.CenterEnd) {
+            Modifier.height(32.dp), contentAlignment = Alignment.CenterEnd) {
             Text(
                 text = place.placeName,
                 modifier = Modifier.padding(start = 16.dp)
             )
         }
-        Box (Modifier.height(40.dp), contentAlignment = Alignment.Center) {
+        Box (Modifier.height(32.dp), contentAlignment = Alignment.Center) {
             IconButton(onClick = {
                 viewModel.unSelectAuroraPlace(place)
             }) {

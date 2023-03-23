@@ -14,8 +14,6 @@ import androidx.navigation.fragment.navArgs
 import com.nassafy.aro.R
 import com.nassafy.aro.databinding.FragmentJoinNicknameBinding
 import com.nassafy.aro.ui.view.BaseFragment
-import com.nassafy.aro.ui.view.custom.AroServiceSelectFragmentArgs
-import com.nassafy.aro.ui.view.custom.AroServiceSelectFragmentDirections
 import com.nassafy.aro.ui.view.login.viewmodel.LoginActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 

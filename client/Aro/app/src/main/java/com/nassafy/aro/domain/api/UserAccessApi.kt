@@ -14,17 +14,17 @@ interface UserAccessApi {
         @Body loginBody: JsonObject
     ): Response<LoginToken> // End of login
 
-    @POST("api/accounts/codecheck")
+    @POST("api/members/codecheck")
     suspend fun validateEmailAuthenticationCode(
         @Body validateEmailAuthenticationCodeBody: JsonObject
     ): Response<Unit>
 
-    @POST("api/accounts/emailcheck")
+    @POST("api/members/emailcheck")
     suspend fun validateEmail(
         @Body validateEmailBody: JsonObject
     ): Response<Unit>
 
-    @GET("api/stamps/nations")
+    @GET("api/attractions/all/nations")
     suspend fun getCountryList(): Response<List<String>>
 
     @GET("api/stamps/signup/{nation}")
@@ -32,7 +32,7 @@ interface UserAccessApi {
         @Path("nation") nation: String
     ): Response<List<PlaceItem>>
 
-    @POST("api/accounts/signup")
+    @POST("api/members/signup")
     suspend fun join(
         @Body user: UserTest
     ): Response<Unit>
