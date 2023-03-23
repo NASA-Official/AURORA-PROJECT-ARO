@@ -35,6 +35,6 @@ class SharedPreferencesUtil(context: Context) {
         const val REFRESH_TOKEN = "refresh_token"
 
         const val to =
-            "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzZGZzZGZAbmFzc2FmeS5jb20iLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjc5NTcxMjY5fQ.70HGB3z02NDLWo0oLBMFoz_R1thwp22PMcC0wKzCMac"
+            "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzZGZzZGZAbmFzc2FmeS5jb20iLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjc5NjMwOTk3fQ.DtAAbajGO5bDr2A9NWMD8CLREXFdL-U6d7_Qa6boHnA"
     }
 } // End of SharedPreferencesUtil class

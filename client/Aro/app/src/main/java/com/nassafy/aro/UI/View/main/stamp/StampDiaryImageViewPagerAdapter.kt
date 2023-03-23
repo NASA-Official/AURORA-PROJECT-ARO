@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.nassafy.aro.R
 import com.nassafy.aro.data.dto.CountryTest
@@ -36,7 +37,7 @@ class StampDiaryImageViewPagerAdapter(
     override fun onBindViewHolder(holder: StampDiaryPlaceHolder, position: Int) {
         Log.d(TAG, "viewAdapter Image List : ${placeDiaryImageList}")
 
-        Picasso.get().load(placeDiaryImageList[position]).fit().centerCrop()
+        Picasso.get().load(placeDiaryImageList[position].toUri()).fit().centerCrop()
             .into(holder.itemView.findViewById<ImageView>(R.id.stamp_diary_image_list_imageview))
 
         binding.stampDiaryHistoryImageDeleteButton.setOnClickListener {
