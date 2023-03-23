@@ -1,21 +1,28 @@
 package com.nassafy.api.controller;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nassafy.api.dto.req.SingupAttractionDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nassafy.api.dto.req.SingupAttractionDTO;
+import com.nassafy.api.dto.req.StampDTO;
 import com.nassafy.api.dto.req.StampDiaryReqDTO;
 import com.nassafy.api.dto.res.StampDiaryResDTO;
 import com.nassafy.api.service.JwtService;
 import com.nassafy.api.service.StampService;
 import com.nassafy.core.DTO.MapStampDTO;
+import com.nassafy.core.DTO.RegisterStampDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.plaf.PanelUI;
 import java.io.IOException;
 import java.util.List;
 
@@ -29,11 +36,28 @@ public class StampController {
     @Autowired
     private JwtService jwtService;
 
-    @GetMapping("{memberId}/{nation}")
-    public ResponseEntity<List<MapStampDTO>> getStampMemberAndCountry(@PathVariable Long memberId, @PathVariable String nation){
-        List<MapStampDTO> mapStamps = stampService.findStampsByUserAndCountry(memberId, nation);
+
+    /**
+     * 30번 Api
+     * @param nation
+     * @return
+     */
+    @GetMapping("{nation}")
+    public ResponseEntity<List<MapStampDTO>> getStampMemberAndCountry(@PathVariable String nation){
+        List<MapStampDTO> mapStamps = stampService.findStampsByUserAndCountry(nation);
         return ResponseEntity.ok(mapStamps);
     }
+
+
+    /**
+     *  31번 API
+     */
+    @GetMapping("detail/{attractionId}")
+    public ResponseEntity<StampDTO> getStampDetail(@PathVariable Long attractionId) {
+        StampDTO stampDTO = stampService.getStampDetail(attractionId);
+        return ResponseEntity.ok(stampDTO);
+    }
+
 
 //    @PostMapping(value = "diary/{nation}/{attraction}/{memberId}",
 //            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -95,6 +119,7 @@ public class StampController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
 
     /**
      * 36번 api
