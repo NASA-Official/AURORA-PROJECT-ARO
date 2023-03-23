@@ -8,17 +8,17 @@
     android:orientation="vertical"
     android:background="@android:color/transparent"
     app:behavior_hideable="false"
-    app:behavior_peekHeight="96dp"
+    app:behavior_peekHeight="86dp"
     app:layout_behavior="@string/bottom_sheet_behavior">
 
     <ImageView
         android:id="@+id/bottom_sheet_top_imageview"
         android:contentDescription="@string/bottom_sheet_behavior"
         android:layout_width="60dp"
-        android:layout_height="40dp"
+        android:layout_height="30dp"
         android:layout_gravity="center_horizontal"
         android:scaleType="fitXY"
-        android:src="@drawable/home_bottom_sheet_button" />
+        android:src="@drawable/bottom_sheet_button" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -30,8 +30,9 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingVertical="20dp"
-            android:paddingHorizontal="30dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingHorizontal="20dp"
             android:background="@drawable/bottom_sheet_background">
 
             <LinearLayout
@@ -43,8 +44,8 @@
 
                 <ImageView
                     android:id="@+id/kpindex_imageview"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:src="@drawable/kpindex_icon"
                     android:layout_marginEnd="10dp"/>
 
@@ -59,21 +60,22 @@
             </LinearLayout>
 
             <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/kp_linechart"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp" />
+                android:layout_height="250dp"
+                android:layout_marginTop="10dp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:layout_marginTop="40dp">
+                android:layout_marginTop="20dp">
 
                 <ImageView
                     android:id="@+id/favorite_imageview"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:src="@drawable/favorite_icon"
                     android:layout_marginEnd="10dp"/>
 
@@ -92,8 +94,7 @@
                 android:id="@+id/favorite_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp" />
+                android:layout_marginTop="8dp" />
 
         </LinearLayout>
 
