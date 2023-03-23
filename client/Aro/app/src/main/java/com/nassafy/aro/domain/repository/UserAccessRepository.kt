@@ -172,5 +172,14 @@ class UserAccessRepository @Inject constructor(private val userAccessApi: UserAc
         _selectedAuraraPlaceListLiveData.value = temp
     }
 
+    fun clearSelectedAuroraPlaceList() {
+        val temp = mutableListOf<PlaceItem>()
+        _selectedAuraraPlaceListLiveData.value = temp
+    }
+
+    fun clearSelectedMeteorPlaceList() {
+        val temp = mutableListOf<PlaceItem>()
+        _selectedMeteorPlaceListLiveData.value = temp
+    }
 
 }

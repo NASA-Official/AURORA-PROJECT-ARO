@@ -31,7 +31,7 @@ class JoinEmailFragment :
 
     override fun onResume() {
         super.onResume()
-        setNextButtonAvailable(false) // TODO ACITVE
+//        setNextButtonAvailable(false) // TODO ACITVE
     } // End of onResume
 
     private fun initObserve() {

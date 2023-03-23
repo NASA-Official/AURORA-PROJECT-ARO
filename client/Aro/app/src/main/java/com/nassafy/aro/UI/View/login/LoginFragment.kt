@@ -20,6 +20,7 @@ import com.nassafy.aro.ui.view.main.MainActivity
 import com.nassafy.aro.ui.view.login.viewmodel.LoginActivityViewModel
 import com.nassafy.aro.util.NetworkResult
 import com.nassafy.aro.util.githubLoginUri
+import com.nassafy.aro.util.showSnackBarMessage
 import com.navercorp.nid.NaverIdLoginSDK
 import com.navercorp.nid.oauth.NidOAuthLogin
 import com.navercorp.nid.oauth.OAuthLoginCallback
@@ -34,6 +35,7 @@ import kotlinx.coroutines.launch
 class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
 
     private val loginActivityViewModel: LoginActivityViewModel by activityViewModels()
+    private var isTriedLoginState = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +57,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         initObserve()
         initView()
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        isTriedLoginState = false
     }
 
     private fun naverLogin() {
@@ -123,12 +130,16 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                     startMainActivity()
                 }
                 is NetworkResult.Error -> {
+                    when (isTriedLoginState) {
+                        true -> {requireView().showSnackBarMessage("로그인에 실패했습니다.")}
+                        false -> {}
+                    }
 
                 }
                 is NetworkResult.Loading -> {
-
                 }
             }
+            isTriedLoginState = false
         }
     }
 
@@ -137,12 +148,15 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             findNavController().navigate(R.id.action_loginFragment_to_joinEmailFragment)
         }
         binding.loginNaverImagebutton.setOnClickListener {
+            isTriedLoginState = true
             naverLogin()
         }
         binding.loginGithubImagebutton.setOnClickListener {
+            isTriedLoginState = true
             githubLogin()
         }
         binding.loginButton.setOnClickListener {
+            isTriedLoginState = true
             CoroutineScope(Dispatchers.IO).launch {
                 loginActivityViewModel.loginByIdPassword(
                     binding.loginEmailIdEdittext.text.toString(),

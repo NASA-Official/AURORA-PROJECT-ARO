@@ -29,7 +29,8 @@ fun CountryPlaceChips(selectedPlaceList: List<PlaceItem>, viewModel: ServiceView
         Modifier
             .wrapContentHeight()
             .fillMaxWidth(1f)
-            .height(50.dp)
+            .height(80.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         //TODO change items
         items(selectedPlaceList) {

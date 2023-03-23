@@ -1,6 +1,6 @@
 package com.nassafy.aro.ui.view.custom
 
-import androidx.compose.foundation.BorderStroke
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -9,29 +9,43 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Done
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.ImageLoader
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.ImagePainter
+import coil.compose.LocalImageLoader
+import coil.compose.rememberImagePainter
+import coil.decode.SvgDecoder
+import coil.transform.GrayscaleTransformation
 import com.nassafy.aro.R
 import com.nassafy.aro.data.dto.PlaceItem
 import com.nassafy.aro.ui.view.ServiceViewModel
-import com.skydoves.landscapist.ImageOptions
-import com.skydoves.landscapist.glide.GlideImage
 
-
+@OptIn(ExperimentalCoilApi::class)
 @Composable
-fun CountryPlaceLazyColumnItem(place: PlaceItem, selectedPlaceList: MutableList<PlaceItem>, viewModel: ServiceViewModel) {
+fun CountryPlaceLazyColumnItem(place: PlaceItem, selectedPlaceList: MutableList<PlaceItem>, viewModel: ServiceViewModel, loadedList: SnapshotStateList<Boolean>) {
     //TODO change isSelected to DTO's boolean type var
-
     var isSelected by remember { mutableStateOf(false) }
+    val imageLoader = ImageLoader.Builder(LocalContext.current)
+        .componentRegistry {
+            add(SvgDecoder(LocalContext.current))
+        }
+        .build()
 
     DisposableEffect(place) {
+        isSelected = selectedPlaceList.contains(place)
+        onDispose {  }
+    }
+    DisposableEffect(selectedPlaceList) {
         isSelected = selectedPlaceList.contains(place)
         onDispose {  }
     }
@@ -64,19 +78,34 @@ fun CountryPlaceLazyColumnItem(place: PlaceItem, selectedPlaceList: MutableList<
                 modifier = Modifier.fillMaxHeight(0.95f),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                GlideImage( // CoilImage, FrescoImage
-                    imageModel = { place.stamp },
-                    imageOptions = ImageOptions(
-                        contentScale = ContentScale.Crop,
-                        alignment = Alignment.Center
-                    ),
-                    modifier = Modifier
-                        .weight(2f),
-                    // shows an error text if fail to load an image.
-                    failure = {
-                        Text(text = "image request failed.")
+                CompositionLocalProvider(LocalImageLoader provides imageLoader) {
+                    val painter = rememberImagePainter(place.stamp, builder = {
+                        when(isSelected) {
+                            true -> {}
+                            false -> {
+                                transformations(
+                                    GrayscaleTransformation(),       // Gray Scale Transformation
+                                )
+                            }
+                        }
                     })
-
+                    val state = painter.state
+                    when (state) {
+                        is ImagePainter.State.Empty -> {}
+                        is ImagePainter.State.Loading -> {}
+                        else -> {
+                            Log.d("ssafy_pcs", "End of ${place.stamp}")
+                            loadedList.add(false)
+                        }
+                    }
+                    Image(
+                        painter = painter,
+                        contentDescription = "SVG Image",
+                        modifier = Modifier
+                            .weight(2f),
+                        contentScale = ContentScale.FillWidth,
+                    )
+                }
                 Column(
                     modifier = Modifier
                         .weight(7f),
@@ -89,7 +118,7 @@ fun CountryPlaceLazyColumnItem(place: PlaceItem, selectedPlaceList: MutableList<
                             text = place.placeName, fontSize = 20.sp,
                             color = when (isSelected) {
                                 false -> colorResource(id = R.color.dark_gray)
-                                true -> colorResource(id = R.color.light_dark_gray)
+                                true -> Color.White
                             } // end of when
                         ) // End of Text
                     } // End of Box
@@ -100,7 +129,7 @@ fun CountryPlaceLazyColumnItem(place: PlaceItem, selectedPlaceList: MutableList<
                             fontSize = 12.sp,
                             color = when (isSelected) {
                                 false -> colorResource(id = R.color.dark_gray)
-                                true -> colorResource(id = R.color.light_dark_gray)
+                                true -> Color.White
                             }
                         )
                     } // End of Box
@@ -111,14 +140,14 @@ fun CountryPlaceLazyColumnItem(place: PlaceItem, selectedPlaceList: MutableList<
                     tint = colorResource(id = R.color.light_dark_gray),
                     modifier = Modifier
                         .alpha(if (isSelected) 1f else 0f)
-                )
+                ) // End of Icon
             } // End of Row
             Spacer(modifier = Modifier.height(4.dp))
             Divider(
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .height(2.dp),
-                color = colorResource(id = R.color.main_app_color_light),
+                color = colorResource(id = R.color.main_app_color),
             )
         } // End of Column
     } // End of Card

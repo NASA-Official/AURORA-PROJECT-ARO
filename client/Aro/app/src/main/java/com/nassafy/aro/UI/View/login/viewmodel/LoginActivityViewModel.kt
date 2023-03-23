@@ -94,4 +94,16 @@ class LoginActivityViewModel @Inject constructor(
         }
     }
 
+    fun clearSelectedService() {
+        userAccessRepository
+    }
+
+    fun clearSelectedAuroraPlaceList() {
+        userAccessRepository.clearSelectedAuroraPlaceList()
+    }
+
+    fun clearSelectedMeteorPlaceList() {
+        userAccessRepository.clearSelectedMeteorPlaceList()
+    }
+
 }
