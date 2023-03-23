@@ -1,8 +1,6 @@
 package com.nassafy.aro.ui.view.aurora
 
 import android.content.res.Resources
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -25,8 +23,12 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.maps.android.PolyUtil
+import com.google.maps.android.clustering.ClusterManager
+import com.google.maps.android.collections.MarkerManager
 import com.nassafy.aro.BuildConfig
 import com.nassafy.aro.R
+import com.nassafy.aro.ui.view.CustomMarkerRenderer
+import com.nassafy.aro.data.dto.Place
 import com.nassafy.aro.databinding.FragmentAuroraBinding
 import com.nassafy.aro.ui.adapter.BottomSheetFavoriteAdapter
 import com.nassafy.aro.ui.view.BaseFragment
@@ -54,6 +56,8 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
     private var hourList = arrayListOf<ArrayList<String>>()
 
     private var selectedMarker: Marker? = null
+    private lateinit var mClusterManager : ClusterManager<Place>
+    private lateinit var markerCollection: MarkerManager.Collection
 
     var kpIndex = 3.0F
 
@@ -84,11 +88,28 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
 
         val customMarker = generateBitmapDescriptorFromRes(requireContext(), R.drawable.map_marker)
 
-        val markerOptions = MarkerOptions()
-            .position(LatLng(37.4220, -122.0841))
-            .title("Googleplex")
-            .icon(customMarker)
-        val marker = googleMap.addMarker(markerOptions)
+//        val markerOptions = MarkerOptions()
+//            .position(LatLng(37.4220, -122.0841))
+//            .title("Googleplex")
+//            .icon(customMarker)
+//        val marker = googleMap.addMarker(markerOptions)
+
+        mClusterManager = ClusterManager<Place>(requireContext(), googleMap)
+        googleMap.setOnCameraIdleListener(mClusterManager)
+        mClusterManager.renderer = CustomMarkerRenderer(requireContext(), googleMap, mClusterManager)
+        mClusterManager.addItems(placeList)
+
+//        mClusterManager!!.markerCollection.setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter() {
+//            override fun getInfoContents(marker: Marker): View? {
+//                TODO("Not yet implemented")
+//            }
+//
+//            override fun getInfoWindow(marker: Marker): View? {
+//                TODO("Not yet implemented")
+//            }
+//
+//        })
+
 
         // setPolyLine
         val polylineOptions = getKpPolylineOptions(kpIndex)
@@ -309,6 +330,15 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
         var item7 = arrayListOf<String>("구미", "100", "Clouds")
         var itemList =
             arrayListOf<MutableList<String>>(item1, item2, item3, item4, item5, item6, item7)
+
+        val reykjavik = Place(0, "아이슬란드", "레이캬비크",64.133F, -21.933F, "https://i.pinimg.com/564x/0b/4c/83/0b4c8348f7e0e89fc9089d0d5b320d68.jpg")
+        val gullfoss = Place(1, "아이슬란드","굴포스", 64.32775F, -20.12133F, "https://i.pinimg.com/564x/bd/f9/28/bdf928c97305e58b071bd4d8b991b3bb.jpg")
+        val akureyri = Place(2, "아이슬란드", "아쿠레이리", 65.68389F, -18.11056F, "https://i.pinimg.com/564x/0b/4c/83/0b4c8348f7e0e89fc9089d0d5b320d68.jpg")
+        val jokulsarlon =
+            Place(3, "아이슬란드", "요쿨살론", 64.06883F, -16.206999F, "https://i.pinimg.com/564x/bd/f9/28/bdf928c97305e58b071bd4d8b991b3bb.jpg")
+        val vik = Place(4, "아이슬란드", "비크", 63.418633F, -19.006048F, "https://i.pinimg.com/564x/55/1e/db/551edb0faa57e8261d40d96905066c14.jpg")
+        val diamondBeach = Place(5, "아이슬란드", "다이아몬드비치",64.04307F, -16.17584F, "https://i.pinimg.com/564x/3c/76/dc/3c76dcd32c82b82197ab2c3128947499.jpg")
+        val placeList = arrayListOf<Place>(reykjavik, gullfoss, akureyri, jokulsarlon, vik, diamondBeach)
     }
 
     // override OnChartValueSelectedListener
