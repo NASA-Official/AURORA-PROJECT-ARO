@@ -10,11 +10,13 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
-import com.github.mikephil.charting.utils.ColorTemplate
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -25,6 +27,7 @@ import com.nassafy.aro.R
 import com.nassafy.aro.databinding.FragmentAuroraBinding
 import com.nassafy.aro.ui.adapter.BottomSheetFavoriteAdapter
 import com.nassafy.aro.ui.view.BaseFragment
+import com.nassafy.aro.ui.view.ChartMarkerView
 import com.nassafy.aro.ui.view.dialog.DateHourSelectDialog
 import com.nassafy.aro.ui.view.main.MainActivity
 import com.nassafy.aro.util.*
@@ -38,7 +41,7 @@ import kotlin.random.Random
 private const val TAG = "AuroraFragment_sdr"
 
 class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding::inflate),
-    OnMapReadyCallback {
+    OnMapReadyCallback, OnChartValueSelectedListener {
     private val auroraViewModel: AuroraViewModel by viewModels()
     private lateinit var googleMap: GoogleMap
     private lateinit var favoriteAdapter: BottomSheetFavoriteAdapter
@@ -60,50 +63,7 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
 //        }
         initView()
 
-        var kpLineChart = binding.bottomSheet.kpLinechart
-
-        // End - Now  < 23
-        // Start = Now - (End - Now)
-        var kpValues = arrayListOf<Entry>()
-        val min = 0.0f
-        val max = 9.0f
-
-        for (i: Int in 0..23) {
-            val randomFloat = min + (max - min) * Random.nextFloat()
-            val temp = (randomFloat * 1000.0).roundToInt() / 1000.0
-            Log.d(TAG, "onViewCreated: $temp")
-            kpValues.add(Entry(i.toFloat(), temp.toFloat()))
-        }
-
-        var kpDataSet = LineDataSet(kpValues, "DataSet")
-        var kpDataSets = arrayListOf<ILineDataSet>(kpDataSet)
-        var lineData = LineData(kpDataSets)
-
-        kpDataSet.apply {
-            lineWidth = 2.5F
-            circleRadius = 4.5F
-            circleHoleRadius = 1.5F
-//            color = ColorTemplate.VORDIPLOM_COLORS[0]
-//            setCircleColor(ColorTemplate.VORDIPLOM_COLORS[0])
-//            highLightColor = Color.rgb(244, 117, 117)
-            color = Color.rgb(75, 181, 117)
-            setCircleColor(Color.rgb(75, 181, 117))
-            highLightColor = Color.rgb(244, 117, 117)
-            setDrawValues(false)
-        }
-
-        kpLineChart.apply {
-            data = lineData
-            description.isEnabled = false
-//            setDrawGridBackground(false)
-            setGridBackgroundColor(ColorTemplate.COLOR_NONE)
-            setPinchZoom(false)
-            isDragEnabled = false
-            isDoubleTapToZoomEnabled = false
-            legend.isEnabled = false
-        }
-
-
+        initBottomSheetChart()
 
         initBottomSheetRecyclerView()
 
@@ -155,6 +115,82 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
         }
     } // End of initView
 
+    private fun initBottomSheetChart() {
+        var kpLineChart = binding.bottomSheet.kpLinechart
+
+        // End - Now  < 23
+        // Start = Now - (End - Now)
+
+        // Dummy Data
+        var kpValues = arrayListOf<Entry>()
+        val min = 0.0f
+        val max = 9.0f
+
+        for (i: Int in 0..23) {
+            val randomFloat = min + (max - min) * Random.nextFloat()
+            val temp = (randomFloat * 1000.0).roundToInt() / 1000.0
+            kpValues.add(Entry(i.toFloat(), temp.toFloat()))
+        }
+
+        var kpDataSet = LineDataSet(kpValues, "DataSet")
+        var kpDataSets = arrayListOf<ILineDataSet>(kpDataSet)
+        var lineData = LineData(kpDataSets)
+
+        // When Chart Marker Selected
+        var myMarkerView = ChartMarkerView(requireContext(), R.layout.bottom_sheet_chart_marker)
+        myMarkerView.chartView = kpLineChart
+
+        // Set ChartData Appearance
+        kpDataSet.apply {
+            lineWidth = 2.5F
+            circleRadius = 4.5F
+            circleHoleRadius = 1.5F
+            color = Color.rgb(75, 181, 117)
+            setCircleColor(Color.rgb(75, 181, 117))
+            setDrawHorizontalHighlightIndicator(false)
+            setDrawVerticalHighlightIndicator(false)
+            setDrawValues(false)
+        }
+
+        // Set Chart Appearance
+        kpLineChart.apply {
+            data = lineData
+            description.isEnabled = false
+            setPinchZoom(false)
+            isDragEnabled = false
+            isDoubleTapToZoomEnabled = false
+            legend.isEnabled = false
+            axisRight.isEnabled = false
+            setOnChartValueSelectedListener(this@AuroraFragment)
+            setDrawGridBackground(false)
+            marker = myMarkerView
+
+            xAxis.apply {
+                position = XAxis.XAxisPosition.BOTTOM
+                setDrawGridLines(false)
+                textColor = Color.WHITE
+                valueFormatter = ChartAxisFormatter(
+                    arrayListOf(
+                        "10", "1", "2", "3", "4", "5",
+                        "6", "7", "8", "9", "10", "11",
+                        "12", "13", "14", "15", "16",
+                        "17","18","19","20","21","22","23"
+                    )
+                )
+            } // End of xAxis
+
+            axisLeft.apply {
+                textColor = Color.WHITE
+                axisMinimum = 0.0F
+                axisMaximum = 9.0F
+                labelCount = 8
+                valueFormatter = ChartAxisFormatter(
+                    arrayListOf("", "1","2","3","4","5","6","7","8","9")
+                )
+            } // End of axisLeft (yAxis)
+        }
+    } // End of initBottomSheetChart
+
     private fun initBottomSheetRecyclerView() {
         val behavior = BottomSheetBehavior.from(binding.bottomSheet.root)
 
@@ -164,11 +200,17 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
             requireContext(),
             LinearLayoutManager(requireContext()).orientation
         )
-        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.line_divider)!!)
+        dividerItemDecoration.setDrawable(
+            ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.line_divider
+            )!!
+        )
 
         binding.bottomSheet.favoriteRecyclerview.apply {
             adapter = favoriteAdapter
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             addItemDecoration(dividerItemDecoration)
             addOnScrollListener(
                 object : RecyclerView.OnScrollListener() {
@@ -187,7 +229,7 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
                         super.onScrollStateChanged(recyclerView, newState)
                     } // End of onScrollStateChanged
                 })
-        }
+        } // End of favoriteRecyclerView
 
     } // End of initBottomSheetRecyclerView
 
@@ -199,7 +241,7 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
     private fun closeBottomSheet() {
         val behavior = BottomSheetBehavior.from(binding.bottomSheet.root)
         behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-    }
+    } // End of closeBottomSheet
 
     private fun setCustomMapStyle() {
         try {
@@ -218,7 +260,7 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
         }
     } // End of setCustomMapStyle
 
-
+    // Dummy Data
     companion object {
         var item1 = arrayListOf<String>("그리핀도르", "88", "Thunderstorm")
         var item2 = arrayListOf<String>("슬리데린", "40", "Drizzle")
@@ -230,5 +272,13 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
         var itemList =
             arrayListOf<MutableList<String>>(item1, item2, item3, item4, item5, item6, item7)
     }
+
+    // override OnChartValueSelectedListener
+    override fun onValueSelected(e: Entry?, h: Highlight?) {
+    } // End of onValueSelected
+
+    // override OnChartValueSelectedListener
+    override fun onNothingSelected() {
+    } // End of onNothingSelected
 
 } // End of AuroraFragment
