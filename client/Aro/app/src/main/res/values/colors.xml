@@ -38,6 +38,7 @@
 
     <!-- 다이얼로그 백그라운드 컬러 -->
     <color name="dialog_background_color">#353535</color>
+    <color name="dialog_background_color_opacity">#E6353535</color>
 
     <!-- 뷰 페이저 컬러 -->
     <color name="view_pager_background_color">#1e1e1e</color>

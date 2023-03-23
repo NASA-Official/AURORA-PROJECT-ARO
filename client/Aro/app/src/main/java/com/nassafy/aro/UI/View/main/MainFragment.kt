@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -21,12 +22,10 @@ import com.nassafy.aro.ui.view.BaseFragment
 import com.nassafy.aro.ui.view.aurora.AuroraFragment
 import java.time.LocalDateTime
 
-private const val TAG = "MainFragment_sdr"
-
 class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::inflate) {
     private lateinit var mContext : Context
     private var tabTitle: ArrayList<String> = arrayListOf()
-    private var tabIcon: ArrayList<Drawable> = arrayListOf()
+    private var tabIcons: ArrayList<Drawable> = arrayListOf()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -52,14 +51,19 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
             getString(R.string.service_meteor_shower)
         )
         // add tablayout Icon
-        tabIcon = arrayListOf(
-            ContextCompat.getDrawable(requireContext(), R.drawable.weather_snowy_icon)!!,
-            ContextCompat.getDrawable(requireContext(), R.drawable.weather_sunny_icon)!!
+//        var tabIcon1 = layoutInflater.inflate(R.layout.tab_icon_custom_view, null)
+//        tabIcon1.findViewById<ImageView>(R.id.icon).setBackgroundResource(R.drawable.tab_aurora_icon)
+//        var tabIcon2 = layoutInflater.inflate(R.layout.tab_icon_custom_view, null)
+//        tabIcon2.findViewById<ImageView>(R.id.icon).setBackgroundResource(R.drawable.tab_aurora_icon)
+
+        tabIcons = arrayListOf(
+            ContextCompat.getDrawable(requireContext(), R.drawable.tab_aurora_icon)!!,
+            ContextCompat.getDrawable(requireContext(), R.drawable.aurora_icon)!!
         )
 
         TabLayoutMediator(binding.tablayout, binding.viewpager) { tab, position ->
             tab.text = tabTitle[position]
-            tab.icon = tabIcon[position]
+            tab.icon = tabIcons[position]
         }.attach()
     } // End of initTabLayout
 
