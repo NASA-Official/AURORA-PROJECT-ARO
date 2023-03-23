@@ -15,7 +15,7 @@ import com.nassafy.aro.databinding.ItemCountrySpinnerBinding
 class CountrySpinnerAdapter(
     context: Context,
     @LayoutRes private val resId: Int,
-    private val list: ArrayList<String>
+    private val list: List<String>
 ) : ArrayAdapter<String>(context, resId, list) {
 
     override fun getCount(): Int = list.size

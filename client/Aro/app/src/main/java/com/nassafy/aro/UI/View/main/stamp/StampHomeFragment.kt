@@ -2,7 +2,6 @@ package com.nassafy.aro.ui.view.main.stamp
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -18,7 +17,9 @@ import com.nassafy.aro.util.NetworkResult
 import com.nassafy.aro.util.showSnackBarMessage
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 private const val TAG = "StampHomeFragment_싸피"
@@ -30,6 +31,9 @@ class StampHomeFragment :
 
     // viewModel
     private val stampViewModel: StampViewModel by viewModels()
+    private val stampHomeViewModel: StampHomeViewModel by viewModels()
+
+    private var countryList: List<String> = ArrayList()
 
 
     // ArrayAdapter
@@ -43,27 +47,14 @@ class StampHomeFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        getCountryTestResponseLiveData()
+        // 뷰모델 라이브 데이터 옵저버들 등록.
+        getAllNationListResponseLiveDataObserve()
 
-        CoroutineScope(Dispatchers.IO).launch {
-            val result: Deferred<Int> = async {
-                stampViewModel.getCountryTest()
-                0
-            }
+        // 처음 데이터 가져오기.
+        initViewgetData()
 
-            result.await()
-        }
-
-        /*
-                로직 : 가장 처음에 토큰과 회원UUID를 통해서 전체 국가리스트를 가져옴.
-                해당 유저의 아이슬란드 데이터를 가져옴.
-                아이슬란드의 지도 데이터를 가장 먼저 가져옴.
-
-                spinner에 선택한 텍스트를 기반으로 해당 국가의 유저 스탬프 데이터를 가져옴.
-         */
-
+        // 이벤트 리스너들 등록
         initEventListeners()
-
         Picasso.get().load(R.drawable.idaho_test_image3).fit().centerCrop()
             .into(binding.stampHomeImageview)
     } // End of onViewCreated
@@ -82,7 +73,7 @@ class StampHomeFragment :
 
     } // End of initEventListeners
 
-    private fun initSpinner(countryList: ArrayList<String>) {
+    private fun initSpinner(countryList: List<String>) {
         arrayAdapter = CountrySpinnerAdapter(mContext, R.layout.item_country_spinner, countryList)
         binding.stampHomeSpinner.adapter = arrayAdapter
 
@@ -105,16 +96,23 @@ class StampHomeFragment :
             }
     } // End of initSpinner
 
-    private fun getCountryTestResponseLiveData() {
-        stampViewModel.getCountryTestResponseLiveData.observe(this.viewLifecycleOwner) {
+    private fun initViewgetData() {
+        CoroutineScope(Dispatchers.IO).launch {
+            stampHomeViewModel.getAllNationList()
+        }
+    } // End of initViewgetData
+
+    private fun getAllNationListResponseLiveDataObserve() {
+        stampHomeViewModel.getAllNationListResponseLiveData.observe(this.viewLifecycleOwner) {
             binding.stampHomeProgressbar.visibility = View.GONE
             binding.stampHomeProgressbar.isVisible = false
-            
+
+
             when (it) {
                 is NetworkResult.Success -> {
-                    Log.d(TAG, "getCountryTestResponseLiveData: ${it.data}")
+                    countryList = it.data as ArrayList<String>
+                    initSpinner(countryList)
 
-                    initSpinner(it.data as ArrayList<String>)
                 }
 
                 is NetworkResult.Error -> {
@@ -128,5 +126,6 @@ class StampHomeFragment :
             }
 
         }
-    } // End of getUserStampDataGroupByCountryResponseLiveDataObserve
+    } // End of getAllNationListResponseLiveDataObserve
+
 } // End of StampHomeFragment class

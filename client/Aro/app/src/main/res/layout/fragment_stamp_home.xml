@@ -2,10 +2,22 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:visibility="visible"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/join_background_color"
     tools:context=".ui.view.main.stamp.StampHomeFragment">
+
+    <ProgressBar
+        android:id="@+id/stamp_home_progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="@color/main_app_color"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/stamp_home_back_button"
@@ -35,15 +47,14 @@
         android:id="@+id/stamp_home_spinner"
         android:layout_width="280dp"
         android:layout_height="46dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="36dp"
         android:background="@drawable/country_spinner_selector"
-        app:layout_constraintBottom_toTopOf="@id/stamp_home_imageview_constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/stamp_home_country_name_title_textview" />
 
     <TextView
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:textColor="@color/white"
         android:textSize="12sp"
         android:layout_width="wrap_content"
@@ -54,12 +65,14 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_marginTop="30dp"
         android:id="@+id/stamp_home_imageview_constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/stamp_home_spinner">
 
         <ImageView
             android:id="@+id/stamp_home_imageview"
@@ -78,21 +91,8 @@
             android:text="내가 모은 스탬프 3 / 8"
             android:textColor="#D5D5D5"
             android:textSize="10sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <ProgressBar
-        android:id="@+id/stamp_home_progressbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminateTint="@color/main_app_color"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
