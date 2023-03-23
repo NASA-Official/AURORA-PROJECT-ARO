@@ -4,7 +4,7 @@ import java.util.*
 
 data class Diary @JvmOverloads constructor(
     var imageList: LinkedList<String> = LinkedList(),
-    var memeo: String = "",
+    var memo: String = "",
     var nation: String? = "",
     var placeName: String? = "",
     var description: String? = "",

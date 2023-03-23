@@ -27,11 +27,9 @@ class DiaryRepository @Inject constructor(
         get() = _getPlaceDiaryUserDataResponseLiveData
 
     suspend fun getPlaceDiaryUserData(
-        countryName: String,
-        placeName: String,
-        userId: Long
+        placeId: Int
     ) {
-        val response = headerDiaryApi.getPlaceUserDiary(countryName, placeName, userId)
+        val response = headerDiaryApi.getPlaceUserDiary(placeId)
 
         _getPlaceDiaryUserDataResponseLiveData.postValue(NetworkResult.Loading())
 
@@ -55,18 +53,37 @@ class DiaryRepository @Inject constructor(
         get() = _createPlaceDiaryResponseLiveData
 
     suspend fun createPlaceDiary(
-        countryName: String,
-        placeName: String,
-        userId: Long,
+        placeId: Int,
         newImageList: List<MultipartBody.Part?>,
-        data: HashMap<String, RequestBody>
+        requestHashMap: HashMap<String, RequestBody>,
     ) {
-        val response = headerDiaryApi.createStampDiary(
-            countryName, placeName, userId, newImageList, data
-        )
 
-        Log.d(TAG, "response: ${response.body()}")
-        Log.d(TAG, "response: ${response}")
+        Log.d(TAG, "newImageList: $newImageList")
+
+//        Log.d(TAG, "createPlaceDiary: ${dataType.get("data").toString()}")
+//
+//        dataType.forEach {
+//            Log.d(TAG, "createPlaceDiary: ${it.key.toString()}")
+//            Log.d(TAG, "createPlaceDiary: ${it.value.contentType()}")
+//            Log.d(TAG, "createPlaceDiary: ${it.value.contentLength()}")
+//            Log.d(
+//                TAG, "createPlaceDiary: ${
+//                    it.value.apply {
+//
+//                    }
+//                }"
+//            )
+//        }
+
+
+        val response = headerDiaryApi.createStampDiary(
+            placeId,
+            newImageList[0],
+            requestHashMap
+        )
+        Log.d(TAG, "다이어리 생성 Response: $response")
+        Log.d(TAG, "다이어리 생성 Response: ${response.body()} ")
+        Log.d(TAG, "다이어리 생성 Response: ${response.code()}")
 
         _createPlaceDiaryResponseLiveData.postValue(NetworkResult.Loading())
 

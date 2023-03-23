@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.nassafy.aro.data.dto.Diary
 import com.nassafy.aro.domain.repository.DiaryRepository
 import com.nassafy.aro.util.NetworkResult
@@ -14,6 +16,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONArray
 import java.util.*
 import javax.inject.Inject
 
@@ -53,10 +56,10 @@ class DiaryViewModel @Inject constructor(private val diaryRepository: DiaryRepos
         get() = diaryRepository.getPlaceDiaryUserDataResponseLiveData
 
     suspend fun getPlaceDiaryUserData(
-        countryName: String, placeName: String, userId: Long
+        placeId: Int
     ) {
         viewModelScope.launch {
-            diaryRepository.getPlaceDiaryUserData(countryName, placeName, userId)
+            diaryRepository.getPlaceDiaryUserData(placeId)
         }
     }
 
@@ -65,21 +68,23 @@ class DiaryViewModel @Inject constructor(private val diaryRepository: DiaryRepos
         get() = diaryRepository.createPlaceDiaryResponseLiveData
 
     suspend fun createPlaceDiary(
-        countryName: String,
-        placeName: String,
-        userId: Long,
+        placeId: Int,
         deleteImageList: List<String>,
         newImageList: List<MultipartBody.Part?>,
         memo: String
     ) {
-        var requestHashMap: HashMap<String, RequestBody> = HashMap()
-        requestHashMap["memo"] = memo.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-        requestHashMap["deleteImageList"] = deleteImageList.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        var gson = Gson()
+        var gsonPretty = GsonBuilder().setPrettyPrinting().create()
 
+        val requestHashMap: HashMap<String, RequestBody> = HashMap()
+        requestHashMap["memo"] = memo.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val jsonArray = JSONArray(deleteImageList)
+        requestHashMap["deleteImageList"] =
+            jsonArray.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull())
 
         viewModelScope.launch {
             diaryRepository.createPlaceDiary(
-                countryName, placeName, userId, newImageList, requestHashMap
+                placeId, newImageList, requestHashMap
             )
         }
     } // End of createPlaceDiary

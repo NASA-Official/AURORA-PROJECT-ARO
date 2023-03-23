@@ -1,13 +1,16 @@
 package com.nassafy.aro.ui.view.main.stamp
 
-import android.app.Activity.RESULT_OK
+import android.app.Activity.*
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.nassafy.aro.data.dto.Diary
@@ -15,6 +18,7 @@ import com.nassafy.aro.data.dto.PlaceDiaryTest
 import com.nassafy.aro.databinding.FragmentStampDiaryBinding
 import com.nassafy.aro.ui.view.BaseFragment
 import com.nassafy.aro.util.ChangeMultipartUtil
+import com.nassafy.aro.util.NetworkResult
 import com.nassafy.aro.util.showSnackBarMessage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -72,10 +76,11 @@ class StampDiaryFragment() :
 
         getPlaceDiaryUserDataResponseLiveDataObserve()
         selectImageLiveDataObserve()
+        createPlaceDiaryResponseLiveDataObserve()
 
         // getData
         CoroutineScope(Dispatchers.IO).launch {
-            diaryViewModel.getPlaceDiaryUserData("미국", "페어뱅크스", 3)
+            diaryViewModel.getPlaceDiaryUserData(1)
 
             withContext(Dispatchers.Main) {
                 initViewPagerAdapter()
@@ -214,6 +219,8 @@ class StampDiaryFragment() :
     private fun getPlaceDiaryUserDataResponseLiveDataObserve() {
         diaryViewModel.getPlaceDiaryUserDataResponseLiveData.observe(this.viewLifecycleOwner) {
             userDiaryData = it.data ?: Diary()
+            Log.d(TAG, "getPlaceDiaryUserDataResponseLiveDataObserve: $userDiaryData")
+
             savedImageList = userDiaryData.imageList as LinkedList<String>
         }
     } // End of getPlaceDiaryUserDataResponseLiveDataObserve
@@ -230,16 +237,40 @@ class StampDiaryFragment() :
 
             CoroutineScope(Dispatchers.IO).launch {
                 diaryViewModel.createPlaceDiary(
-                    userDiaryData.nation.toString(),
-                    userDiaryData.placeName.toString(),
-                    3L,
+                    1,
                     deleteImageList,
                     newImageList,
-                    userDiaryData.toString()
+                    userDiaryData.memo
                 )
             }
         }
     } // End of eventListeners
+
+    private fun createPlaceDiaryResponseLiveDataObserve() {
+        diaryViewModel.createPlaceDiaryResponseLiveData.observe(this.viewLifecycleOwner) {
+            binding.stampDiaryProgressbar.visibility = View.GONE
+            binding.stampDiaryProgressbar.isVisible = false
+
+
+            when (it) {
+                is NetworkResult.Success -> {
+                    if (it.data == 200) {
+                        findNavController().popBackStack()
+                    }
+                }
+
+                is NetworkResult.Error -> {
+                    requireView().showSnackBarMessage("저장 실패!")
+                }
+
+                is NetworkResult.Loading -> {
+                    binding.stampDiaryProgressbar.visibility = View.VISIBLE
+                    binding.stampDiaryProgressbar.isVisible = true
+                }
+            }
+
+        }
+    } // End of createPlaceDiaryResponseLiveDataObserve
 
     companion object {
         const val REQ_GALLERY = 1
