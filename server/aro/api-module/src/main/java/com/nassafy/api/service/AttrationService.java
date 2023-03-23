@@ -70,7 +70,7 @@ public class AttrationService {
     }
 
     /**
-     *
+     * 23번 Api
      * @param nationName 국가 명
      * @return MapImage
      */
