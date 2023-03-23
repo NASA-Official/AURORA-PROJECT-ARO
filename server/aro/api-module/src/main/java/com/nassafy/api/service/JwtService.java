@@ -15,6 +15,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -54,5 +56,23 @@ public class JwtService {
         User user = (User)authentication.getPrincipal();
 
         return user.getUsername();
+    }
+
+
+    public Long getUserIdFromJWT() {
+        String email = getUserEmailFromJwt();
+        Member member = memberRepository.findByEmail(email).orElseThrow(
+                () -> new EntityNotFoundException("회원이 없습니다.")
+        );
+        return member.getId();
+    }
+
+    public Member getUserFromEmail(){
+        String email = getUserEmailFromJwt();
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("해당 id를 가진 회원이 없습니다.")
+                );
+        return member;
     }
 }

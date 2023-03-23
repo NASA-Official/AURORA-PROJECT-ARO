@@ -33,11 +33,7 @@ public class RegisterController {
     public ResponseEntity<Void> serviceRegiser(@RequestBody ServiesRegisterDTO serviesRegisterDTO) {
         logger.debug("\t Start serviceRegister ");
 
-        String email = jwtService.getUserEmailFromJwt();
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(
-                        () -> new EntityNotFoundException("해당 id를 가진 회원이 없습니다.")
-                );
+        Member member = jwtService.getUserFromEmail();
         if (member.getAuroraService() != serviesRegisterDTO.getAuroraService()) {
             member.toggleAuroraService();
         }
@@ -56,11 +52,7 @@ public class RegisterController {
     @GetMapping("/service/aurora")
     public ResponseEntity<Boolean> getAuroraService() {
         logger.debug("\t Start getAuroraService ");
-        String email = jwtService.getUserEmailFromJwt();
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(
-                        () -> new EntityNotFoundException("해당 id를 가진 회원이 없습니다.")
-                );
+        Member member = jwtService.getUserFromEmail();
         return ResponseEntity.ok(member.getAuroraService());
     }
 
@@ -71,11 +63,7 @@ public class RegisterController {
     @GetMapping("/service/meteor")
     public ResponseEntity<Boolean> getMeteorService(){
         logger.debug("\t Start getMeteorService ");
-        String email = jwtService.getUserEmailFromJwt();
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(
-                        () -> new EntityNotFoundException("해당 id를 가진 회원이 없습니다.")
-                );
+        Member member = jwtService.getUserFromEmail();
         return ResponseEntity.ok(member.getMeteorService());
     }
 
@@ -86,12 +74,7 @@ public class RegisterController {
     @GetMapping("/alarm")
     public ResponseEntity<Boolean> getAlarm(){
         logger.debug("\t Start getAlarm ");
-
-        String email = jwtService.getUserEmailFromJwt();
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(
-                        () -> new EntityNotFoundException("해당 id를 가진 회원이 없습니다.")
-                );
+        Member member = jwtService.getUserFromEmail();
         return ResponseEntity.ok(member.getAlarm());
     }
 
@@ -102,12 +85,7 @@ public class RegisterController {
     @PostMapping("/alarm")
     public ResponseEntity<Void> toggleAlarm() {
         logger.debug("\t Start toggleAlarm ");
-
-        String email = jwtService.getUserEmailFromJwt();
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(
-                        () -> new EntityNotFoundException("해당 id를 가진 회원이 없습니다.")
-                );
+        Member member = jwtService.getUserFromEmail();
         member.toggleAlarm();
         memberRepository.save(member);
         return ResponseEntity.noContent().build();
@@ -120,11 +98,7 @@ public class RegisterController {
     @GetMapping("/auroraDisplay")
     public ResponseEntity<Boolean> getAuroraDisplay(){
         logger.debug("\t Start getAuroraDisplay ");
-        String email = jwtService.getUserEmailFromJwt();
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(
-                        () -> new EntityNotFoundException("해당 id를 가진 회원이 없습니다.")
-                );
+        Member member = jwtService.getUserFromEmail();
         return ResponseEntity.ok(member.getAuroraDisplay());
     }
 
@@ -135,13 +109,7 @@ public class RegisterController {
     @PostMapping("/auroraDisplay")
     public ResponseEntity<Void> toggleAuroraDisplay(){
         logger.debug("\t Start toggleAuroraDisplay ");
-
-        String email = jwtService.getUserEmailFromJwt();
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(
-                        () -> new EntityNotFoundException("해당 id를 가진 회원이 없습니다.")
-                );
-
+        Member member = jwtService.getUserFromEmail();
         member.toggleAuroraDisplay();
         memberRepository.save(member);
         return ResponseEntity.noContent().build();

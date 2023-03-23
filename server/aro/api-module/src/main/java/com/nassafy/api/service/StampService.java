@@ -1,6 +1,7 @@
 package com.nassafy.api.service;
 
 import com.nassafy.api.dto.req.SingupAttractionDTO;
+import com.nassafy.api.dto.req.StampDTO;
 import com.nassafy.api.dto.req.StampDiaryReqDTO;
 import com.nassafy.api.dto.res.StampDiaryResDTO;
 import com.nassafy.api.util.S3Util;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
+import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +48,9 @@ public class StampService {
     @Autowired
     private S3Util s3Util;
 
+    @Autowired
+    private JwtService jwtService;
+
     /**
      * 회원 가입 시 명소 리스트 제공
      * @param countryName 국가 명
@@ -61,8 +66,18 @@ public class StampService {
         return singupAttractionDTOS;
     }
 
-    public List<MapStampDTO> findStampsByUserAndCountry(Long userId, String countryName) {
-        List<Stamp> stamps = stampRepository.findByMemberId(userId);
+    /**
+     * 30번 Api
+     * @param countryName 국가명
+     * @return 스탬프 사진, 인증 여부
+     */
+
+    public List<MapStampDTO> findStampsByUserAndCountry(String countryName) {
+        String email = jwtService.getUserEmailFromJwt();
+        Member member = memberRepository.findByEmail(email).orElseThrow(
+                () -> new EntityNotFoundException("존재하지 않는 회원입니다.")
+        );
+        List<Stamp> stamps = stampRepository.findByMemberId(member.getId());
         List<Attraction> attractions = attractionRepository.findByNation(countryName);
 
         List<MapStampDTO> mapStamps = new ArrayList<>();
@@ -200,5 +215,27 @@ public class StampService {
 
             imageCnt += 1;
         }
+    }
+
+    /**
+     * 31번 API
+     * @param attractionId 명소Id
+     * @return 국가명, 명소명, 명소설명, 인증여부, 명소컬러사진, 명소흑백사진, 명소 스탬프 사진
+     */
+
+    public StampDTO getStampDetail(Long attractionId) {
+        String email = jwtService.getUserEmailFromJwt();
+
+        Member member = memberRepository.findByEmail(email).orElseThrow(
+                () -> new EntityNotFoundException("회원이 없습니다")
+        );
+        Attraction attraction = attractionRepository.findById(attractionId).orElseThrow(
+                () -> new EntityNotFoundException("해당하는 명소가 없습니다.")
+        );
+        Stamp stamp = stampRepository.findByAttractionIdAndMemberId(attraction.getId(), member.getId()).orElseThrow(
+                () -> new EntityNotFoundException("스탬프가 없습니다.")
+        );
+        StampDTO stampDTO = new StampDTO(attraction.getNation(), attraction.getAttractionName(), attraction.getDescription(), stamp.getCertification(), attraction.getColorAuth(), attraction.getGrayAuth(), attraction.getColorStamp());
+        return stampDTO;
     }
 }
