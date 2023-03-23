@@ -211,7 +211,7 @@ class StampDiaryFragment() :
                 ChangeMultipartUtil().changeAbsoluteyPath(imageUri, mContext)
             )
             val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
-            val body = MultipartBody.Part.createFormData("diaryNewImage", file.name, requestFile)
+            val body = MultipartBody.Part.createFormData("newImageList", file.name, requestFile)
             newImageList.add(body)
         }
     } // End of registerForActivityResult
