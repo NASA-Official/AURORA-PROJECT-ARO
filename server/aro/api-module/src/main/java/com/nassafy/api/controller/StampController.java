@@ -38,14 +38,12 @@ public class StampController {
 
 
     /**
-     * 30번 Api
-     * @param nation
-     * @return
+     *  30번 Api
      */
-    @GetMapping("{nation}")
-    public ResponseEntity<List<MapStampDTO>> getStampMemberAndCountry(@PathVariable String nation){
-        List<MapStampDTO> mapStamps = stampService.findStampsByUserAndCountry(nation);
-        return ResponseEntity.ok(mapStamps);
+    @GetMapping("collectioncount/{nationName}")
+    public ResponseEntity<String> getHowManyStamps(@PathVariable String nationName){
+        String count = stampService.getHowManyStamps(nationName);
+        return ResponseEntity.ok(count);
     }
 
 

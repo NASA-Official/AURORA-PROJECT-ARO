@@ -27,6 +27,7 @@ import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,7 +52,48 @@ public class StampService {
     @Autowired
     private JwtService jwtService;
 
+
+
+    public String getHowManyStamps(String nationName) {
+        Long memberId = jwtService.getUserIdFromJWT();
+        List<Attraction> attractions = attractionRepository.findByNation(nationName);
+
+        Integer totalCount = attractions.size();
+        Integer myCount = 0;
+        for (Attraction attraction : attractions){
+            Long attractionId = attraction.getId();
+            Stamp stamp = stampRepository.findByAttractionIdAndMemberId(attractionId, memberId).orElse(null);
+            if (stamp.getCertification()) {
+                myCount++;
+            }
+        } return String.format("%d / %d", myCount, totalCount);
+    }
+
+
     /**
+     * 31번 API
+     * @param attractionId 명소Id
+     * @return 국가명, 명소명, 명소설명, 인증여부, 명소컬러사진, 명소흑백사진, 명소 스탬프 사진
+     */
+
+    public StampDTO getStampDetail(Long attractionId) {
+        String email = jwtService.getUserEmailFromJwt();
+
+        Member member = memberRepository.findByEmail(email).orElseThrow(
+                () -> new EntityNotFoundException("회원이 없습니다")
+        );
+        Attraction attraction = attractionRepository.findById(attractionId).orElseThrow(
+                () -> new EntityNotFoundException("해당하는 명소가 없습니다.")
+        );
+        Stamp stamp = stampRepository.findByAttractionIdAndMemberId(attraction.getId(), member.getId()).orElseThrow(
+                () -> new EntityNotFoundException("스탬프가 없습니다.")
+        );
+        StampDTO stampDTO = new StampDTO(attraction.getNation(), attraction.getAttractionName(), attraction.getDescription(), stamp.getCertification(), attraction.getColorAuth(), attraction.getGrayAuth(), attraction.getColorStamp());
+        return stampDTO;
+    }
+
+
+    /** 36번 Api
      * 회원 가입 시 명소 리스트 제공
      * @param countryName 국가 명
      * @return 명소 id, 명소 명, 스탬프 이미지, 명소 설명
@@ -66,34 +108,7 @@ public class StampService {
         return singupAttractionDTOS;
     }
 
-    /**
-     * 30번 Api
-     * @param countryName 국가명
-     * @return 스탬프 사진, 인증 여부
-     */
 
-    public List<MapStampDTO> findStampsByUserAndCountry(String countryName) {
-        String email = jwtService.getUserEmailFromJwt();
-        Member member = memberRepository.findByEmail(email).orElseThrow(
-                () -> new EntityNotFoundException("존재하지 않는 회원입니다.")
-        );
-        List<Stamp> stamps = stampRepository.findByMemberId(member.getId());
-        List<Attraction> attractions = attractionRepository.findByNation(countryName);
-
-        List<MapStampDTO> mapStamps = new ArrayList<>();
-        for (Attraction attraction : attractions) {
-            Stamp stamp = stamps.stream()
-                    .filter(s -> s.getAttraction().getId().equals(attraction.getId()))
-                    .findFirst()
-                    .orElse(null);
-
-            if (stamp != null) {
-                mapStamps.add(new MapStampDTO(attraction.getId(), attraction.getColorStamp(), stamp.getCertification()));
-            }
-        }
-
-        return mapStamps;
-    }
 
     // 자동으로 데이터를 추가하는 로직 회원 가입 이후 로직에서 호출 됨
     @Transactional
@@ -218,25 +233,5 @@ public class StampService {
         }
     }
 
-    /**
-     * 31번 API
-     * @param attractionId 명소Id
-     * @return 국가명, 명소명, 명소설명, 인증여부, 명소컬러사진, 명소흑백사진, 명소 스탬프 사진
-     */
 
-    public StampDTO getStampDetail(Long attractionId) {
-        String email = jwtService.getUserEmailFromJwt();
-
-        Member member = memberRepository.findByEmail(email).orElseThrow(
-                () -> new EntityNotFoundException("회원이 없습니다")
-        );
-        Attraction attraction = attractionRepository.findById(attractionId).orElseThrow(
-                () -> new EntityNotFoundException("해당하는 명소가 없습니다.")
-        );
-        Stamp stamp = stampRepository.findByAttractionIdAndMemberId(attraction.getId(), member.getId()).orElseThrow(
-                () -> new EntityNotFoundException("스탬프가 없습니다.")
-        );
-        StampDTO stampDTO = new StampDTO(attraction.getNation(), attraction.getAttractionName(), attraction.getDescription(), stamp.getCertification(), attraction.getColorAuth(), attraction.getGrayAuth(), attraction.getColorStamp());
-        return stampDTO;
-    }
 }
