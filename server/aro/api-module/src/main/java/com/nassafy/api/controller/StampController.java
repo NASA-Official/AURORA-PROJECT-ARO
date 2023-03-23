@@ -67,6 +67,8 @@ public class StampController {
             @RequestPart("data") StampDiaryReqDTO stampDiaryReqDTO,
             @PathVariable Long attractionId) {
         log.info("start edit diary");
+        log.info("image count: " + String.valueOf(newImageList.size()));
+        log.info("first image is empty?? " + String.valueOf(newImageList.get(0).isEmpty()));
 
         String email = jwtService.getUserEmailFromJwt();
 
