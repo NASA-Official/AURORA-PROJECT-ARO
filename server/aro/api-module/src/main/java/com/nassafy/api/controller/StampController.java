@@ -32,10 +32,21 @@ public class StampController {
     @Autowired
     private StampService stampService;
 
-    @GetMapping("{memberId}/{nation}")
+    // 30번 Api
+    @GetMapping("{nation}/{memberId}")
     public ResponseEntity<List<MapStampDTO>> getStampMemberAndCountry(@PathVariable Long memberId, @PathVariable String nation){
         List<MapStampDTO> mapStamps = stampService.findStampsByUserAndCountry(memberId, nation);
         return ResponseEntity.ok(mapStamps);
+    }
+
+
+    /**
+     *  31번 API
+     */
+    @GetMapping("detail/{attractionId}/{memberId}")
+    public ResponseEntity<StampDTO> getStampDetail(@PathVariable Long attractionId, @PathVariable Long memberId) {
+        StampDTO stampDTO = stampService.getStampDetail(attractionId, memberId);
+        return ResponseEntity.ok(stampDTO);
     }
 
     @PostMapping(value = "diary/{nation}/{attraction}/{memberId}",
@@ -99,16 +110,6 @@ public class StampController {
             log.debug("BAD REQUEST");
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-    }
-
-
-    /**
-     *  31번 API
-     */
-    @GetMapping("detail/{attractionId}/{memberId}")
-    public ResponseEntity<StampDTO> getStampDetail(@PathVariable Long attractionId, @PathVariable Long memberId) {
-        StampDTO stampDTO = stampService.getStampDetail(attractionId, memberId);
-        return ResponseEntity.ok(stampDTO);
     }
 
 

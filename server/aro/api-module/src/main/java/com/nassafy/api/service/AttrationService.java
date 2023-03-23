@@ -23,18 +23,19 @@ public class AttrationService {
     private final AttractionRepository attractionRepository;
     private final MemberRepository memberRepository;
     private final StampRepository stampRepository;
+    private final JwtService jwtService;
 
+    /**
+     * 20번 Api
+     * @return 모든 국가 명
+     */
     public List<String> getAllNation(){
         return attractionRepository.findAllNation();
     }
 
-    public List<Attraction> getAttractionByNation(String nation) {
-        return attractionRepository.findByNation(nation);
-    }
-
 
     /**
-     *
+     * 21번 Api
      * @return 지도 화면에 모든 명소 정보를 보내줌. 정보는 명소 id, 명소명, 명소 작은  사진, 명소 위도, 명소 경도
      */
     public List<MapAttractionDTO> getAttrationForMap() {
@@ -46,18 +47,19 @@ public class AttrationService {
         return mapAttractionDTOS;
     }
 
+
     /**
-     * 30번 api
+     * 22번 api
      * @param nation 국가 이름
-     * @param memberId 유저 id
      * @return 스탬프 이미지, 인증여부
      */
-    public List<MapStampDTO> getStampsFormember(String nation, Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(
-                () -> new EntityNotFoundException("회원이 없습니다")
+    public List<MapStampDTO> getStampsFormember(String nation) {
+        String email = jwtService.getUserEmailFromJwt();
+        Member member = memberRepository.findByEmail(email).orElseThrow(
+                () -> new EntityNotFoundException("회원이 없습니다.")
         );
         List<Attraction> attractions = attractionRepository.findByNation(nation);
-        List<Stamp> stamps = stampRepository.findByMemberId(memberId);
+        List<Stamp> stamps = stampRepository.findByMemberId(member.getId());
         List<MapStampDTO> mapStampDTOS = new ArrayList<>();
 
         for (Attraction attraction : attractions){
@@ -68,5 +70,15 @@ public class AttrationService {
             }
         }
         return mapStampDTOS;
+    }
+
+
+    /**
+     * 테스트
+     * @param nation 국가명
+     * @return 통짜 Api
+     */
+    public List<Attraction> getAttractionByNation(String nation) {
+        return attractionRepository.findByNation(nation);
     }
 }
