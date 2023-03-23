@@ -51,7 +51,7 @@ public class AttrationService {
     /**
      * 22번 api
      * @param nation 국가 이름
-     * @return 스탬프 이미지, 인증여부
+     * @return 명소 아이디, 스탬프 이미지, 인증여부
      */
     public List<MapStampDTO> getStampsFormember(String nation) {
         Long memberId = jwtService.getUserIdFromJWT();
@@ -62,7 +62,7 @@ public class AttrationService {
         for (Attraction attraction : attractions){
             for (Stamp stamp : stamps){
                 if (attraction.getAttractionName().equals(stamp.getAttraction().getAttractionName())){
-                    mapStampDTOS.add(new MapStampDTO(attraction.getColorStamp(), stamp.getCertification()));
+                    mapStampDTOS.add(new MapStampDTO(attraction.getId(), attraction.getColorStamp(), stamp.getCertification()));
                 }
             }
         }

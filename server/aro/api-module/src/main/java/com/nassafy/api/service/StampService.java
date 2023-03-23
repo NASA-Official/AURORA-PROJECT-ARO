@@ -88,7 +88,7 @@ public class StampService {
                     .orElse(null);
 
             if (stamp != null) {
-                mapStamps.add(new MapStampDTO(attraction.getColorStamp(), stamp.getCertification()));
+                mapStamps.add(new MapStampDTO(attraction.getId(), attraction.getColorStamp(), stamp.getCertification()));
             }
         }
 
