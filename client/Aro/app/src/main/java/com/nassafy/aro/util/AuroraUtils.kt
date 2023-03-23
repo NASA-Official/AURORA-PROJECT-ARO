@@ -6,7 +6,6 @@ import com.google.android.gms.maps.model.PatternItem
 import com.nassafy.aro.R
 
 
-private const val TAG = "AuroraUtils_sdr"
 fun getKpPolylineOptions(kpIndex: Float) : PolylineOptions {
     val polylineOptions = PolylineOptions()
     when {

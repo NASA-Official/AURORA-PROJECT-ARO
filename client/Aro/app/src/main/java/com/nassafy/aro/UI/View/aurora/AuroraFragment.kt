@@ -1,6 +1,8 @@
 package com.nassafy.aro.ui.view.aurora
 
 import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -20,9 +22,10 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.maps.android.PolyUtil
+import com.nassafy.aro.BuildConfig
 import com.nassafy.aro.R
 import com.nassafy.aro.databinding.FragmentAuroraBinding
 import com.nassafy.aro.ui.adapter.BottomSheetFavoriteAdapter
@@ -31,23 +34,27 @@ import com.nassafy.aro.ui.view.ChartMarkerView
 import com.nassafy.aro.ui.view.dialog.DateHourSelectDialog
 import com.nassafy.aro.ui.view.main.MainActivity
 import com.nassafy.aro.util.*
+import java.net.MalformedURLException
+import java.net.URL
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
-
 private const val TAG = "AuroraFragment_sdr"
-
 class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding::inflate),
     OnMapReadyCallback, OnChartValueSelectedListener {
     private val auroraViewModel: AuroraViewModel by viewModels()
     private lateinit var googleMap: GoogleMap
+    private lateinit var cloudTileOverlay: TileOverlay
     private lateinit var favoriteAdapter: BottomSheetFavoriteAdapter
     private var now = LocalDateTime.now()
     private var dateList = arrayListOf<String>()
     private var hourList = arrayListOf<ArrayList<String>>()
+
+    private var selectedMarker: Marker? = null
+
     var kpIndex = 3.0F
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -73,9 +80,19 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
         googleMap = gMap
         googleMap.uiSettings.isMapToolbarEnabled = false
         setCustomMapStyle()
+        setCloudTileOverlay()
+
+        val customMarker = generateBitmapDescriptorFromRes(requireContext(), R.drawable.map_marker)
+
+        val markerOptions = MarkerOptions()
+            .position(LatLng(37.4220, -122.0841))
+            .title("Googleplex")
+            .icon(customMarker)
+        val marker = googleMap.addMarker(markerOptions)
+
+        // setPolyLine
         val polylineOptions = getKpPolylineOptions(kpIndex)
         val polyline = googleMap.addPolyline(polylineOptions)
-
         googleMap.setOnMapClickListener { latLng ->
             auroraViewModel.setClickedLocation(latLng)
 
@@ -259,6 +276,27 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
             Log.e(TAG, "Can't find style. Error: ", e)
         }
     } // End of setCustomMapStyle
+
+    private fun setCloudTileOverlay() {
+        val tileProvider: TileProvider = object : UrlTileProvider(256, 256) {
+            override fun getTileUrl(x: Int, y: Int, z: Int): URL? {
+                val s =
+                    "https://tile.openweathermap.org/map/clouds_new/${z}/${x}/${y}.png?appid=${BuildConfig.WEATHER_API_KEY}"
+                val tileUrl: URL? = try {
+                    URL(s)
+                } catch (e: MalformedURLException) {
+                    throw AssertionError(e)
+                }
+                Log.d(TAG, "getTileUrl: $tileUrl")
+                return tileUrl
+            }
+        }
+        cloudTileOverlay = googleMap.addTileOverlay(
+            TileOverlayOptions()
+                .tileProvider(tileProvider)
+                .transparency(0.9f)
+        )!!
+    } // End of setCloudTileOverlay
 
     // Dummy Data
     companion object {
