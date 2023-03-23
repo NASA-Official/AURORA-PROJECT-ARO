@@ -15,14 +15,14 @@ public class StampDiaryReqDTO {
     List<String> deleteImageList;
     String memo;
 
-    MultipartFile newImageList;
+//    List<MultipartFile> newImageList;
 
     @Builder
-    public StampDiaryReqDTO(String deleteImageList, String memo, MultipartFile newImageList) throws JsonProcessingException {
+    public StampDiaryReqDTO(String deleteImageList, String memo) throws JsonProcessingException {
 
         ObjectMapper objectMapper = new ObjectMapper();
         this.deleteImageList = objectMapper.readValue(deleteImageList, new TypeReference<List<String>>() {});
         this.memo = memo;
-        this.newImageList = newImageList;
+//        this.newImageList = newImageList;
     }
 }
