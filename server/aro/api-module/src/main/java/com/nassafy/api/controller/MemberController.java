@@ -170,13 +170,13 @@ public class MemberController {
      * API 8
      * @return
      */
-//    @PostMapping("/logout")
-//    public ResponseEntity<?> logout(@RequestBody TokenReqDto tokenReqDto) {
-//        logger.debug("\t Start logout ");
-//
-////        String accessToken = jwtService.logout(tokenReqDto);
-////        return ResponseEntity.ok(accessToken);
-//    }
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestBody TokenReqDto tokenReqDto) {
+        logger.debug("\t Start logout ");
+
+        String accessToken = jwtService.logout(tokenReqDto);
+        return ResponseEntity.ok(accessToken);
+    }
 
     @GetMapping("/blacklist")
     public ResponseEntity<?> getBlacklist(){

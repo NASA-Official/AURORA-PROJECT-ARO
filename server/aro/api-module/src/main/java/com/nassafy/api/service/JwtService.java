@@ -1,5 +1,6 @@
 package com.nassafy.api.service;
 
+import com.nassafy.api.dto.req.TokenReqDto;
 import com.nassafy.api.jwt.JwtAuthenticationFilter;
 import com.nassafy.api.jwt.JwtTokenProvider;
 import com.nassafy.api.dto.jwt.TokenDto;
@@ -55,14 +56,14 @@ public class JwtService {
         return tokenDto;
     }
 
-    public String logout(TokenDto tokenDto) {
+    public String logout(TokenReqDto tokenReqDto) {
         logger.debug("\t Start logout");
 
-        if(!jwtTokenProvider.validateToken(tokenDto.getAccessToken())) {
+        if(!jwtTokenProvider.validateToken(tokenReqDto.getAccessToken())) {
             throw new IllegalArgumentException("로그아웃 : 유효하지 않은 토큰입니다.");
         }
 
-        String accessToken = tokenDto.getAccessToken();
+        String accessToken = tokenReqDto.getAccessToken();
         JwtAuthenticationFilter.setBlacklist(accessToken);
 
         return accessToken;
