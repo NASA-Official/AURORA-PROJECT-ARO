@@ -1,5 +1,6 @@
 package com.nassafy.api.dto.req;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -10,6 +11,7 @@ public class AttractionInterestOrNotDTO {
     public String desciption;
     public Boolean interest = false;
 
+    @Builder
     public AttractionInterestOrNotDTO(Long attractionId, String stamp, String attractionName, String desciption, Boolean interest) {
         this.attractionId = attractionId;
         this.stamp = stamp;

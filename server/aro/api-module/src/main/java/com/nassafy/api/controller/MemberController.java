@@ -9,6 +9,7 @@ import com.nassafy.api.dto.res.MemberLoginResDto;
 import com.nassafy.api.dto.res.MemberResDto;
 import com.nassafy.api.service.EmailService;
 import com.nassafy.api.service.JwtService;
+import com.nassafy.core.DTO.ServiesRegisterDTO;
 import com.nassafy.api.service.MemberService;
 import com.nassafy.api.service.StampService;
 import com.nassafy.core.entity.Member;
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
@@ -182,5 +184,4 @@ public class MemberController {
 
         return ResponseEntity.ok(memberResDto);
     }
-
 }
