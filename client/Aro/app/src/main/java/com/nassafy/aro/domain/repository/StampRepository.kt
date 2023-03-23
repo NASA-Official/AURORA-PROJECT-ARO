@@ -2,6 +2,7 @@ package com.nassafy.aro.domain.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.nassafy.aro.data.dto.CountryTest
 import com.nassafy.aro.data.dto.StampTest
 import com.nassafy.aro.domain.api.StampApi
 import com.nassafy.aro.util.NetworkResult
@@ -17,22 +18,48 @@ class StampRepository @Inject constructor(
     @HeaderInterceptorApi private val headerStampApi: StampApi
 ) {
 
-    // ================================= 테스트 통신 =================================
-    private val _getCountryTestResponseLiveData = MutableLiveData<NetworkResult<List<String>>>()
-    val getCountryTestResponseLiveData: LiveData<NetworkResult<List<String>>>
-        get() = _getCountryTestResponseLiveData
 
-    suspend fun getCountryTest() {
-        val response = stampApi.getCountryTest()
 
-        _getCountryTestResponseLiveData.postValue(NetworkResult.Loading())
+    // ==================================== 전체 국가 리스트 가져오기 ====================================
+    private val _getAllNationListResponseLiveData = MutableLiveData<NetworkResult<List<String>>>()
+    val getAllNationListResponseLiveData: LiveData<NetworkResult<List<String>>>
+        get() = _getAllNationListResponseLiveData
+
+    suspend fun getAllNationList() {
+        val response = stampApi.getAllNationList()
+
+        _getAllNationListResponseLiveData.postValue(NetworkResult.Loading())
 
         when {
             response.isSuccessful && response.body() != null -> {
-                _getCountryTestResponseLiveData.postValue(NetworkResult.Success(response.body()!!))
+                _getAllNationListResponseLiveData.postValue(NetworkResult.Success(response.body()!!))
             }
             response.errorBody() != null -> {
-                _getCountryTestResponseLiveData.postValue(
+                _getAllNationListResponseLiveData.postValue(
+                    NetworkResult.Error(
+                        response.errorBody()!!.string()
+                    )
+                )
+            }
+        }
+    } // End of getAllNationList
+
+    // ================================= 국가별 해당 데이터와 유저 데이터 가져오기 =================================
+    private val _getCountryStampDataResponseLiveData = MutableLiveData<NetworkResult<CountryTest>>()
+    val getCountryStampDataResponseLiveData: LiveData<NetworkResult<CountryTest>>
+        get() = _getCountryStampDataResponseLiveData
+
+    suspend fun getCountryStampData() {
+        val response = headerStampApi.getCountryStampData()
+
+        _getCountryStampDataResponseLiveData.postValue(NetworkResult.Loading())
+
+        when {
+            response.isSuccessful && response.body() != null -> {
+                _getCountryStampDataResponseLiveData.postValue(NetworkResult.Success(response.body()!!))
+            }
+            response.errorBody() != null -> {
+                _getCountryStampDataResponseLiveData.postValue(
                     NetworkResult.Error(
                         response.errorBody()!!.string()
                     )
@@ -40,17 +67,8 @@ class StampRepository @Inject constructor(
             }
         }
 
-    } // End of getCountryTest
 
-
-    private val _getStampTestResponseLiveData = MutableLiveData<NetworkResult<List<StampTest>>>()
-    val getStampTestResponseLiveData: LiveData<NetworkResult<List<StampTest>>>
-        get() = _getStampTestResponseLiveData
-
-    suspend fun getStampsTest() {
-
-    } // End of getStampsTest
-
+    } // End of _getCountryStampData
 
     // ================================= 유저별 국가 스탬프 데이터 가져오기 =================================
     // getUserStampDataGroupByCountry

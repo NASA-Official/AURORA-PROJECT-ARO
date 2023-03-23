@@ -13,25 +13,6 @@ import javax.inject.Inject
 class StampViewModel @Inject constructor(private val stampRepository: StampRepository) :
     ViewModel() {
 
-    // ================================= 테스트 통신 =================================
-    val getCountryTestResponseLiveData: LiveData<NetworkResult<List<String>>>
-        get() = stampRepository.getCountryTestResponseLiveData
-
-    suspend fun getCountryTest() {
-        viewModelScope.launch {
-            stampRepository.getCountryTest()
-        }
-    } // End of getCountryTest
-
-
-    private val _countryList: MutableList<String> = arrayListOf()
-    val countryList: List<String>
-        get() = _countryList
-
-    fun setCountryList(newCountryList: List<String>) {
-        _countryList.clear()
-        _countryList.addAll(newCountryList)
-    } // End of setCountryList
     
     // ================================= 유저별 국가 스탬프 데이터 가져오기 =================================
     // getUserStampDataGroupByCountry
