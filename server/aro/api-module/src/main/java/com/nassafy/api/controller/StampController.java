@@ -93,18 +93,18 @@ public class StampController {
         log.info("start edit diary");
         log.info(stampDiaryReqDTO.getMemo());
         log.info(String.valueOf(stampDiaryReqDTO.getDeleteImageList().size()));
-        log.info(stampDiaryReqDTO.getDeleteImageList().get(0));
-        log.info(String.valueOf(stampDiaryReqDTO.getNewImageList().size()));
-        log.info(stampDiaryReqDTO.getNewImageList().get(0).getOriginalFilename());
+//        log.info(String.valueOf(stampDiaryReqDTO.getNewImageList()));
+        log.info(stampDiaryReqDTO.getNewImageList().getOriginalFilename());
 
         String email = jwtService.getUserEmailFromJwt();
-
-        try {
-            stampService.editStampDiary(email, attractionId, stampDiaryReqDTO);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (IllegalArgumentException | IOException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(HttpStatus.OK);
+//
+//        try {
+//            stampService.editStampDiary(email, attractionId, stampDiaryReqDTO);
+//            return new ResponseEntity<>(HttpStatus.OK);
+//        } catch (IllegalArgumentException | IOException e) {
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
     }
 
     @GetMapping(value = "diary/{attractionId}")
