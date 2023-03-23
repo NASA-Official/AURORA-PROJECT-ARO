@@ -13,7 +13,6 @@ import com.nassafy.aro.R
 import com.nassafy.aro.util.addInfoWindow
 import kotlinx.coroutines.launch
 
-private const val TAG = "AuroraViewModel_sdr"
 class AuroraViewModel : ViewModel() {
     private var _clickedLocation = MutableLiveData<LatLng>()
     val clickedLocation: LiveData<LatLng>
