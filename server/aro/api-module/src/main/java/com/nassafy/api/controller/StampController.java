@@ -87,6 +87,7 @@ public class StampController {
     @PostMapping(value = "diary/{attractionId}",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> editStampDiary (
+            @RequestPart("newImageList") List<MultipartFile> newImageList,
             StampDiaryReqDTO stampDiaryReqDTO,
             @PathVariable Long attractionId) {
 
@@ -94,17 +95,16 @@ public class StampController {
         log.info(stampDiaryReqDTO.getMemo());
         log.info(String.valueOf(stampDiaryReqDTO.getDeleteImageList().size()));
 //        log.info(String.valueOf(stampDiaryReqDTO.getNewImageList()));
-        log.info(stampDiaryReqDTO.getNewImageList().getOriginalFilename());
+        log.info(newImageList.get(0).getOriginalFilename());
 
         String email = jwtService.getUserEmailFromJwt();
-        return new ResponseEntity<>(HttpStatus.OK);
-//
-//        try {
-//            stampService.editStampDiary(email, attractionId, stampDiaryReqDTO);
-//            return new ResponseEntity<>(HttpStatus.OK);
-//        } catch (IllegalArgumentException | IOException e) {
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
+
+        try {
+            stampService.editStampDiary(email, attractionId, newImageList, stampDiaryReqDTO);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IllegalArgumentException | IOException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping(value = "diary/{attractionId}")
