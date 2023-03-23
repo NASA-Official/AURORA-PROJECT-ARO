@@ -11,11 +11,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/interest")
 @RequiredArgsConstructor
 public class InteresetController {
     private final InterestService interestService;
-    @PostMapping("aurora/favorite")
+
+    // 41번 Api
+    @PostMapping("")
     public ResponseEntity<String> registerInterest(@RequestParam Long memberId, @RequestBody Map<String, Object> requestBody) {
         List<Integer> ids = (List<Integer>) requestBody.get("attractionIds");
         List<Long> attractionIds = ids.stream()
@@ -25,17 +27,14 @@ public class InteresetController {
         return ResponseEntity.ok("success");
     }
 
-    @GetMapping("stamps/interests/{nationName}/{memberId}")
+
+
+    // 42번 Api
+    @GetMapping("/{nationName}/{memberId}")
     public ResponseEntity<List<AttractionInterestOrNotDTO>> getAttreactionInterestOrNot(@PathVariable String nationName, @PathVariable Long memberId) {
         List<AttractionInterestOrNotDTO> attractionInterestOrNotDTOList = interestService.getAttractionInterestOrNot(nationName,memberId);
         return ResponseEntity.ok(attractionInterestOrNotDTOList);
     }
-
-//    @GetMapping("stamps/{memberId}")
-//    public ResponseEntity<List<Interest>> findInterest(@RequestParam Long memberId) {
-//        List<Interest> interests = interestService.findInterest(memberId);
-//        return ResponseEntity.ok(interests);
-//    }
 
 
 

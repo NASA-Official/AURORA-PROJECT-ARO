@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
+import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,9 @@ public class StampService {
     @Autowired
     private S3Util s3Util;
 
+    @Autowired
+    private JwtService jwtService;
+
     /**
      * 회원 가입 시 명소 리스트 제공
      * @param countryName 국가 명
@@ -65,6 +69,13 @@ public class StampService {
         }
         return singupAttractionDTOS;
     }
+
+    /**
+     * 30번 Api
+     * @param userId 유저 id
+     * @param countryName 국가명
+     * @return 스탬프 사진, 인증 여부
+     */
 
     public List<MapStampDTO> findStampsByUserAndCountry(Long userId, String countryName) {
         List<Stamp> stamps = stampRepository.findByMemberId(userId);
@@ -192,7 +203,11 @@ public class StampService {
      */
 
     public StampDTO getStampDetail(Long attractionId, Long memberId) {
-        System.out.println(memberId + "*********************************************************");
+//        String email = jwtService.getUserEmailFromJwt();
+//        Member member1 = memberRepository.findByEmail(email).orElseThrow(
+//                () -> new EntityNotFoundException("회원이 없습니다")
+//        );
+
         Member member = memberRepository.findById(memberId).orElseThrow(
                 () -> new EntityNotFoundException("회원이 없습니다")
         );
