@@ -80,7 +80,7 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
         googleMap = gMap
         googleMap.uiSettings.isMapToolbarEnabled = false
         setCustomMapStyle()
-        setCloudTileOverlay()
+//        setCloudTileOverlay()
 
         val customMarker = generateBitmapDescriptorFromRes(requireContext(), R.drawable.map_marker)
 
