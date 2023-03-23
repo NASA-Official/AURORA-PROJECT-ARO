@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonObject
 import com.nassafy.aro.data.dto.Diary
 import com.nassafy.aro.domain.repository.DiaryRepository
 import com.nassafy.aro.util.NetworkResult
@@ -76,11 +77,19 @@ class DiaryViewModel @Inject constructor(private val diaryRepository: DiaryRepos
         var gson = Gson()
         var gsonPretty = GsonBuilder().setPrettyPrinting().create()
 
+        var dataJson = JsonObject().apply {
+            addProperty("memo", memo)
+            addProperty("deleteImageList", JSONArray(deleteImageList).toString())
+        }
+
         val requestHashMap: HashMap<String, RequestBody> = HashMap()
+
         requestHashMap["memo"] = memo.toRequestBody("multipart/form-data".toMediaTypeOrNull())
         val jsonArray = JSONArray(deleteImageList)
         requestHashMap["deleteImageList"] =
             jsonArray.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull())
+
+
 
         viewModelScope.launch {
             diaryRepository.createPlaceDiary(
