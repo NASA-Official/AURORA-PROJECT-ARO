@@ -14,7 +14,7 @@ logging:
     org:
       springframework:
         web:
-          filter=debug:
+          filter: debug
 
 #logging:
 #  level:
