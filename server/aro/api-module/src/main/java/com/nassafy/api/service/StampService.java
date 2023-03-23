@@ -170,6 +170,8 @@ public class StampService {
         stamp.editMemo(stampDiaryReqDTO.getMemo());
         Stamp savedStamp = stampRepository.save(stamp);
 
+        int imageCnt = stampImageRepository.findByStampId(savedStamp.getId()).size();
+
 
         // 삭제 요청이 들어온 이미지 삭제하기
         log.info("delete start");
@@ -190,13 +192,28 @@ public class StampService {
         }
         log.debug(String.valueOf(deleteCnt) + "개의 사진이 삭제되었습니다.");
 
+        imageCnt -= deleteCnt;
+
         // 추가된 이미지 저장하기
-        for (MultipartFile file: newImageList) {
-            String imageUrl = s3Util.upload(file, "diary/" + email + "/" + attractionId);
+        for (int i = 0; i < newImageList.size(); i++) {
+            if (newImageList.get(i).isEmpty()) {
+                continue;
+            }
+
+            if (imageCnt >= 5) {
+                log.info("max file count: 5");
+                log.info("total image cnt: " + newImageList.size());
+                log.info("saved image cnt: " + i);
+                break;
+            }
+
+            String imageUrl = s3Util.upload(newImageList.get(i), "diary/" + email + "/" + attractionId);
 
             StampImage stampImage = StampImage.builder().image(imageUrl).stamp(stamp).build();
 
             stampImageRepository.save(stampImage);
+
+            imageCnt += 1;
         }
     }
 
