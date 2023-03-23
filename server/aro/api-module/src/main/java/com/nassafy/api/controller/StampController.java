@@ -87,17 +87,20 @@ public class StampController {
     @PostMapping(value = "diary/{attractionId}",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> editStampDiary (
-            @RequestPart("newImageList") List<MultipartFile> newImageList,
-            @RequestPart("data") StampDiaryReqDTO stampDiaryReqDTO,
+            StampDiaryReqDTO stampDiaryReqDTO,
             @PathVariable Long attractionId) {
+
         log.info("start edit diary");
-        log.info("image count: " + String.valueOf(newImageList.size()));
-        log.info("first image is empty?? " + String.valueOf(newImageList.get(0).isEmpty()));
+        log.info(stampDiaryReqDTO.getMemo());
+        log.info(String.valueOf(stampDiaryReqDTO.getNewImageList().size()));
+        log.info(stampDiaryReqDTO.getNewImageList().get(0).getOriginalFilename());
+        log.info(String.valueOf(stampDiaryReqDTO.getDeleteImageList().size()));
+        log.info(stampDiaryReqDTO.getDeleteImageList().get(0));
 
         String email = jwtService.getUserEmailFromJwt();
 
         try {
-            stampService.editStampDiary(email, attractionId, newImageList, stampDiaryReqDTO);
+            stampService.editStampDiary(email, attractionId, stampDiaryReqDTO);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (IllegalArgumentException | IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
