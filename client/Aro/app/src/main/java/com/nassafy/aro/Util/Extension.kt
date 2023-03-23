@@ -2,23 +2,23 @@ package com.nassafy.aro.util
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.util.Log
+import android.graphics.Canvas
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.renderscript.Allocation
 import android.renderscript.Element
 import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicBlur
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.Polyline
+import com.google.android.gms.maps.model.*
 import com.google.android.material.snackbar.Snackbar
+
 
 fun Context.showToastMessage(message: String) {
     val toast = Toast.makeText(this, message, Toast.LENGTH_SHORT)
@@ -79,3 +79,19 @@ fun setImageWithGrayScale(image: Bitmap?, imageView: ImageView): Int {
     imageView.setImageBitmap(image)
     return 0;
 } // End of setImageWithGrayScale
+
+fun generateBitmapDescriptorFromRes(context: Context, resId: Int): BitmapDescriptor {
+    val drawable = ContextCompat.getDrawable(context, resId)
+    drawable!!.setBounds(0, 0,
+        drawable.intrinsicWidth,
+        drawable.intrinsicHeight
+    )
+    val bitmap = Bitmap.createBitmap(
+        drawable.intrinsicWidth,
+        drawable.intrinsicHeight,
+        Bitmap.Config.ARGB_8888
+    )
+    val canvas = Canvas(bitmap)
+    drawable.draw(canvas)
+    return BitmapDescriptorFactory.fromBitmap(bitmap)
+}

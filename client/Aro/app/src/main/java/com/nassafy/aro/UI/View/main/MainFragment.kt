@@ -22,8 +22,6 @@ import com.nassafy.aro.ui.view.BaseFragment
 import com.nassafy.aro.ui.view.aurora.AuroraFragment
 import java.time.LocalDateTime
 
-private const val TAG = "MainFragment_sdr"
-
 class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::inflate) {
     private lateinit var mContext : Context
     private var tabTitle: ArrayList<String> = arrayListOf()

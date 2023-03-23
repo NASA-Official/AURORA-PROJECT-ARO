@@ -13,7 +13,6 @@ import com.github.mikephil.charting.utils.Utils
 import com.nassafy.aro.R
 
 @SuppressLint("ViewConstructor")
-private const val TAG = "ChartMarkerView_SDR"
 class ChartMarkerView(context: Context, layoutResource: Int) : MarkerView(context, layoutResource) {
 
     private var chartMarkerTextview: TextView = findViewById(R.id.chart_marker_textview)
@@ -24,7 +23,6 @@ class ChartMarkerView(context: Context, layoutResource: Int) : MarkerView(contex
         if (e is CandleEntry) {
             chartMarkerTextview!!.text = Utils.formatNumber(e.high, 0, true)
         } else {
-            Log.d(TAG, "refreshContent: ${e.y}")
             chartMarkerTextview!!.text = "${e.y}"
         }
         super.refreshContent(e, highlight)
