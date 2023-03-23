@@ -38,6 +38,7 @@ public class MemberService {
                 .meteorService(signupReqDto.isMeteorService())
                 .alarm(true)
                 .auroraDisplay(true)
+                .refreshToken(null)
                 .build();
         member.getRoles().add("USER");
         logger.debug("\t member " + member);
@@ -54,16 +55,9 @@ public class MemberService {
         if(optionalMember.isEmpty()){
             return null;
         }
-        Member member = optionalMember.get();
-        logger.debug("\t before update member : " + member);
 
+        memberRepository.updateNickname(email, nickname);
 
-        member.setNickname(nickname);
-        memberRepository.save(member);
-
-        member = memberRepository.findByEmail(email).get();
-        logger.debug("\t after update member : " + member);
-
-        return member;
+        return memberRepository.findByEmail(email).get();
     }
 }

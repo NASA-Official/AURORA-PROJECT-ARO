@@ -11,9 +11,15 @@ logging:
     root: warn
     com.nassafy.api: DEBUG
     org.hibernate.type.descriptor.sql: DEBUG
+    org:
+      springframework:
+        web:
+          filter: DEBUG
 #logging:
 #  level:
 #    ccom.nassafy.api: info    # 로깅 레벨
+
+
 
 spring:
   #  h2:

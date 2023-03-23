@@ -27,7 +27,11 @@ public class InterestService {
     private final MemberRepository memberRepository;
     private final AttractionRepository attractionRepository;
 
-
+    /**
+     * 41번 Api
+     * @param memberId
+     * @param attractionIds
+     */
     @Transactional(readOnly = false)
     public void registerInterest(Long memberId, List<Long> attractionIds) {
         Member member = memberRepository.findById(memberId)
@@ -54,10 +58,14 @@ public class InterestService {
         }
     }
 
-    public List<AttractionInterestOrNotDTO> getAttractionInterestOrNot(String nationName, Long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException("회원이 없습니다."));
 
+    /**
+     * 42번 Api
+     * @param nationName
+     * @param memberId
+     * @return
+     */
+    public List<AttractionInterestOrNotDTO> getAttractionInterestOrNot(String nationName, Long memberId) {
         List<Attraction> attractionList = attractionRepository.findAll();
         System.out.println(attractionList);
         List<Interest> interestList = interestRepository.findAllByMemberId(memberId)

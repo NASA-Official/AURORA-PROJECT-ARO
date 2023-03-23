@@ -54,12 +54,9 @@ public class AttrationService {
      * @return 스탬프 이미지, 인증여부
      */
     public List<MapStampDTO> getStampsFormember(String nation) {
-        String email = jwtService.getUserEmailFromJwt();
-        Member member = memberRepository.findByEmail(email).orElseThrow(
-                () -> new EntityNotFoundException("회원이 없습니다.")
-        );
+        Long memberId = jwtService.getUserIdFromJWT();
         List<Attraction> attractions = attractionRepository.findByNation(nation);
-        List<Stamp> stamps = stampRepository.findByMemberId(member.getId());
+        List<Stamp> stamps = stampRepository.findByMemberId(memberId);
         List<MapStampDTO> mapStampDTOS = new ArrayList<>();
 
         for (Attraction attraction : attractions){
