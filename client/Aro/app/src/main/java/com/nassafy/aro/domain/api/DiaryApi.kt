@@ -1,6 +1,7 @@
 package com.nassafy.aro.domain.api
 
 
+import com.nassafy.aro.data.dto.Diary
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -9,16 +10,26 @@ import retrofit2.http.*
 private const val TAG = "DiaryApi_싸피"
 
 interface DiaryApi {
-    // 일지 개별 스템프 기록하기
-    // https://j8d106.p.ssafy.io/api/stamps/diary/미국/페어뱅크스/3
+    // https://j8d106.p.ssafy.io/api/stamps/diary/1
+
+
+    // 명소별 일기 가져오기
+    // https://j8d106.p.ssafy.io/api/stamps/diary/1
+    @JvmSuppressWildcards
+    @GET("/api/stamps/diary/{placeId}")
+    suspend fun getPlaceUserDiary(
+        @Path("placeId") placeId: Int,
+    ): Response<Diary>  // End of getPlaceUserDiary
+
+
+    // 일지 개별 스템프 작성 및 수정
+    // https://j8d106.p.ssafy.io/api/stamps/diary/1
     @Multipart
     @JvmSuppressWildcards
-    @POST("/api/stamps/diary/{countryName}/{placeName}/{userId}")
+    @POST("/api/stamps/diary/{placeId}")
     suspend fun createStampDiary(
-        @Path("countryName") countryName: String,
-        @Path("placeName") placeName: String,
-        @Path("userId") userId: Long,
-        @Part files: List<MultipartBody.Part?>,
-        @PartMap diaryContent: HashMap<String, RequestBody>
+        @Path("placeId") placeId: Int,
+        @Part newImageList: MultipartBody.Part?,
+        @PartMap() requestHashMap: HashMap<String, RequestBody>,
     ): Response<Void>
 } // End of DiaryApi interface
