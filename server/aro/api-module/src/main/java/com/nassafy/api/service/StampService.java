@@ -157,7 +157,7 @@ public class StampService {
                 .build();
     }
 
-    public void editStampDiary(String email, Long attractionId, StampDiaryReqDTO stampDiaryReqDTO)
+    public void editStampDiary(String email, Long attractionId, List<MultipartFile> newImageList, StampDiaryReqDTO stampDiaryReqDTO)
             throws IOException {
 
         log.info("start edit service");
@@ -196,26 +196,26 @@ public class StampService {
 
         // 추가된 이미지 저장하기
 //        List<MultipartFile> newImageList = stampDiaryReqDTO.getNewImageList();
-//        for (int i = 0; i < newImageList.size(); i++) {
-//            if (newImageList.get(i).isEmpty()) {
-//                continue;
-//            }
-//
-//            if (imageCnt >= 5) {
-//                log.info("max file count: 5");
-//                log.info("total image cnt: " + newImageList.size());
-//                log.info("saved image cnt: " + i);
-//                break;
-//            }
-//
-//            String imageUrl = s3Util.upload(newImageList.get(i), "diary/" + email + "/" + attractionId);
-//
-//            StampImage stampImage = StampImage.builder().image(imageUrl).stamp(stamp).build();
-//
-//            stampImageRepository.save(stampImage);
-//
-//            imageCnt += 1;
-//        }
+        for (int i = 0; i < newImageList.size(); i++) {
+            if (newImageList.get(i).isEmpty()) {
+                continue;
+            }
+
+            if (imageCnt >= 5) {
+                log.info("max file count: 5");
+                log.info("total image cnt: " + newImageList.size());
+                log.info("saved image cnt: " + i);
+                break;
+            }
+
+            String imageUrl = s3Util.upload(newImageList.get(i), "diary/" + email + "/" + attractionId);
+
+            StampImage stampImage = StampImage.builder().image(imageUrl).stamp(stamp).build();
+
+            stampImageRepository.save(stampImage);
+
+            imageCnt += 1;
+        }
     }
 
     /**
