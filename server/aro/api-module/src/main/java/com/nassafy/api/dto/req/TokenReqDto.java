@@ -1,8 +1,8 @@
 package com.nassafy.api.dto.req;
 
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class TokenReqDto {
     private String grantType;
     private String accessToken;
