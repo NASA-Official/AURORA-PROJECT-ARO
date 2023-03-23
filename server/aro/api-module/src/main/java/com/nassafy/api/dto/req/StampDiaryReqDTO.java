@@ -26,9 +26,7 @@ public class StampDiaryReqDTO {
 
         ObjectMapper objectMapper = new ObjectMapper();
         this.deleteImageList = objectMapper.readValue(deleteImageList, new TypeReference<List<String>>() {});
-        log.info(String.valueOf(newImageList.getClass()));
         this.memo = memo;
         this.newImageList = newImageList;
-//        this.newImageList = objectMapper.readValue((JsonParser) newImageList,new TypeReference<List<MultipartFile>>() {});
     }
 }
