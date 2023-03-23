@@ -94,6 +94,7 @@ public class StampController {
         log.info(stampDiaryReqDTO.getMemo());
         log.info(String.valueOf(stampDiaryReqDTO.getDeleteImageList().size()));
         log.info(String.valueOf(stampDiaryReqDTO.getNewImageList().getClass()));
+        log.info(String.valueOf(stampDiaryReqDTO.getNewImageList().get(0).getClass()));
 //        log.info(String.valueOf(stampDiaryReqDTO.getNewImageList()));
         log.info(stampDiaryReqDTO.getNewImageList().get(0).getOriginalFilename());
 
