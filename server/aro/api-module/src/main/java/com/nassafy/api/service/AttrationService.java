@@ -69,6 +69,17 @@ public class AttrationService {
         return mapStampDTOS;
     }
 
+    /**
+     *
+     * @param nationName 국가 명
+     * @return MapImage
+     */
+    public String getMapImage(String nationName) {
+        List<Attraction> attraction = attractionRepository.findByNation(nationName);
+        String mapImage = attraction.get(0).getMapImage();
+        return mapImage;
+    }
+
 
     /**
      * 테스트
@@ -78,4 +89,6 @@ public class AttrationService {
     public List<Attraction> getAttractionByNation(String nation) {
         return attractionRepository.findByNation(nation);
     }
+
+
 }

@@ -49,6 +49,16 @@ public class AttrationController {
     }
 
 
+    // 23번 api
+    @GetMapping("/mapImage/{nationName}")
+    public ResponseEntity<String> getMapImage(@PathVariable String nationName) {
+        String mapImage = attrationService.getMapImage(nationName);
+        return ResponseEntity.ok(mapImage);
+
+
+    }
+
+
     // 테스트
     @GetMapping("/stamps/attrations/{nation}")
     public ResponseEntity<List<Attraction>> getAttrationsByNation(@PathVariable String nation){
