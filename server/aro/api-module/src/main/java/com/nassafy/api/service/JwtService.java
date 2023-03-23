@@ -2,9 +2,8 @@ package com.nassafy.api.service;
 
 import com.nassafy.api.jwt.JwtTokenProvider;
 import com.nassafy.api.dto.jwt.TokenDto;
-import com.nassafy.core.entity.RefreshToken;
+import com.nassafy.core.entity.Member;
 import com.nassafy.core.respository.MemberRepository;
-import com.nassafy.core.respository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +24,6 @@ public class JwtService {
     private final MemberRepository memberRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
-    private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
     public TokenDto login(String email, String password) {
@@ -42,12 +40,11 @@ public class JwtService {
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         TokenDto tokenDto = jwtTokenProvider.generateToken(authentication);
 
-        refreshTokenRepository.save(
-                RefreshToken.builder()
-                        .email(authenticationToken.getName())
-                        .refreshToken(tokenDto.getRefreshToken())
-                        .build()
-        );
+        Member member = memberRepository.findByEmail(email).get();
+        String refreshToken = tokenDto.getRefreshToken();
+        member.setRefreshToken(refreshToken);
+
+        memberRepository.save(member);
 
         return tokenDto;
     }
