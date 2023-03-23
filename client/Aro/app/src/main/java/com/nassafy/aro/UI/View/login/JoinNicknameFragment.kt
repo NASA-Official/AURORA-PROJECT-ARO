@@ -14,8 +14,6 @@ import androidx.navigation.fragment.navArgs
 import com.nassafy.aro.R
 import com.nassafy.aro.databinding.FragmentJoinNicknameBinding
 import com.nassafy.aro.ui.view.BaseFragment
-import com.nassafy.aro.ui.view.custom.AroServiceSelectFragmentArgs
-import com.nassafy.aro.ui.view.custom.AroServiceSelectFragmentDirections
 import com.nassafy.aro.ui.view.login.viewmodel.LoginActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,9 +31,9 @@ class JoinNicknameFragment : BaseFragment<FragmentJoinNicknameBinding>(FragmentJ
 
     private fun setNextButtonAvailable(isAvailable: Boolean) {
         //TODO ACTIVATE
-//        binding.nextButton.isSelected = isAvailable
-//        binding.nextButton.isEnabled = isAvailable
-//        binding.nextButton.isClickable = isAvailable
+        binding.nextButton.isSelected = isAvailable
+        binding.nextButton.isEnabled = isAvailable
+        binding.nextButton.isClickable = isAvailable
     } // End of setNextButtonAvalable
 
     override fun onResume() {

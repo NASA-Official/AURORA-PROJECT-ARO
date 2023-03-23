@@ -20,9 +20,9 @@
 
         <item name="backgroundColor" >@android:color/transparent</item>
 
-        <item name="colorPrimary">@color/main_app_color_light</item>
-        <item name="colorControlNormal">@color/main_app_color_light</item>  // unFocus 상태일때 밑줄 색.
-        <item name="colorControlActivated">@color/main_app_color_light</item> // Focus 상태일때 밑줄 색.
+        <item name="colorPrimary">@color/main_app_color</item>
+        <item name="colorControlNormal">@color/main_app_color</item>  // unFocus 상태일때 밑줄 색.
+        <item name="colorControlActivated">@color/main_app_color</item> // Focus 상태일때 밑줄 색.
         <item name="android:textCursorDrawable">@color/white</item>  // cursor 색.
 
         <item name="endIconTint">@color/white</item>
