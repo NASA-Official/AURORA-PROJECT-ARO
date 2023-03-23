@@ -17,26 +17,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.nassafy.aro.data.dto.PlaceItem
+import com.nassafy.aro.ui.view.ServiceViewModel
 
-//Todo Change Dto
 @Composable
-fun ChipHasCancelButton(text: String) {
+fun ChipHasCancelButton(place: PlaceItem, viewModel: ServiceViewModel) {
     Row(
         modifier = Modifier
             .background(
-                color = Color.LightGray,
+                color = Color.White,
                 shape = RoundedCornerShape(16.dp)
             ),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
-            Modifier.height(40.dp), contentAlignment = Alignment.Center) {
+            Modifier.height(32.dp), contentAlignment = Alignment.CenterEnd) {
             Text(
-                text = text,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                text = place.placeName,
+                modifier = Modifier.padding(start = 16.dp)
             )
         }
-        Box (Modifier.height(40.dp), contentAlignment = Alignment.Center) {
-            IconButton(onClick = { /*TODO*/ }) {
+        Box (Modifier.height(32.dp), contentAlignment = Alignment.Center) {
+            IconButton(onClick = {
+                viewModel.unSelectAuroraPlace(place)
+            }) {
                 Icon(
                     imageVector = Icons.Default.Close,
                     contentDescription = "Cancel",

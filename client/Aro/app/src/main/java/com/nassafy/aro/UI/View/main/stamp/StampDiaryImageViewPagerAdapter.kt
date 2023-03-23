@@ -1,10 +1,14 @@
 package com.nassafy.aro.ui.view.main.stamp
 
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
+import com.nassafy.aro.R
 import com.nassafy.aro.data.dto.CountryTest
 import com.nassafy.aro.databinding.StampDiaryImageListItemBinding
 import com.squareup.picasso.Picasso
@@ -13,7 +17,7 @@ import java.util.*
 private const val TAG = "StampDiaryImageViewPage_싸피"
 
 class StampDiaryImageViewPagerAdapter(
-    private val placeDiaryImageList: LinkedList<Uri>
+    private val placeDiaryImageList: LinkedList<String>
 ) : RecyclerView.Adapter<StampDiaryImageViewPagerAdapter.StampDiaryPlaceHolder>() {
     private lateinit var binding: StampDiaryImageListItemBinding
 
@@ -31,13 +35,14 @@ class StampDiaryImageViewPagerAdapter(
     } // End of onCreateViewHolder
 
     override fun onBindViewHolder(holder: StampDiaryPlaceHolder, position: Int) {
-        Picasso.get().load(placeDiaryImageList[position].toString()).fit().centerCrop()
-            .into(binding.stampDiaryImageListImageview)
+        Log.d(TAG, "viewAdapter Image List : ${placeDiaryImageList}")
+
+        Picasso.get().load(placeDiaryImageList[position].toUri()).fit().centerCrop()
+            .into(holder.itemView.findViewById<ImageView>(R.id.stamp_diary_image_list_imageview))
 
         binding.stampDiaryHistoryImageDeleteButton.setOnClickListener {
             itemClickListener.imageRemoveButtonClick(position)
         }
-
     } // End of onBindViewHolder
 
     override fun getItemCount(): Int = placeDiaryImageList.size
@@ -45,6 +50,18 @@ class StampDiaryImageViewPagerAdapter(
     fun refreshAdapter() {
         notifyDataSetChanged()
     } // End of refreshAdapter
+
+    internal fun addImage(newImageUri: Uri) {
+        Log.d(TAG, "addImage: 이미지 들어가나?")
+        placeDiaryImageList.add(newImageUri.toString())
+        refreshAdapter()
+    } // End of addImage
+
+    internal fun removeImage(position: Int) {
+        placeDiaryImageList.removeAt(position)
+        refreshAdapter()
+    } // End of removeImage
+
 
     interface ItemClickListener {
         fun imageRemoveButtonClick(position: Int)

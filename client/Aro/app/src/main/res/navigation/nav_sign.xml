@@ -55,14 +55,17 @@
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right" />
-        <action
-            android:id="@+id/action_joinNicknameFragment_to_aroServiceSelectFragment"
-            app:destination="@id/nav_service" />
     </fragment>
     <fragment
         android:id="@+id/joinCountryPlaceSelectFragment"
-        android:name="com.nassafy.aro.ui.view.login.joinCountryPlaceSelectFragment"
-        android:label="SignUpFavoriteFragment" />
+        android:name="com.nassafy.aro.ui.view.login.JoinCountryPlaceSelectFragment"
+        android:label="SignUpFavoriteFragment" >
+        <action
+            android:id="@+id/action_joinCountryPlaceSelectFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
     <fragment
         android:id="@+id/joinServiceFragment"
         android:name="com.nassafy.aro.ui.view.login.JoinServiceFragment"
@@ -74,36 +77,11 @@
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right" />
+        <action
+            android:id="@+id/action_joinServiceFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
-    <navigation android:id="@+id/nav_service"
-        app:startDestination="@id/aroServiceSelectFragment">
-        <fragment
-            android:id="@+id/aroServiceSelectFragment"
-            android:name="com.nassafy.aro.ui.view.custom.AroServiceSelectFragment"
-            android:label="AroServiceSelectFragment">
-            <action
-                android:id="@+id/action_aroServiceSelectFragment_to_joinFavoriteFragment"
-                app:destination="@id/joinCountryPlaceSelectFragment"
-                app:enterAnim="@anim/from_right"
-                app:exitAnim="@anim/to_left"
-                app:popEnterAnim="@anim/from_left"
-                app:popExitAnim="@anim/to_right" />
-            <action
-                android:id="@+id/action_aroServiceSelectFragment_to_aroCountryPlaceSelectFragment"
-                app:destination="@id/aroCountryPlaceSelectFragment"
-                app:enterAnim="@anim/from_right"
-                app:exitAnim="@anim/to_left"
-                app:popEnterAnim="@anim/from_left"
-                app:popExitAnim="@anim/to_right" />
-            <argument
-                android:name="isJoinProcess"
-                app:argType="boolean"
-                android:defaultValue="true" />
-        </fragment>
-        <fragment
-            android:id="@+id/aroCountryPlaceSelectFragment"
-            android:name="com.nassafy.aro.ui.view.custom.AroCountryPlaceSelectFragment"
-            android:label="AroCountryPlaceSelectFragment" />
-    </navigation>
 </navigation>

@@ -3,6 +3,7 @@ package com.nassafy.aro.domain.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.nassafy.aro.data.dto.Diary
 import com.nassafy.aro.domain.api.DiaryApi
 import com.nassafy.aro.util.NetworkResult
 import com.nassafy.aro.util.di.HeaderInterceptorApi
@@ -20,32 +21,69 @@ class DiaryRepository @Inject constructor(
 ) {
 
 
+    // ===================================== 명소별 유저 diary 데이터 가져오기 =====================================
+    private val _getPlaceDiaryUserDataResponseLiveData = MutableLiveData<NetworkResult<Diary>>()
+    val getPlaceDiaryUserDataResponseLiveData: LiveData<NetworkResult<Diary>>
+        get() = _getPlaceDiaryUserDataResponseLiveData
+
+    suspend fun getPlaceDiaryUserData(
+        placeId: Int
+    ) {
+        val response = headerDiaryApi.getPlaceUserDiary(placeId)
+
+        _getPlaceDiaryUserDataResponseLiveData.postValue(NetworkResult.Loading())
+
+        if (response.isSuccessful && response.body() != null) {
+            _getPlaceDiaryUserDataResponseLiveData.postValue(
+                NetworkResult.Success(response.body()!!)
+            )
+        } else if (response.errorBody() != null) {
+            _getPlaceDiaryUserDataResponseLiveData.postValue(
+                NetworkResult.Error(
+                    response.errorBody()!!.string()
+                )
+            )
+        }
+    } // End of getPlaceDiaryUserData
+
+
     // ====================================== 명소별 일지 작성 ======================================
     private val _createPlaceDiaryResponseLiveData = MutableLiveData<NetworkResult<Int>>()
     val createPlaceDiaryResponseLiveData: LiveData<NetworkResult<Int>>
         get() = _createPlaceDiaryResponseLiveData
 
     suspend fun createPlaceDiary(
-        countryName: String,
-        placeName: String,
-        userId: Long,
-        imageList: List<MultipartBody.Part?>,
-        diaryContent: HashMap<String, RequestBody>
-
+        placeId: Int,
+        newImageList: List<MultipartBody.Part?>,
+        requestHashMap: HashMap<String, RequestBody>,
     ) {
-        Log.d(TAG, "일기생성 Repositroy : 여기 까지오나? ")
+
+        Log.d(TAG, "newImageList: $newImageList")
+
+//        Log.d(TAG, "createPlaceDiary: ${dataType.get("data").toString()}")
+//
+//        dataType.forEach {
+//            Log.d(TAG, "createPlaceDiary: ${it.key.toString()}")
+//            Log.d(TAG, "createPlaceDiary: ${it.value.contentType()}")
+//            Log.d(TAG, "createPlaceDiary: ${it.value.contentLength()}")
+//            Log.d(
+//                TAG, "createPlaceDiary: ${
+//                    it.value.apply {
+//
+//                    }
+//                }"
+//            )
+//        }
+
 
         val response = headerDiaryApi.createStampDiary(
-            countryName,
-            placeName,
-            userId,
-            imageList,
-            diaryContent
+            placeId,
+            newImageList[0],
+            requestHashMap
         )
-
-        Log.d(TAG, "일기 생성 response: ${response}")
-        Log.d(TAG, "일기 생성 response: ${response.body()}")
-        Log.d(TAG, "일기 생성 response: ${response.code()}")
+        Log.d(TAG, "다이어리 생성 Response: $response")
+        Log.d(TAG, "다이어리 생성 Response: ${response.body()} ")
+        Log.d(TAG, "다이어리 생성 Response: ${response.code()}")
 
         _createPlaceDiaryResponseLiveData.postValue(NetworkResult.Loading())
 
