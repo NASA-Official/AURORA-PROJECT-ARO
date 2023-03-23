@@ -9,13 +9,12 @@ logging:
         util:
           EC2MetadataUtils: error
     root: warn
-    com.nassafy.api: DEBUG
+    com.nassafy.api: INFO
     org.hibernate.type.descriptor.sql: DEBUG
     org:
       springframework:
         web:
           filter: info
-
 #logging:
 #  level:
 #    ccom.nassafy.api: info    # 로깅 레벨
