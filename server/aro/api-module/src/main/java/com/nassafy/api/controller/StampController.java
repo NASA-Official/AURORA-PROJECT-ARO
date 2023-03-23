@@ -92,10 +92,10 @@ public class StampController {
 
         log.info("start edit diary");
         log.info(stampDiaryReqDTO.getMemo());
-        log.info(String.valueOf(stampDiaryReqDTO.getNewImageList().size()));
-        log.info(stampDiaryReqDTO.getNewImageList().get(0).getOriginalFilename());
         log.info(String.valueOf(stampDiaryReqDTO.getDeleteImageList().size()));
         log.info(stampDiaryReqDTO.getDeleteImageList().get(0));
+        log.info(String.valueOf(stampDiaryReqDTO.getNewImageList().size()));
+        log.info(stampDiaryReqDTO.getNewImageList().get(0).getOriginalFilename());
 
         String email = jwtService.getUserEmailFromJwt();
 
