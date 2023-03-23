@@ -51,6 +51,8 @@ public class Member implements UserDetails {
 
     private boolean meteorService = false;
 
+    private String refreshToken;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
