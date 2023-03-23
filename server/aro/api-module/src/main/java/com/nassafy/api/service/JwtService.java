@@ -2,9 +2,8 @@ package com.nassafy.api.service;
 
 import com.nassafy.api.jwt.JwtTokenProvider;
 import com.nassafy.api.dto.jwt.TokenDto;
-import com.nassafy.core.entity.RefreshToken;
+import com.nassafy.core.entity.Member;
 import com.nassafy.core.respository.MemberRepository;
-import com.nassafy.core.respository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +15,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -25,7 +26,6 @@ public class JwtService {
     private final MemberRepository memberRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
-    private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
     public TokenDto login(String email, String password) {
@@ -42,12 +42,11 @@ public class JwtService {
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         TokenDto tokenDto = jwtTokenProvider.generateToken(authentication);
 
-        refreshTokenRepository.save(
-                RefreshToken.builder()
-                        .email(authenticationToken.getName())
-                        .refreshToken(tokenDto.getRefreshToken())
-                        .build()
-        );
+        Member member = memberRepository.findByEmail(email).get();
+        String refreshToken = tokenDto.getRefreshToken();
+        member.setRefreshToken(refreshToken);
+
+        memberRepository.save(member);
 
         return tokenDto;
     }
@@ -57,5 +56,23 @@ public class JwtService {
         User user = (User)authentication.getPrincipal();
 
         return user.getUsername();
+    }
+
+
+    public Long getUserIdFromJWT() {
+        String email = getUserEmailFromJwt();
+        Member member = memberRepository.findByEmail(email).orElseThrow(
+                () -> new EntityNotFoundException("회원이 없습니다.")
+        );
+        return member.getId();
+    }
+
+    public Member getUserFromEmail(){
+        String email = getUserEmailFromJwt();
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("해당 id를 가진 회원이 없습니다.")
+                );
+        return member;
     }
 }
