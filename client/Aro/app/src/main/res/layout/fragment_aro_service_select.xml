@@ -25,7 +25,8 @@
         android:text="@string/join_service_select_page_title_text"
         android:textColor="@color/main_app_color"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@id/service_select_layout"
+        app:layout_constraintTop_toTopOf="@id/cancel_button"
+        app:layout_constraintBottom_toBottomOf="@id/cancel_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -82,6 +83,7 @@
         app:layout_constraintTop_toBottomOf="@id/next_button" />
 
     <TextView
+        android:id="@+id/service_select_later_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/main_app_color"
@@ -91,5 +93,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/service_select_skip_textview" />
 
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/service_select_later_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="service_select_later_textview, service_select_skip_textview" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,10 +5,7 @@ import androidx.viewbinding.BuildConfig
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.nassafy.aro.Application
-import com.nassafy.aro.domain.api.DiaryApi
-import com.nassafy.aro.domain.api.StampApi
-import com.nassafy.aro.domain.api.TestApi
-import com.nassafy.aro.domain.api.UserAccessApi
+import com.nassafy.aro.domain.api.*
 import com.nassafy.aro.util.SERVER_URL
 import dagger.Module
 import dagger.Provides
@@ -127,17 +124,7 @@ object ApiModule {
             .create(TestApi::class.java)
     }
 
-    @Provides
-    fun provideUserAccessApi(@WithoutHeaderInterceptorOkHttpClient okHttpClient: OkHttpClient): UserAccessApi {
-        return Retrofit.Builder()
-            .client(okHttpClient)
-            .baseUrl(provideBaseUrl())
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
-            .create(UserAccessApi::class.java)
-    }
-
-    @HeaderInterceptorApi
+  @HeaderInterceptorApi
     @Provides
     fun provideHeaderTestApi(@HeaderInterceptorOkHttpClient okHeaderOkHttpClient: OkHttpClient): TestApi {
         return Retrofit.Builder()
@@ -174,6 +161,26 @@ object ApiModule {
             .create(StampApi::class.java)
     } // End of provideHeaderStampApi
 
+    // ============================================ UserAccess ============================================
+    @Provides
+    fun provideUserAccessApi(@WithoutHeaderInterceptorOkHttpClient okHttpClient: OkHttpClient): UserAccessApi {
+        return Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(provideBaseUrl())
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+            .create(UserAccessApi::class.java)
+    }
+
+    @Provides
+    fun provideUserAccessUsingTokenApi(@HeaderInterceptorOkHttpClient okHttpClient: OkHttpClient): UserAccessUsingTokenApi {
+        return Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(provideBaseUrl())
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+            .create(UserAccessUsingTokenApi::class.java)
+    } // End of provideWithoutHeaderDiaryApi)
 
     // ============================================ Diary ============================================
     @Provides
