@@ -7,5 +7,7 @@ data class PlaceItem(
     @SerializedName("attraction_id") val placeId: String,
     @SerializedName("description") val description: String,
     @SerializedName("stamp") val stamp: String,
-    var isChecked: Boolean = false
+    @SerializedName("mapImage") val mapImage : String,
+    @SerializedName("latitude") val latitude : Float,
+    @SerializedName("longitude") val longitude : Float
 )
