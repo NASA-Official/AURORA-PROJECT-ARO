@@ -117,5 +117,23 @@ public class InterestService {
         InterestListDTO interestListDTO = new InterestListDTO(attractionInterestOrNotDTOList, "테스트");
         return interestListDTO;
 
+
+    }
+
+    /**
+     * 11번 Api 관심 오로라 명소 지우기 로직
+     * @param memberId
+     */
+    public void deleteAuroaAttraction(Long memberId) {
+        Member member = memberRepository.findById(memberId).get();
+        // 해당 회원 관심 지역 비우기
+        List<Interest> interests = member.getInterests();
+        if(interests != null) {
+            for (Interest interest : interests) {
+                interestRepository.delete(interest);
+            }
+        }
+        // 영속성 컨텍스트 비우기
+        member.clearInterest();
     }
 }
