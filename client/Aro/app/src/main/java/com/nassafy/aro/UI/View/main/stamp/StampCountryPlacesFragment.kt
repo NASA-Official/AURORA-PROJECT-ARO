@@ -2,25 +2,35 @@ package com.nassafy.aro.ui.view.main.stamp
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import androidx.core.os.bundleOf
+import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
+import androidx.navigation.navGraphViewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.nassafy.aro.R
-import com.nassafy.aro.data.dto.PlaceDiaryTest
-import com.nassafy.aro.data.dto.PlaceTest
 import com.nassafy.aro.databinding.FragmentStampCountryPlacesBinding
 import com.nassafy.aro.ui.view.BaseFragment
+import com.nassafy.aro.util.NetworkResult
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.*
 
 private const val TAG = "StampHomeFragment_싸피"
 
-
+@AndroidEntryPoint
 class StampCountryPlacesFragment :
     BaseFragment<FragmentStampCountryPlacesBinding>(FragmentStampCountryPlacesBinding::inflate) {
     private lateinit var mContext: Context
 
     // viewPager
     private lateinit var countryPlaceViewPager: CountryPlaceViewPagerAdapter
+
+    // Fragment ViewModel
+    private val stampCountryPlaceViewModel: StampCountryPlaceViewModel by viewModels()
+
+    // navigationViewModel
+    private val stampHomeNavViewModel: StampNavViewModel by navGraphViewModels(R.id.nav_stamp_diary)
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -30,15 +40,40 @@ class StampCountryPlacesFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initEventListeners()
-        initViewPagerAdapter()
+        getUserPlaceDataGroupByCountryResponseLiveDataObserve()
+
+        // View가져오기.
+        CoroutineScope(Dispatchers.IO).launch {
+            val def: Deferred<Int> = async {
+                initViewGetData()
+                1
+            }
+
+            def.await()
+            initEventListeners()
+        }
     } // End of onViewCreated
+
+    private suspend fun initViewGetData() {
+        /*
+            stampHomeNavViewModel 에서 선택된 국가를 가져와서 통신
+         */
+        Log.d(TAG, "initViewGetData: ${stampHomeNavViewModel.selectedCountry}")
+        stampCountryPlaceViewModel.setSelectedCountry(stampCountryPlaceViewModel.selectedCountry)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            stampCountryPlaceViewModel.getUserPlaceDataGroupByCountry()
+        }
+    } // End of initViewGetData
 
     private fun initEventListeners() {
     } // End of initEventListeners
 
     private fun initViewPagerAdapter() {
-        countryPlaceViewPager = CountryPlaceViewPagerAdapter("미국", placeList)
+        countryPlaceViewPager = CountryPlaceViewPagerAdapter(
+            stampHomeNavViewModel.selectedCountry,
+            stampHomeNavViewModel.userCountryPlaceDataList
+        )
         binding.stampCountryCustomViewpager2.apply {
             adapter = countryPlaceViewPager
             ViewPager2.ORIENTATION_HORIZONTAL
@@ -47,87 +82,41 @@ class StampCountryPlacesFragment :
         countryPlaceViewPager.setItemClickListener(object :
             CountryPlaceViewPagerAdapter.ItemClickListener {
             override fun writeDiaryButtonClick(position: Int) {
-                val bundle = bundleOf("placeDiaryTest" to placeList[position].placeDiary)
-
                 // 해당 명소에 해당하는 일기 데이터를 가져옴.
-                Navigation.findNavController(binding.stampCountryCustomViewpager2.findViewById(R.id.stamp_country_custom_make_diary_button))
+                Navigation.findNavController(binding.stampCountryCustomViewpager2.findViewById(R.id.stamp_country_place_write_diary_button))
                     .navigate(
                         R.id.action_stampCountryPlacesFragment_to_stampDiaryFragment,
-                        bundle
                     )
             }
-        })
 
+            // 검증 버튼 클릭 이벤트
+            override fun validateButtonclick(position: Int) {
+                Log.d(TAG, "validateButtonclick: 검증 버튼 클릭")
+            } // End of validateButtonclick
+        })
     } // End of initViewPagerAdapter
 
-    companion object {
-        var cookCountyDiaryImageList = arrayListOf(
-            R.drawable.diary_test_image1,
-            R.drawable.diary_test_image2,
-            R.drawable.diary_test_image3,
-            R.drawable.diary_test_image4,
-        )
+    private fun getUserPlaceDataGroupByCountryResponseLiveDataObserve() {
+        stampCountryPlaceViewModel.getUserPlaceDataGroupByCountryResponseLiveData.observe(this.viewLifecycleOwner) {
+            // 통신 성공시 ViewPagerAdapter 연결
 
-        var idahoDiaryImageList = arrayListOf(
-            R.drawable.idaho_test_image1,
-            R.drawable.idaho_test_image2,
-            R.drawable.idaho_test_image3,
-            R.drawable.idaho_test_image4,
-        )
+            when (it) {
+                is NetworkResult.Success -> {
+                    stampHomeNavViewModel.setUserCountryPlaceDataList(it.data!!)
 
+                    //setUserCountryPlaceDataList
+                    initViewPagerAdapter()
+                }
 
-        var placeList: List<PlaceTest> = arrayListOf(
-            PlaceTest(
-                "미국",
-                "쿡 카운티",
-                R.drawable.usa_cook_county_color,
-                "시카고근교에서 즐기는 북극광 명소",
-                PlaceDiaryTest(
-                    "미국",
-                    "쿡 카운티", "시카고근교에서 즐기는 북극광 명소", "", cookCountyDiaryImageList
-                )
-            ),
-            PlaceTest(
-                "미국",
-                "아이다호 팬핸들",
-                R.drawable.usa_idaho_color,
-                "국유림의 장관 하지만, 곰조심!",
-                PlaceDiaryTest(
-                    "미국",
-                    "아이다호 팬핸들", "국유림의 장관 하지만, 곰조심!", "", idahoDiaryImageList
-                )
-            ),
-            PlaceTest(
-                "미국",
-                "어퍼 반도",
-                R.drawable.usa_upper_color,
-                "미시간주의 자랑",
-                PlaceDiaryTest(
-                    "미국",
-                    "어퍼 반도", "미시간주의 자랑", "", cookCountyDiaryImageList
-                )
-            ),
-            PlaceTest(
-                "미국",
-                "아루스투크",
-                R.drawable.usa_arustuk_color,
-                "국립야생공원에서 보이는 북극광",
-                PlaceDiaryTest(
-                    "미국",
-                    "아루스투크", "국립야생공원에서 보이는 북극광", "", cookCountyDiaryImageList
-                )
-            ),
-            PlaceTest(
-                "미국",
-                "데날리",
-                R.drawable.usa_denali_color,
-                "알래스카 산악 공원의 자연 예술",
-                PlaceDiaryTest(
-                    "미국",
-                    "데날리", "알래스카 산악 공원의 자연 예술", "", cookCountyDiaryImageList
-                )
-            ),
-        )
+                is NetworkResult.Error -> {
 
-    }
+                }
+
+                is NetworkResult.Loading -> {
+
+                }
+            }
+        }
+    } // End of getUserPlaceDataGroupByCountryResponseLiveDataObserve
+
 } // End of StampHomeFragment class

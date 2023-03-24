@@ -3,6 +3,7 @@ package com.nassafy.aro.ui.view.main.stamp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nassafy.aro.data.dto.CountryTest
 import com.nassafy.aro.domain.repository.StampRepository
 import com.nassafy.aro.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +28,14 @@ class StampHomeViewModel @Inject constructor(private val stampRepository: StampR
         }
     } // End of getAllNationList
 
-    // 국가를 Key로 해당 국가 데이터와 유저 데이터 가져오기
+    // ================================= 유저별 국가 스탬프 데이터 가져오기 =================================
+    val getUserStampDataGroupByCountryResponseLiveData: LiveData<NetworkResult<List<CountryTest>>>
+        get() = stampRepository.getUserStampDataGroupByCountryResponseLiveData
 
+    suspend fun getUserStampDataGroupByCountry(countryName: String) {
+        viewModelScope.launch {
+            stampRepository.getUserStampDataGroupByCountry(countryName)
+        }
 
+    } // End of getUserStampDataGroupByCountry
 } // End of StampHomeViewModel class
