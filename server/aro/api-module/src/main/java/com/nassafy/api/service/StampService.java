@@ -88,7 +88,7 @@ public class StampService {
                     .orElse(null);
 
             if (stamp != null) {
-                mapStamps.add(new MapStampDTO(attraction.getColorStamp(), stamp.getCertification()));
+                mapStamps.add(new MapStampDTO(attraction.getId(), attraction.getColorStamp(), stamp.getCertification()));
             }
         }
 
@@ -157,7 +157,7 @@ public class StampService {
                 .build();
     }
 
-    public void editStampDiary(String email, Long attractionId, List<MultipartFile> newImageList, StampDiaryReqDTO stampDiaryReqDTO)
+    public void editStampDiary(String email, Long attractionId, StampDiaryReqDTO stampDiaryReqDTO)
             throws IOException {
 
         log.info("start edit service");
@@ -195,6 +195,7 @@ public class StampService {
         imageCnt -= deleteCnt;
 
         // 추가된 이미지 저장하기
+        List<MultipartFile> newImageList = stampDiaryReqDTO.getNewImageList();
         for (int i = 0; i < newImageList.size(); i++) {
             if (newImageList.get(i).isEmpty()) {
                 continue;
