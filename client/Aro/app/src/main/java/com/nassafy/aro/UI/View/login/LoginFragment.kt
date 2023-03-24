@@ -18,6 +18,7 @@ import com.nassafy.aro.databinding.FragmentLoginBinding
 import com.nassafy.aro.ui.view.BaseFragment
 import com.nassafy.aro.ui.view.main.MainActivity
 import com.nassafy.aro.ui.view.login.viewmodel.LoginActivityViewModel
+import com.nassafy.aro.ui.view.login.viewmodel.LoginFragmentViewModel
 import com.nassafy.aro.util.NetworkResult
 import com.nassafy.aro.util.githubLoginUri
 import com.nassafy.aro.util.showSnackBarMessage
@@ -34,7 +35,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
 
-    private val loginActivityViewModel: LoginActivityViewModel by activityViewModels()
+    private val loginFragmentViewModel: LoginFragmentViewModel by viewModels()
     private var isTriedLoginState = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -120,7 +121,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     }
 
     private fun initJoinObserve() {
-        loginActivityViewModel.loginToken.observe(this.viewLifecycleOwner) {
+
+        loginFragmentViewModel.loginToken.observe(this.viewLifecycleOwner) {
             when (it) {
                 is NetworkResult.Success -> {
                     val data = it.data
@@ -158,7 +160,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         binding.loginButton.setOnClickListener {
             isTriedLoginState = true
             CoroutineScope(Dispatchers.IO).launch {
-                loginActivityViewModel.loginByIdPassword(
+                loginFragmentViewModel.loginByIdPassword(
                     binding.loginEmailIdEdittext.text.toString(),
                     binding.loginPasswordEdittext.text.toString()
                 )

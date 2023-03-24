@@ -20,7 +20,7 @@ class SharedPreferencesUtil(context: Context) {
     fun addUserAccessToken(access_token: String) {
         val editor = preferences.edit()
         val temp =
-            "Bearer $to"
+            "Bearer $access_token"
         editor.putString(ACCESS_TOKEN, temp)
         editor.apply()
     } // End of addUserAccessToken

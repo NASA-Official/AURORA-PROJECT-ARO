@@ -38,6 +38,7 @@ class JoinNicknameFragment : BaseFragment<FragmentJoinNicknameBinding>(FragmentJ
 
     override fun onResume() {
         super.onResume()
+        setNextButtonAvailable(false)
     }
 
     private fun initView() {

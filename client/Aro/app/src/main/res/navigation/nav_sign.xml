@@ -17,6 +17,9 @@
             app:exitAnim="@anim/aro_exit_anim"
             app:popEnterAnim="@anim/aro_pop_enter_anim"
             app:popExitAnim="@anim/aro_pop_exit_anim" />
+        <action
+            android:id="@+id/action_loginFragment_to_joinNicknameFragment"
+            app:destination="@id/joinNicknameFragment" />
     </fragment>
     <fragment
         android:id="@+id/joinEmailFragment"
