@@ -1,5 +1,6 @@
 package com.nassafy.aro.ui.view.login.viewmodel
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.nassafy.aro.data.dto.LoginToken
@@ -37,6 +38,10 @@ class LoginActivityViewModel @Inject constructor(
         get() = userAccessRepository.placeListLiveData
     val userJoinNetworkResultLiveData: LiveData<NetworkResult<Unit>>
         get() = userAccessRepository.userJoinNetworkResultLiveData
+
+    // 임시
+    val placeListData = mutableStateListOf<PlaceItem>()
+    val selectedAuroraPlaceList = mutableStateListOf<PlaceItem>()
 
     suspend fun loginByIdPassword(email: String, password: String) {
         viewModelScope.launch {

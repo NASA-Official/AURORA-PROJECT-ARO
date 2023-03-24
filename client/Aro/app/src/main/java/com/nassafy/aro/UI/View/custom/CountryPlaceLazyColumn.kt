@@ -10,28 +10,16 @@ import com.nassafy.aro.data.dto.PlaceItem
 import com.nassafy.aro.ui.view.ServiceViewModel
 
 @Composable
-fun CountryPlaceLazyColumn(placeList: List<PlaceItem>, selectedPlaceList: MutableList<PlaceItem>, viewModel: ServiceViewModel ) {
-
-    var allImageLoadedState by remember { mutableStateOf(mutableStateListOf<Boolean>()) }
-    DisposableEffect(key1 = allImageLoadedState, key2 = placeList) {
-        Log.d("ssafy_pcs", "list_changed")
-        when (allImageLoadedState.size == placeList.size) {
-            true -> {
-                Log.d("ssafy_pcs", "all image loaded")
-            }
-            false -> {
-
-            }
-        }
-        onDispose {  }
+fun CountryPlaceLazyColumn(placeList: MutableList<PlaceItem>, selectedPlaceList: MutableList<PlaceItem>, viewModel: ServiceViewModel ) {
+    val loadedList = remember {
+        mutableStateListOf<Boolean>()
     }
-
     LazyColumn (
         Modifier.fillMaxWidth(0.9f)
             ){
         // TODO Change items DTO List
         items(placeList) {
-            CountryPlaceLazyColumnItem(it, selectedPlaceList, viewModel, allImageLoadedState)
+            CountryPlaceLazyColumnItem(it, selectedPlaceList, viewModel, loadedList)
         }
 //
 //        items(placeList) {
