@@ -38,17 +38,17 @@ public class StampController {
 
 
     /**
-     *  30번 Api
+     * 30번 Api
      */
     @GetMapping("collectioncount/{nationName}")
-    public ResponseEntity<String> getHowManyStamps(@PathVariable String nationName){
+    public ResponseEntity<String> getHowManyStamps(@PathVariable String nationName) {
         String count = stampService.getHowManyStamps(nationName);
         return ResponseEntity.ok(count);
     }
 
 
     /**
-     *  31번 API
+     * 31번 API
      */
     @GetMapping("detail/{attractionId}")
     public ResponseEntity<StampDTO> getStampDetail(@PathVariable Long attractionId) {
@@ -83,8 +83,8 @@ public class StampController {
 //    }
 
     @PostMapping(value = "diary/{attractionId}",
-            consumes = { MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> editStampDiary (
+            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> editStampDiary(
             StampDiaryReqDTO stampDiaryReqDTO,
             @PathVariable Long attractionId) {
 
@@ -107,14 +107,14 @@ public class StampController {
     }
 
     @GetMapping(value = "diary/{attractionId}")
-    public ResponseEntity<?> getStampDiary (
+    public ResponseEntity<?> getStampDiary(
             @PathVariable Long attractionId) {
 
         String email = jwtService.getUserEmailFromJwt();
 
         try {
             StampDiaryResDTO result = stampService.getStampDiary(attractionId, email);
-            return new ResponseEntity<>(result,HttpStatus.OK);
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             log.debug(e.getMessage());
             log.debug("BAD REQUEST");
@@ -131,4 +131,13 @@ public class StampController {
         List<SingupAttractionDTO> singupAttractionDTOS = stampService.findStampsCountry(nation);
         return ResponseEntity.ok(singupAttractionDTOS);
     }
+
+
+    // 37번 api
+    @GetMapping("detail/all/{nationName}")
+    public ResponseEntity<List<StampDTO>> getAllStampdetail(@PathVariable String nationName) {
+        List<StampDTO> stampDTOS = stampService.findAllStampdetail(nationName);
+        return ResponseEntity.ok(stampDTOS);
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.nassafy.api.controller;
 
+import com.nassafy.api.dto.req.CollectionsDTO;
 import com.nassafy.api.dto.req.MapAttractionDTO;
 import com.nassafy.api.service.AttrationService;
 import com.nassafy.core.DTO.MapStampDTO;
@@ -56,6 +57,30 @@ public class AttrationController {
         return ResponseEntity.ok(mapImage);
 
 
+    }
+
+    // 24번 api
+    @GetMapping("/stamps/total/{nation}")
+    public ResponseEntity<Integer> getStampCountCountry(@PathVariable  String nation) {
+        Integer total = attrationService.getStampCountCountry(nation);
+        return ResponseEntity.ok(total);
+    }
+
+
+
+    // 25번 api
+    @GetMapping("/stamps/myCount/{nation}")
+    public ResponseEntity<Integer> getMyStampCountCountry(@PathVariable String nation) {
+        Integer myCount = attrationService.getMyStampCountCountry(nation);
+        return ResponseEntity.ok(myCount);
+    }
+
+
+     // 26번 api
+    @GetMapping("/stamps/collections/{nation}")
+    public ResponseEntity<CollectionsDTO> getCollections(@PathVariable String nation) {
+        CollectionsDTO collectionsDTO = attrationService.getCollections(nation);
+        return ResponseEntity.ok(collectionsDTO);
     }
 
 

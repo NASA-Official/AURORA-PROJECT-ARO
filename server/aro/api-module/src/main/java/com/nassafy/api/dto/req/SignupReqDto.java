@@ -19,8 +19,8 @@ public class SignupReqDto {
     private boolean meteorService;
 
     // 서비스별 선택한 명로 리스트
-    private List<String> auroraPlaces;
-    private List<String> meteorPlaces;
+    private List<Long> auroraPlaces;
+    private List<Long> meteorPlaces;
 //
 //    public SignupReqDto(){
 //        auroraPlaces = new LinkedList<>();

@@ -14,12 +14,14 @@ import com.nassafy.core.respository.AttractionRepository;
 import com.nassafy.core.respository.MemberRepository;
 import com.nassafy.core.respository.StampImageRepository;
 import com.nassafy.core.respository.StampRepository;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
@@ -88,7 +90,7 @@ public class StampService {
         Stamp stamp = stampRepository.findByAttractionIdAndMemberId(attraction.getId(), member.getId()).orElseThrow(
                 () -> new EntityNotFoundException("스탬프가 없습니다.")
         );
-        StampDTO stampDTO = new StampDTO(attraction.getNation(), attraction.getAttractionName(), attraction.getDescription(), stamp.getCertification(), attraction.getColorAuth(), attraction.getGrayAuth(), attraction.getColorStamp());
+        StampDTO stampDTO = new StampDTO(attractionId, attraction.getNation(), attraction.getAttractionName(), attraction.getDescription(), stamp.getCertification(), attraction.getColorAuth(), attraction.getGrayAuth(), attraction.getColorStamp());
         return stampDTO;
     }
 
@@ -107,6 +109,8 @@ public class StampService {
         }
         return singupAttractionDTOS;
     }
+
+
 
 
 
@@ -233,5 +237,22 @@ public class StampService {
         }
     }
 
+    /**
+     * 37번 Api
+     * @param nationName 국가 이름
+     * @return StampDTO들 (명소 id, 국가 명, 명소 명, 명소설명, 인증여부, 컬러사진, 흑백 사진, 스탬프)
+     */
 
+    public List<StampDTO> findAllStampdetail(String nationName) {
+        Long memberId = jwtService.getUserIdFromJWT();
+        List<Attraction> stampLists = attractionRepository.findByNation(nationName);
+        List<StampDTO> stampDTOS = new ArrayList<>();
+        for (Attraction attraction : stampLists) {
+            Long attractionId = attraction.getId();
+            Stamp stamp = stampRepository.findByAttractionIdAndMemberId(attractionId, memberId).orElse(null);
+            if (stamp != null) {
+                stampDTOS.add(new StampDTO(attractionId, nationName, attraction.getAttractionName(), attraction.getDescription(), stamp.getCertification(), attraction.getColorAuth(), attraction.getGrayAuth(), attraction.getColorStamp()));
+            }
+        } return stampDTOS;
+    }
 }
