@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.nassafy.aro.R
 import com.nassafy.aro.databinding.FragmentJoinEmailBinding
 import com.nassafy.aro.ui.view.BaseFragment
+import com.nassafy.aro.ui.view.login.viewmodel.JoinEmailFragmentViewModel
 import com.nassafy.aro.ui.view.login.viewmodel.LoginActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
@@ -22,6 +23,7 @@ class JoinEmailFragment :
     BaseFragment<FragmentJoinEmailBinding>(FragmentJoinEmailBinding::inflate) {
 
     private val loginActivityViewModel: LoginActivityViewModel by activityViewModels()
+    private val joinEmailFragmentViewModel: JoinEmailFragmentViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -31,7 +33,7 @@ class JoinEmailFragment :
 
     override fun onResume() {
         super.onResume()
-//        setNextButtonAvailable(false) // TODO ACITVE
+        setNextButtonAvailable(false) // TODO ACITVE
     } // End of onResume
 
     private fun initObserve() {
@@ -45,7 +47,7 @@ class JoinEmailFragment :
     } // End of setNextButtonAvalable
 
     private fun initEmailValidateObserve() {
-        loginActivityViewModel.isEmailValidated.observe(this.viewLifecycleOwner) {
+        joinEmailFragmentViewModel.isEmailValidated.observe(this.viewLifecycleOwner) {
             when (it) {
                 true -> {
                     binding.joinEmailIdTextfield.error = null
@@ -58,11 +60,11 @@ class JoinEmailFragment :
                 }
             } // End of when
         } // End of isEmailValidated.observe
-        loginActivityViewModel.isEmailAuthCodeValidated.observe(this.viewLifecycleOwner) {
+        joinEmailFragmentViewModel.isEmailAuthCodeValidated.observe(this.viewLifecycleOwner) {
             when (it) {
                 true -> {
                     binding.verificationEmailCodeTextfield.error = null
-                    when (loginActivityViewModel.isEmailValidated.value) {
+                    when (joinEmailFragmentViewModel.isEmailValidated.value) {
                         true -> {
                             setNextButtonAvailable(true)
                         }
@@ -96,7 +98,7 @@ class JoinEmailFragment :
         binding.verifyEmailTextview.setOnClickListener {
             Log.d("ssafy", "clicked")
             CoroutineScope(Dispatchers.IO).launch {
-                loginActivityViewModel.validateEmail(binding.joinEmailIdTextfield.editText?.text.toString())
+                joinEmailFragmentViewModel.validateEmail(binding.joinEmailIdTextfield.editText?.text.toString())
             }
         } // End of verifyEmailTextview.setOnClickListener
 
@@ -107,7 +109,7 @@ class JoinEmailFragment :
                     override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
                     override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
                     override fun afterTextChanged(p0: Editable?) {
-                        loginActivityViewModel.setIsEmailValidatedFalse()
+                        joinEmailFragmentViewModel.setIsEmailValidatedFalse()
                     }
                 }
             } // End of addTextChangedListener
@@ -122,7 +124,7 @@ class JoinEmailFragment :
                     when (text?.length) {
                         6 -> {
                             CoroutineScope(Dispatchers.IO).launch {
-                                loginActivityViewModel.validateEmialAuthCode(
+                                joinEmailFragmentViewModel.validateEmialAuthCode(
                                     binding.joinEmailIdTextfield.editText?.text.toString(),
                                     text.toString()
                                 ) // End of return

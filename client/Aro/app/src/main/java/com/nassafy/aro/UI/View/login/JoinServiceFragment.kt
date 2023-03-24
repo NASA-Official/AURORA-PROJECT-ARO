@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nassafy.aro.R
 import com.nassafy.aro.data.dto.PlaceItem
 import com.nassafy.aro.data.dto.UserTest
 import com.nassafy.aro.databinding.FragmentAroServiceSelectBinding
 import com.nassafy.aro.ui.view.BaseFragment
+import com.nassafy.aro.ui.view.login.viewmodel.JoinServiceFragmentViewModel
 import com.nassafy.aro.ui.view.login.viewmodel.LoginActivityViewModel
 import com.nassafy.aro.util.NetworkResult
 import com.nassafy.aro.util.showSnackBarMessage
@@ -19,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class JoinServiceFragment : BaseFragment<FragmentAroServiceSelectBinding>(FragmentAroServiceSelectBinding::inflate) {
 
     private val loginActivityViewModel: LoginActivityViewModel by activityViewModels()
-
+    private val joinSericeFragmentViewModel: JoinServiceFragmentViewModel by viewModels()
     override fun onResume() {
         super.onResume()
         binding.auroraServiceCardview.isSelected = loginActivityViewModel.isAuroraServiceSelected
@@ -34,7 +36,7 @@ class JoinServiceFragment : BaseFragment<FragmentAroServiceSelectBinding>(Fragme
 
     private fun initObserve() {
 
-        loginActivityViewModel.userJoinNetworkResultLiveData.observe(this.viewLifecycleOwner) { selectedAuroraPlaces ->
+        joinSericeFragmentViewModel.userJoinNetworkResultLiveData.observe(this.viewLifecycleOwner) {
             when (loginActivityViewModel.placeListLiveData.value!!) {
                 is NetworkResult.Success<List<PlaceItem>> -> {
                     requireView().showSnackBarMessage("회원가입 성공!")
@@ -57,8 +59,9 @@ class JoinServiceFragment : BaseFragment<FragmentAroServiceSelectBinding>(Fragme
     private fun initView() {
         binding.nextButton.setOnClickListener {
             loginActivityViewModel.apply {
-                isAuroraServiceSelected = binding.auroraServiceCardview.isSelected
-                isMeteorServiceSelected = binding.meteorServiceCardview.isSelected
+                Log.d("ssafy_isSelected?", "${binding.auroraServiceCardview.getIsSelected()}, ${binding.meteorServiceCardview.getIsSelected()}")
+                isAuroraServiceSelected = binding.auroraServiceCardview.getIsSelected()
+                isMeteorServiceSelected = binding.meteorServiceCardview.getIsSelected()
             }
             findNavController().navigate(R.id.action_joinServiceFragment_to_joinCountryPlaceSelectFragment)
         }
@@ -67,15 +70,15 @@ class JoinServiceFragment : BaseFragment<FragmentAroServiceSelectBinding>(Fragme
         }
         binding.serviceSelectSkipTextview.setOnClickListener {
             loginActivityViewModel.apply {
-                join(UserTest(
+                joinSericeFragmentViewModel.join(UserTest(
                     email = email,
                     password = password,
                     nickname = nickname,
                     alarm = true,
-                    auroraService = isAuroraServiceSelected,
-                    auroraPlaces = selectedAuroraPlaces.value?.map { it.placeName } ?: emptyList(),
-                    meteorService = isMeteorServiceSelected,
-                    meteorPlaces = selectedMeteorPlaces.value?.map { it.placeName } ?: emptyList(),
+                    auroraService = false,
+                    auroraPlaces = emptyList(),
+                    meteorService = false,
+                    meteorPlaces = emptyList(),
                 ))
             }
         }

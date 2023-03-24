@@ -39,7 +39,7 @@ fun CountryPlaceLazyColumnItem(
     loadedList: SnapshotStateList<Boolean>
 ) {
     //TODO change isSelected to DTO's boolean type var
-    var isSelected by remember { mutableStateOf(selectedPlaceList.contains(place)) }
+    var isSelected by remember { mutableStateOf(false) }
     val imageLoader = ImageLoader.Builder(LocalContext.current)
         .componentRegistry {
             add(SvgDecoder(LocalContext.current))
@@ -47,6 +47,7 @@ fun CountryPlaceLazyColumnItem(
         .build()
 
     DisposableEffect(key1 =  place, key2 = selectedPlaceList.size) {
+        isSelected = selectedPlaceList.contains(place)
         onDispose {
             isSelected = selectedPlaceList.contains(place)
         }

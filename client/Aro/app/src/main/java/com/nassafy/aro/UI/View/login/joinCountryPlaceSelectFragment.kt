@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nassafy.aro.R
 import com.nassafy.aro.data.dto.PlaceItem
@@ -31,6 +32,7 @@ import com.nassafy.aro.ui.adapter.CountrySpinnerAdapter
 import com.nassafy.aro.ui.view.BaseFragment
 import com.nassafy.aro.ui.view.custom.CountryPlaceChips
 import com.nassafy.aro.ui.view.custom.CountryPlaceLazyColumn
+import com.nassafy.aro.ui.view.login.viewmodel.JoinCountryPlaceSelectFragmentViewModel
 import com.nassafy.aro.ui.view.login.viewmodel.LoginActivityViewModel
 import com.nassafy.aro.util.NetworkResult
 import com.nassafy.aro.util.showSnackBarMessage
@@ -42,6 +44,7 @@ class JoinCountryPlaceSelectFragment : BaseFragment<FragmentAroCountryPlaceSelec
 
 
     private val loginActivityViewModel: LoginActivityViewModel by activityViewModels()
+    private val joinCountryPlaceServiceSelectFragmentViewModel: JoinCountryPlaceSelectFragmentViewModel by viewModels()
     private var spinnerList = arrayListOf<String>()
     private lateinit var adapter: CountrySpinnerAdapter
 
@@ -69,18 +72,24 @@ class JoinCountryPlaceSelectFragment : BaseFragment<FragmentAroCountryPlaceSelec
     private fun initView() {
         initSpinner(spinnerList)
         binding.nextButton.setOnClickListener {
+
             loginActivityViewModel.apply {
-                join(UserTest(
+                val userT = UserTest(
                     email = email,
                     password = password,
                     nickname = nickname,
                     alarm = true,
                     auroraService = isAuroraServiceSelected,
-                    auroraPlaces = selectedAuroraPlaces.value?.map { it.placeName } ?: emptyList(),
+                    auroraPlaces = selectedAuroraPlaces.value?.map { it.placeId } ?: emptyList(),
                     meteorService = isMeteorServiceSelected,
-                    meteorPlaces = selectedMeteorPlaces.value?.map { it.placeName } ?: emptyList(),
-                ))
+                    meteorPlaces = selectedMeteorPlaces.value?.map { it.placeId } ?: emptyList(),
+                )
+                Log.d("ssafy_pcs", "$userT")
+                joinCountryPlaceServiceSelectFragmentViewModel.join(userT)
             }
+        }
+        binding.cancelButton.setOnClickListener {
+            findNavController().popBackStack()
         }
         initComposeView()
     }
@@ -169,6 +178,23 @@ class JoinCountryPlaceSelectFragment : BaseFragment<FragmentAroCountryPlaceSelec
 //            Log.d("ssafy_selected_after", loginActivityViewModel.selectedAuroraPlaceList.toString())
         }
 
+        joinCountryPlaceServiceSelectFragmentViewModel.userJoinNetworkResultLiveData.observe(this.viewLifecycleOwner) {
+            when (loginActivityViewModel.placeListLiveData.value!!) {
+                is NetworkResult.Success<List<PlaceItem>> -> {
+                    requireView().showSnackBarMessage("회원가입 성공!")
+                    findNavController().navigate(R.id.action_joinCountryPlaceSelectFragment_to_loginFragment)
+                }
+                is NetworkResult.Error<*> -> {
+                    requireView().showSnackBarMessage("서버 통신 에러 발생")
+                }
+                is NetworkResult.Loading<*> -> {
+                    //TODO Loading
+                    Log.d(
+                        "ssafy_pcs", "로딩 중.."
+                    )
+                }
+            }
+        } // End of userJoinNetworkResultLiveData.observe
 
     }
 
