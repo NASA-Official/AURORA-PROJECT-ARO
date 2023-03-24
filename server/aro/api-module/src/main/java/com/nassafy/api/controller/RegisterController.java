@@ -1,6 +1,7 @@
 package com.nassafy.api.controller;
 
 
+import com.nassafy.api.dto.req.ServiceDTO;
 import com.nassafy.api.service.JwtService;
 import com.nassafy.core.DTO.ServiesRegisterDTO;
 import com.nassafy.core.entity.Member;
@@ -15,7 +16,7 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/register")
+@RequestMapping("/api/members")
 public class RegisterController {
     private static final Logger logger = LoggerFactory.getLogger(RegisterController.class);
     @Autowired
@@ -113,6 +114,18 @@ public class RegisterController {
         member.toggleAuroraDisplay();
         memberRepository.save(member);
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * 18번 Api
+     * @return 오로라 서비스 등록 여부 메테오 서비스 등록 여부
+     */
+    @GetMapping("/service/all")
+    public ResponseEntity<ServiceDTO> getAllServiceRegisteration() {
+        Long memberId = jwtService.getUserIdFromJWT();
+        Member member = memberRepository.findById(memberId).get();
+        ServiceDTO serviceDTO = new ServiceDTO(member.getAuroraService(), member.getMeteorService());
+        return ResponseEntity.ok(serviceDTO);
     }
 
 }
