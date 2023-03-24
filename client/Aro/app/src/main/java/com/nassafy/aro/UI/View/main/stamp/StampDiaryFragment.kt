@@ -78,6 +78,7 @@ class StampDiaryFragment() :
         selectImageLiveDataObserve()
         createPlaceDiaryResponseLiveDataObserve()
 
+
         // getData
         CoroutineScope(Dispatchers.IO).launch {
             diaryViewModel.getPlaceDiaryUserData(1)
@@ -198,6 +199,10 @@ class StampDiaryFragment() :
         )
         imageResult.launch(intent)
     } // End of selectGallery
+
+    private fun initViewGetData() {
+
+    } // End of initViewGetData
 
     private val imageResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()

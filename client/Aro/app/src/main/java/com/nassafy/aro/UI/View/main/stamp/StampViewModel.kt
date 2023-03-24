@@ -13,16 +13,15 @@ import javax.inject.Inject
 class StampViewModel @Inject constructor(private val stampRepository: StampRepository) :
     ViewModel() {
 
-    
     // ================================= 유저별 국가 스탬프 데이터 가져오기 =================================
     // getUserStampDataGroupByCountry
 
-    val getUserStampDataGroupByCountryResponseLiveData: LiveData<NetworkResult<String>>
-        get() = stampRepository.getUserStampDataGroupByCountryResponseLiveData
+    //val getUserStampDataGroupByCountryResponseLiveData: LiveData<NetworkResult<String>>
+        //get() = stampRepository.getUserStampDataGroupByCountryResponseLiveData
 
     suspend fun getUserStampDataGroupByCountry() {
         viewModelScope.launch {
-            stampRepository.getUserStampDataGroupByCountry()
+            //stampRepository.getUserStampDataGroupByCountry()
         }
     } // End of getUserStampDataGroupByCountry
 } // End of StampViewModel class

@@ -2,6 +2,7 @@ package com.nassafy.aro.ui.view.main.stamp
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -9,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import com.nassafy.aro.R
 import com.nassafy.aro.databinding.FragmentStampHomeBinding
 import com.nassafy.aro.ui.adapter.CountrySpinnerAdapter
@@ -17,9 +19,7 @@ import com.nassafy.aro.util.NetworkResult
 import com.nassafy.aro.util.showSnackBarMessage
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 
 private const val TAG = "StampHomeFragment_싸피"
@@ -30,14 +30,14 @@ class StampHomeFragment :
     private lateinit var mContext: Context
 
     // viewModel
-    private val stampViewModel: StampViewModel by viewModels()
     private val stampHomeViewModel: StampHomeViewModel by viewModels()
+    private val stampHomeNavViewModel: StampNavViewModel by navGraphViewModels(R.id.nav_stamp_diary)
 
     private var countryList: List<String> = ArrayList()
 
-
     // ArrayAdapter
     private lateinit var arrayAdapter: ArrayAdapter<String>
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -49,13 +49,14 @@ class StampHomeFragment :
 
         // 뷰모델 라이브 데이터 옵저버들 등록.
         getAllNationListResponseLiveDataObserve()
+        getUserStampDataGroupByCountryResponseLiveDataObserve()
 
         // 처음 데이터 가져오기.
         initViewgetData()
 
         // 이벤트 리스너들 등록
         initEventListeners()
-        Picasso.get().load(R.drawable.idaho_test_image3).fit().centerCrop()
+        Picasso.get().load(R.drawable.iceland_test_image).fit().centerCrop()
             .into(binding.stampHomeImageview)
     } // End of onViewCreated
 
@@ -67,16 +68,15 @@ class StampHomeFragment :
 
         // 국가별 명소 상세보기 버튼 클릭 이벤트
         binding.stampHomeDetailButtonTextview.setOnClickListener {
+            // 번들로 국가 넘겨줌.
+            //val bundle = bundleOf("selectedCountryName" to selectedCountry.toString())
+
             Navigation.findNavController(binding.stampHomeDetailButtonTextview)
                 .navigate(R.id.action_stampHomeFragment_to_stampCountryPlacesFragment)
         }
-
     } // End of initEventListeners
 
-    private fun initSpinner(countryList: List<String>) {
-        arrayAdapter = CountrySpinnerAdapter(mContext, R.layout.item_country_spinner, countryList)
-        binding.stampHomeSpinner.adapter = arrayAdapter
-
+    private fun spinnerEventListener() {
         binding.stampHomeSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -85,34 +85,44 @@ class StampHomeFragment :
                     position: Int,
                     id: Long
                 ) {
-                    requireView().showSnackBarMessage(
-                        parent!!.getItemAtPosition(position).toString()
-                    )
+                    val countryName = countryList[position]
+                    stampHomeNavViewModel.setSelectedCountry(countryName)
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        stampHomeViewModel.getUserStampDataGroupByCountry(countryName)
+                    }
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
                     return
                 }
             }
+    } // End of spinnerEventListener
+
+    private fun initSpinner(countryList: List<String>) {
+        arrayAdapter = CountrySpinnerAdapter(mContext, R.layout.item_country_spinner, countryList)
+        binding.stampHomeSpinner.adapter = arrayAdapter
     } // End of initSpinner
 
     private fun initViewgetData() {
-        CoroutineScope(Dispatchers.IO).launch {
-            stampHomeViewModel.getAllNationList()
+        if (stampHomeNavViewModel.countryList.isEmpty()) {
+            CoroutineScope(Dispatchers.IO).launch {
+                stampHomeViewModel.getAllNationList()
+            }
         }
     } // End of initViewgetData
 
-    private fun getAllNationListResponseLiveDataObserve() {
-        stampHomeViewModel.getAllNationListResponseLiveData.observe(this.viewLifecycleOwner) {
+    private fun getUserStampDataGroupByCountryResponseLiveDataObserve() {
+        stampHomeViewModel.getUserStampDataGroupByCountryResponseLiveData.observe(this.viewLifecycleOwner) {
             binding.stampHomeProgressbar.visibility = View.GONE
             binding.stampHomeProgressbar.isVisible = false
 
-
             when (it) {
                 is NetworkResult.Success -> {
-                    countryList = it.data as ArrayList<String>
-                    initSpinner(countryList)
+//                    countryList = it.data as ArrayList<String>
+//                    initSpinner(countryList)
 
+                    requireView().showSnackBarMessage("통신 완료")
                 }
 
                 is NetworkResult.Error -> {
@@ -124,8 +134,43 @@ class StampHomeFragment :
                     binding.stampHomeProgressbar.isVisible = true
                 }
             }
+        }
+    } // End of getUserStampDataGroupByCountryResponseLiveDataObserve
 
+    private fun getAllNationListResponseLiveDataObserve() {
+        stampHomeViewModel.getAllNationListResponseLiveData.observe(this.viewLifecycleOwner) {
+            binding.stampHomeProgressbar.visibility = View.GONE
+            binding.stampHomeProgressbar.isVisible = false
+
+            when (it) {
+                is NetworkResult.Success -> {
+                    countryList = it.data as ArrayList<String>
+                    stampHomeNavViewModel.setCountryList(countryList)
+
+
+                    CoroutineScope(Dispatchers.Main).launch {
+                        val spinnerDef: Deferred<Int> = async {
+                            initSpinner(countryList)
+                            1
+                        }
+
+                        spinnerDef.await()
+
+                        withContext(Dispatchers.IO) {
+                            spinnerEventListener()
+                        }
+                    }
+                }
+
+                is NetworkResult.Error -> {
+                    requireView().showSnackBarMessage("서버 통신 에러 발생")
+                }
+
+                is NetworkResult.Loading -> {
+                    binding.stampHomeProgressbar.visibility = View.VISIBLE
+                    binding.stampHomeProgressbar.isVisible = true
+                }
+            }
         }
     } // End of getAllNationListResponseLiveDataObserve
-
 } // End of StampHomeFragment class

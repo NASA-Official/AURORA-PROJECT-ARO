@@ -1,9 +1,10 @@
 package com.nassafy.aro.domain.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nassafy.aro.data.dto.CountryTest
-import com.nassafy.aro.data.dto.StampTest
+import com.nassafy.aro.data.dto.UserStampPlace
 import com.nassafy.aro.domain.api.StampApi
 import com.nassafy.aro.util.NetworkResult
 import com.nassafy.aro.util.di.HeaderInterceptorApi
@@ -15,10 +16,8 @@ private const val TAG = "StampRepository_싸피"
 
 class StampRepository @Inject constructor(
     @WithoutHeaderInterceptorApi private val stampApi: StampApi,
-    @HeaderInterceptorApi private val headerStampApi: StampApi
+    @HeaderInterceptorApi private val stampHeaderApi: StampApi
 ) {
-
-
 
     // ==================================== 전체 국가 리스트 가져오기 ====================================
     private val _getAllNationListResponseLiveData = MutableLiveData<NetworkResult<List<String>>>()
@@ -44,22 +43,28 @@ class StampRepository @Inject constructor(
         }
     } // End of getAllNationList
 
-    // ================================= 국가별 해당 데이터와 유저 데이터 가져오기 =================================
-    private val _getCountryStampDataResponseLiveData = MutableLiveData<NetworkResult<CountryTest>>()
-    val getCountryStampDataResponseLiveData: LiveData<NetworkResult<CountryTest>>
-        get() = _getCountryStampDataResponseLiveData
+    // ================================= 유저별 국가 스탬프 데이터 가져오기 =================================
 
-    suspend fun getCountryStampData() {
-        val response = headerStampApi.getCountryStampData()
+    private val _getUserStampDataGroupByCountryResponseLiveData =
+        MutableLiveData<NetworkResult<List<CountryTest>>>()
+    val getUserStampDataGroupByCountryResponseLiveData: LiveData<NetworkResult<List<CountryTest>>>
+        get() = _getUserStampDataGroupByCountryResponseLiveData
 
-        _getCountryStampDataResponseLiveData.postValue(NetworkResult.Loading())
+    suspend fun getUserStampDataGroupByCountry(countryName: String) {
+        val response = stampHeaderApi.getUserStampDataGroupByCountry(countryName)
+
+        _getUserStampDataGroupByCountryResponseLiveData.postValue(NetworkResult.Loading())
 
         when {
             response.isSuccessful && response.body() != null -> {
-                _getCountryStampDataResponseLiveData.postValue(NetworkResult.Success(response.body()!!))
+                _getUserStampDataGroupByCountryResponseLiveData.postValue(
+                    NetworkResult.Success(
+                        response.body()!!
+                    )
+                )
             }
             response.errorBody() != null -> {
-                _getCountryStampDataResponseLiveData.postValue(
+                _getUserStampDataGroupByCountryResponseLiveData.postValue(
                     NetworkResult.Error(
                         response.errorBody()!!.string()
                     )
@@ -67,25 +72,38 @@ class StampRepository @Inject constructor(
             }
         }
 
+    }  // End of getUserStampDataGroupByCountry
 
-    } // End of _getCountryStampData
+    // ========================================== 국가별 명소 & 유저 데이터 가져오기 ==========================================
+    private val _getUserPlaceDataGroupByCountryResponseLiveData =
+        MutableLiveData<NetworkResult<List<UserStampPlace>>>()
+    val getUserPlaceDataGroupByCountryResponseLiveData: LiveData<NetworkResult<List<UserStampPlace>>>
+        get() = _getUserPlaceDataGroupByCountryResponseLiveData
 
-    // ================================= 유저별 국가 스탬프 데이터 가져오기 =================================
-    // getUserStampDataGroupByCountry
+    suspend fun getUserPlaceDataGroupByCountry(countryName: String) {
+        Log.d(TAG, "getUserPlaceDataGroupByCountry: ${countryName} ")
 
-    private val _getUserStampDataGroupByCountryResponseLiveData =
-        MutableLiveData<NetworkResult<String>>()
-    val getUserStampDataGroupByCountryResponseLiveData: LiveData<NetworkResult<String>>
-        get() = _getUserStampDataGroupByCountryResponseLiveData
+        val response = stampHeaderApi.getUserPlaceDataGroupByCountry(countryName)
+        Log.d(TAG, "getUserPlaceDataGroupByCountry: $response")
 
-    suspend fun getUserStampDataGroupByCountry() {
-        //val response = stampApi.
-
-        _getUserStampDataGroupByCountryResponseLiveData.postValue(NetworkResult.Loading())
+        _getUserPlaceDataGroupByCountryResponseLiveData.postValue(NetworkResult.Loading())
 
         when {
-
+            response.isSuccessful && response.body() != null -> {
+                _getUserPlaceDataGroupByCountryResponseLiveData.postValue(
+                    NetworkResult.Success(
+                        response.body()!!
+                    )
+                )
+            }
+            response.errorBody() != null -> {
+                _getUserPlaceDataGroupByCountryResponseLiveData.postValue(
+                    NetworkResult.Error(
+                        response.errorBody()!!.string()
+                    )
+                )
+            }
         }
 
-    }  // End of getUserStampDataGroupByCountry
+    } // End of getUserPlaceDataGroupByCountry
 } // End of StampRepository class
