@@ -39,8 +39,10 @@ public class InterestService {
 
         // 해당 회원 관심 지역 비우기
         List<Interest> interests = member.getInterests();
-        for (Interest interest : interests) {
-            interestRepository.delete(interest);
+        if(interests != null) {
+            for (Interest interest : interests) {
+                interestRepository.delete(interest);
+            }
         }
 
         // 영속성 컨텍스트에 반영
