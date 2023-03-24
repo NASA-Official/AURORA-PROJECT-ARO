@@ -1,5 +1,6 @@
 package com.nassafy.api.service;
 
+import com.nassafy.api.dto.req.CollectionsDTO;
 import com.nassafy.api.dto.req.MapAttractionDTO;
 import com.nassafy.core.DTO.MapStampDTO;
 import com.nassafy.core.entity.Attraction;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -90,5 +92,50 @@ public class AttrationService {
         return attractionRepository.findByNation(nation);
     }
 
+    /**
+     * 24번 Api
+     * @param nation
+     * @return 명소 개수 반환
+     */
+    public Integer getStampCountCountry(String nation) {
+        List<Attraction> attractions = attractionRepository.findByNation(nation);
+        return attractions.size();
+    }
 
+
+
+    /**
+     * 25번 Api
+     * @param nation 나라 이름
+     * @return 유저가 모은 스탬프 개수 (나라별)
+     */
+
+    public Integer getMyStampCountCountry(String nation) {
+        Long memberId = jwtService.getUserIdFromJWT();
+        List<Attraction> attractions = attractionRepository.findByNation(nation);
+        Integer MyCount = 0;
+        for (Attraction attraction : attractions) {
+            Long attractonId = attraction.getId();
+            Stamp stamp = stampRepository.findByAttractionIdAndMemberId(attractonId, memberId).orElse(null);
+            if (stamp.getCertification()){
+                MyCount++;
+            }
+        }
+
+
+        return MyCount;
+    }
+
+    /**
+     * 26번 api
+     * @param nation 국가 명
+     * @return 스탬프리스트(명소id, 스탬프 이미지, 인증 유무) mapImage 
+     */
+
+    public CollectionsDTO getCollections(String nation) {
+        List<MapStampDTO> mapStampDTO = getStampsFormember(nation);
+        String mapImage = getMapImage(nation);
+        CollectionsDTO collectionsDTO = new CollectionsDTO(mapStampDTO, mapImage);
+        return collectionsDTO;
+    }
 }
