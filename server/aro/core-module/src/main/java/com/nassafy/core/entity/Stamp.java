@@ -25,11 +25,11 @@ public class Stamp {
     @OneToMany(mappedBy ="stamp", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<StampImage> stampImage;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "attraction_id")
     private Attraction attraction;
 
