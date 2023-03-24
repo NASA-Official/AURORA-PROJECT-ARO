@@ -32,23 +32,26 @@ import com.nassafy.aro.ui.view.ServiceViewModel
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun CountryPlaceLazyColumnItem(place: PlaceItem, selectedPlaceList: MutableList<PlaceItem>, viewModel: ServiceViewModel, loadedList: SnapshotStateList<Boolean>) {
+fun CountryPlaceLazyColumnItem(
+    place: PlaceItem,
+    selectedPlaceList: MutableList<PlaceItem>,
+    viewModel: ServiceViewModel,
+    loadedList: SnapshotStateList<Boolean>
+) {
     //TODO change isSelected to DTO's boolean type var
-    var isSelected by remember { mutableStateOf(false) }
+    var isSelected by remember { mutableStateOf(selectedPlaceList.contains(place)) }
     val imageLoader = ImageLoader.Builder(LocalContext.current)
         .componentRegistry {
             add(SvgDecoder(LocalContext.current))
         }
         .build()
 
-    DisposableEffect(place) {
-        isSelected = selectedPlaceList.contains(place)
-        onDispose {  }
+    DisposableEffect(key1 =  place, key2 = selectedPlaceList.size) {
+        onDispose {
+            isSelected = selectedPlaceList.contains(place)
+        }
     }
-    DisposableEffect(selectedPlaceList) {
-        isSelected = selectedPlaceList.contains(place)
-        onDispose {  }
-    }
+
     Card(
         shape = RoundedCornerShape(4.dp),
         modifier = Modifier
@@ -80,7 +83,7 @@ fun CountryPlaceLazyColumnItem(place: PlaceItem, selectedPlaceList: MutableList<
             ) {
                 CompositionLocalProvider(LocalImageLoader provides imageLoader) {
                     val painter = rememberImagePainter(place.stamp, builder = {
-                        when(isSelected) {
+                        when (isSelected) {
                             true -> {}
                             false -> {
                                 transformations(
@@ -89,15 +92,6 @@ fun CountryPlaceLazyColumnItem(place: PlaceItem, selectedPlaceList: MutableList<
                             }
                         }
                     })
-                    val state = painter.state
-                    when (state) {
-                        is ImagePainter.State.Empty -> {}
-                        is ImagePainter.State.Loading -> {}
-                        else -> {
-                            Log.d("ssafy_pcs", "End of ${place.stamp}")
-                            loadedList.add(false)
-                        }
-                    }
                     Image(
                         painter = painter,
                         contentDescription = "SVG Image",
@@ -152,6 +146,7 @@ fun CountryPlaceLazyColumnItem(place: PlaceItem, selectedPlaceList: MutableList<
         } // End of Column
     } // End of Card
 }
+
 
 //@Preview(showBackground = true)
 //@Composable
