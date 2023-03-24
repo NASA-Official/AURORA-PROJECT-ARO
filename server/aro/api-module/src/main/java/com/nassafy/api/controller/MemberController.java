@@ -1,17 +1,11 @@
 package com.nassafy.api.controller;
 
 import com.nassafy.api.dto.jwt.TokenDto;
-import com.nassafy.api.dto.req.CodeCheckDto;
-import com.nassafy.api.dto.req.EmailCheckDto;
-import com.nassafy.api.dto.req.MemberLoginReqDto;
-import com.nassafy.api.dto.req.SignupReqDto;
+import com.nassafy.api.dto.req.*;
 import com.nassafy.api.dto.res.MemberLoginResDto;
 import com.nassafy.api.dto.res.MemberResDto;
-import com.nassafy.api.service.EmailService;
-import com.nassafy.api.service.JwtService;
-import com.nassafy.core.DTO.ServiesRegisterDTO;
-import com.nassafy.api.service.MemberService;
-import com.nassafy.api.service.StampService;
+import com.nassafy.api.jwt.JwtAuthenticationFilter;
+import com.nassafy.api.service.*;
 import com.nassafy.core.entity.Member;
 import com.nassafy.core.respository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -38,6 +29,7 @@ public class MemberController {
     private final MemberService memberService;
     private final EmailService emailService;
     private final StampService stampService;
+    private final InterestService interestService;
     private final String mailCode = "123456";
 
     private Map<String, String> emailCode = new HashMap<>();
@@ -89,6 +81,11 @@ public class MemberController {
         logger.debug("\t Start singup");
         memberService.create(signupReqDto);
         stampService.makeStamp(signupReqDto.getEmail());
+
+        Long memberId = memberRepository.findByEmail(signupReqDto.getEmail()).get().getId();
+        logger.debug("\t attractionIds " + signupReqDto.getAuroraPlaces());
+        interestService.registerInterest(memberId, signupReqDto.getAuroraPlaces());
+
 
         return ResponseEntity.ok("singup is success!!!");
     }
@@ -170,6 +167,25 @@ public class MemberController {
         }
 
         return ResponseEntity.ok(member.getNickname());
+    }
+
+    /***
+     * API 8
+     * @return
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestBody TokenReqDto tokenReqDto) {
+        logger.debug("\t Start logout ");
+
+        String accessToken = jwtService.logout(tokenReqDto);
+        return ResponseEntity.ok(accessToken);
+    }
+
+    @GetMapping("/blacklist")
+    public ResponseEntity<?> getBlacklist(){
+        logger.debug("\t Start getBlacklist ");
+        Set<String> blacklist = JwtAuthenticationFilter.getBlacklist();
+        return ResponseEntity.ok(new ArrayList<String>(blacklist));
     }
 
     @PostMapping("/parseInfo")

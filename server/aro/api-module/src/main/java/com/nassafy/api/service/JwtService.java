@@ -1,5 +1,7 @@
 package com.nassafy.api.service;
 
+import com.nassafy.api.dto.req.TokenReqDto;
+import com.nassafy.api.jwt.JwtAuthenticationFilter;
 import com.nassafy.api.jwt.JwtTokenProvider;
 import com.nassafy.api.dto.jwt.TokenDto;
 import com.nassafy.core.entity.Member;
@@ -16,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @Transactional(readOnly = true)
@@ -26,6 +30,7 @@ public class JwtService {
     private final MemberRepository memberRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
+    private Set<String> blacklist = new HashSet<>();
 
     @Transactional
     public TokenDto login(String email, String password) {
@@ -49,6 +54,19 @@ public class JwtService {
         memberRepository.save(member);
 
         return tokenDto;
+    }
+
+    public String logout(TokenReqDto tokenReqDto) {
+        logger.debug("\t Start logout");
+
+        if(!jwtTokenProvider.validateToken(tokenReqDto.getAccessToken())) {
+            throw new IllegalArgumentException("로그아웃 : 유효하지 않은 토큰입니다.");
+        }
+
+        String accessToken = tokenReqDto.getAccessToken();
+        JwtAuthenticationFilter.setBlacklist(accessToken);
+
+        return accessToken;
     }
 
     public String getUserEmailFromJwt() {
