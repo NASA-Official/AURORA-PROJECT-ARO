@@ -86,8 +86,9 @@ public class MemberController {
         logger.debug("\t attractionIds " + signupReqDto.getAuroraPlaces());
         interestService.registerInterest(memberId, signupReqDto.getAuroraPlaces());
 
+        TokenDto tokenDto = jwtService.login(signupReqDto.getEmail(), signupReqDto.getPassword());
 
-        return ResponseEntity.ok("singup is success!!!");
+        return ResponseEntity.ok(tokenDto);
     }
 
     /***
