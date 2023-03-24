@@ -1,5 +1,6 @@
 package com.nassafy.aro.ui.view.login.viewmodel
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.nassafy.aro.data.dto.LoginToken
@@ -25,44 +26,14 @@ class LoginActivityViewModel @Inject constructor(
     override val selectedAuroraPlaces: LiveData<MutableList<PlaceItem>> get() = userAccessRepository.selectedAuraraPlaceListLiveData
     override val selectedMeteorPlaces: LiveData<MutableList<PlaceItem>> get() = userAccessRepository.selectedMeteorPlaceListLiveData
 
-    val loginToken: LiveData<NetworkResult<LoginToken>>
-        get() = userAccessRepository.loginToken
-    val isEmailValidated: LiveData<Boolean>
-        get() = userAccessRepository.isEmailValidated
-    val isEmailAuthCodeValidated: LiveData<Boolean>
-        get() = userAccessRepository.isEmailAuthCodeValidated
     val countryListLiveData: LiveData<NetworkResult<List<String>>>
         get() = userAccessRepository.countryListLiveData
     val placeListLiveData: LiveData<NetworkResult<List<PlaceItem>>>
         get() = userAccessRepository.placeListLiveData
-    val userJoinNetworkResultLiveData: LiveData<NetworkResult<Unit>>
-        get() = userAccessRepository.userJoinNetworkResultLiveData
 
-    suspend fun loginByIdPassword(email: String, password: String) {
-        viewModelScope.launch {
-            userAccessRepository.loginByIdPassword(email, password)
-        }
-    }
-
-    fun validateEmail(email: String) {
-        viewModelScope.launch {
-            userAccessRepository.validateEmail(email)
-        }
-    }
-
-    fun setIsEmailValidatedFalse() {
-        userAccessRepository.setIsEmailValidatedFalse()
-    }
-
-    fun setisEmailAuthCodeValidatedFalse() {
-        userAccessRepository.setisEmailAuthCodeValidatedFalse()
-    }
-
-    fun validateEmialAuthCode(email: String, code: String) {
-        viewModelScope.launch {
-            userAccessRepository.validateEmialAuthenticationCode(email, code)
-        }
-    }
+    // 임시
+    val placeListData = mutableStateListOf<PlaceItem>()
+    val selectedAuroraPlaceList = mutableStateListOf<PlaceItem>()
 
     fun getCountryList() {
         viewModelScope.launch {
@@ -76,11 +47,6 @@ class LoginActivityViewModel @Inject constructor(
         }
     }
 
-    fun join(user: UserTest) {
-        viewModelScope.launch {
-            userAccessRepository.join(user)
-        }
-    }
 
     override fun selectAuroraPlace(place: PlaceItem) {
         viewModelScope.launch {

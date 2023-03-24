@@ -18,10 +18,11 @@ class AroServiceCardView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : LinearLayoutCompat(context, attrs, defStyleAttr) {
 
+    val binding by lazy {
+        AroServiceCardviewLayoutBinding.inflate(LayoutInflater.from(context), this, true)
+    }
+
     init {
-        // CustomView viewBinding
-        val binding =
-            AroServiceCardviewLayoutBinding.inflate(LayoutInflater.from(context), this, true)
         val view = binding.root
 
         val styledAttributes =
@@ -60,5 +61,7 @@ class AroServiceCardView @JvmOverloads constructor(
         }
 
     } // End of Init
+
+    fun getIsSelected() = binding.root.isSelected
 
 } // End of AroServiceCarView
