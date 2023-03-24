@@ -3,6 +3,7 @@ package com.nassafy.api.service;
 import com.amazonaws.services.kms.model.NotFoundException;
 import com.amazonaws.services.kms.model.NotFoundException;
 import com.nassafy.api.dto.req.AttractionInterestOrNotDTO;
+import com.nassafy.api.dto.req.InterestListDTO;
 import com.nassafy.core.entity.Attraction;
 import com.nassafy.core.entity.Interest;
 import com.nassafy.core.entity.Member;
@@ -99,4 +100,22 @@ public class InterestService {
         return attractionInterestOrNotDTOList;
     }
 
+
+    /**
+     * 43번 Api
+     * @param memberId
+     * @return 리스트(명소Id, 스탬프, 명소명, 명소설명, 관심여부) + 메테오 더미 데이터 (서비스 추가시 수정 필요)
+     */
+    public InterestListDTO getInterest(Long memberId) {
+        List<Interest> interestList = interestRepository.findAllByMemberId(memberId)
+                .orElse(new ArrayList<>());
+        List<AttractionInterestOrNotDTO> attractionInterestOrNotDTOList = new ArrayList<>();
+        for (Interest interest : interestList) {
+            Attraction attraction = interest.getAttraction();
+            attractionInterestOrNotDTOList.add(new AttractionInterestOrNotDTO(attraction.getId(), attraction.getColorStamp(), attraction.getAttractionName(), attraction.getDescription(), true));
+        }
+        InterestListDTO interestListDTO = new InterestListDTO(attractionInterestOrNotDTOList, "테스트");
+        return interestListDTO;
+
+    }
 }
