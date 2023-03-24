@@ -5,10 +5,7 @@ import com.nassafy.api.dto.req.*;
 import com.nassafy.api.dto.res.MemberLoginResDto;
 import com.nassafy.api.dto.res.MemberResDto;
 import com.nassafy.api.jwt.JwtAuthenticationFilter;
-import com.nassafy.api.service.EmailService;
-import com.nassafy.api.service.JwtService;
-import com.nassafy.api.service.MemberService;
-import com.nassafy.api.service.StampService;
+import com.nassafy.api.service.*;
 import com.nassafy.core.entity.Member;
 import com.nassafy.core.respository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +29,7 @@ public class MemberController {
     private final MemberService memberService;
     private final EmailService emailService;
     private final StampService stampService;
+    private final InterestService interestService;
     private final String mailCode = "123456";
 
     private Map<String, String> emailCode = new HashMap<>();
@@ -83,6 +81,11 @@ public class MemberController {
         logger.debug("\t Start singup");
         memberService.create(signupReqDto);
         stampService.makeStamp(signupReqDto.getEmail());
+
+        Long memberId = memberRepository.findByEmail(signupReqDto.getEmail()).get().getId();
+        logger.debug("\t attractionIds " + signupReqDto.getAuroraPlaces());
+        interestService.registerInterest(memberId, signupReqDto.getAuroraPlaces());
+
 
         return ResponseEntity.ok("singup is success!!!");
     }
