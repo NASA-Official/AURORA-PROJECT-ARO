@@ -1,8 +1,6 @@
 package com.nassafy.aro.ui.view.aurora
 
 import android.content.res.Resources
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -19,18 +17,21 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.maps.android.PolyUtil
+import com.google.maps.android.clustering.ClusterManager
+import com.google.maps.android.collections.MarkerManager
 import com.nassafy.aro.BuildConfig
 import com.nassafy.aro.R
+import com.nassafy.aro.data.dto.Place
 import com.nassafy.aro.databinding.FragmentAuroraBinding
 import com.nassafy.aro.ui.adapter.BottomSheetFavoriteAdapter
-import com.nassafy.aro.ui.view.BaseFragment
-import com.nassafy.aro.ui.view.ChartMarkerView
+import com.nassafy.aro.ui.view.*
 import com.nassafy.aro.ui.view.dialog.DateHourSelectDialog
 import com.nassafy.aro.ui.view.main.MainActivity
 import com.nassafy.aro.util.*
@@ -44,9 +45,13 @@ import kotlin.random.Random
 
 private const val TAG = "AuroraFragment_sdr"
 class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding::inflate),
-    OnMapReadyCallback, OnChartValueSelectedListener {
+    OnChartValueSelectedListener,
+    OnMapAndViewReadyListener.OnGlobalLayoutAndMapReadyListener,
+    ClusterManager.OnClusterItemClickListener<Place>
+
+{ // End of AuroraFragment
     private val auroraViewModel: AuroraViewModel by viewModels()
-    private lateinit var googleMap: GoogleMap
+    private lateinit var mMap: GoogleMap
     private lateinit var cloudTileOverlay: TileOverlay
     private lateinit var favoriteAdapter: BottomSheetFavoriteAdapter
     private var now = LocalDateTime.now()
@@ -54,15 +59,13 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
     private var hourList = arrayListOf<ArrayList<String>>()
 
     private var selectedMarker: Marker? = null
+    private lateinit var mClusterManager : ClusterManager<Place>
+    private lateinit var markerCollection: MarkerManager.Collection
 
     var kpIndex = 3.0F
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val mapFragment: SupportMapFragment =
-            childFragmentManager.findFragmentById(R.id.map_view) as SupportMapFragment
-        mapFragment.getMapAsync(this)
-
 //        auroraViewModel.clickedLocation.observe(viewLifecycleOwner) { latLng ->
 //            googleMap.setOnPolylineClickListener {
 //
@@ -74,32 +77,48 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
 
         initBottomSheetRecyclerView()
 
+        val mapFragment: SupportMapFragment =
+            childFragmentManager.findFragmentById(R.id.map_view) as SupportMapFragment
+
+        OnMapAndViewReadyListener(mapFragment, this)
+
     } // End of onViewCreated
 
-    override fun onMapReady(gMap: GoogleMap) {
-        googleMap = gMap
-        googleMap.uiSettings.isMapToolbarEnabled = false
+    override fun onMapReady(googleMap: GoogleMap?) {
+        mMap = googleMap!!
+        mMap.uiSettings.isMapToolbarEnabled = false
         setCustomMapStyle()
 //        setCloudTileOverlay()
 
-        val customMarker = generateBitmapDescriptorFromRes(requireContext(), R.drawable.map_marker)
+//        requireActivity().runOnUiThread {
+//            CoroutineScope(Dis)
+//        }
 
-        val markerOptions = MarkerOptions()
-            .position(LatLng(37.4220, -122.0841))
-            .title("Googleplex")
-            .icon(customMarker)
-        val marker = googleMap.addMarker(markerOptions)
+        // set Start Location
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(64.8, -18.5), 5F))
+
+        // set ClusterManager
+        mClusterManager = ClusterManager<Place>(requireContext(), mMap)
+        mMap.setOnCameraIdleListener(mClusterManager)
+        Log.d(TAG, "onMapReady: 1")
+        mClusterManager.renderer = CustomMarkerRenderer(requireContext(), mMap, mClusterManager)
+        Log.d(TAG, "onMapReady: 2.renderer")
+        mClusterManager.addItems(placeList)
+        Log.d(TAG, "onMapReady: 3.add")
+        mClusterManager.markerCollection.setInfoWindowAdapter(CustomMarkerInfoRenderer(layoutInflater, requireContext()))
+        Log.d(TAG, "onMapReady: 4.setInfoWindow")
+        mClusterManager.setOnClusterItemClickListener(this@AuroraFragment)
 
         // setPolyLine
         val polylineOptions = getKpPolylineOptions(kpIndex)
-        val polyline = googleMap.addPolyline(polylineOptions)
-        googleMap.setOnMapClickListener { latLng ->
+        val polyline = mMap.addPolyline(polylineOptions)
+        mMap.setOnMapClickListener { latLng ->
             auroraViewModel.setClickedLocation(latLng)
 
             // When Clicked Location is on Polyline, Google Map shows Info.
-            val tolerance = getKpPolylineTolerance(googleMap.cameraPosition.zoom)
+            val tolerance = getKpPolylineTolerance(mMap.cameraPosition.zoom)
             if (PolyUtil.isLocationOnPath(latLng, polylineOptions.points, true, tolerance)) {
-                polyline.addInfoWindow(googleMap, latLng, "KP 지수", "$kpIndex")
+                polyline.addInfoWindow(mMap, latLng, "KP 지수", "$kpIndex")
             }
         } // End of setOnMapClickListener
 
@@ -264,7 +283,7 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
         try {
             // Customise the styling of the base map using a JSON object defined
             // in a raw resource file.
-            val success = googleMap.setMapStyle(
+            val success = mMap.setMapStyle(
                 MapStyleOptions.loadRawResourceStyle(
                     requireContext(), R.raw.map_night_style
                 )
@@ -291,7 +310,7 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
                 return tileUrl
             }
         }
-        cloudTileOverlay = googleMap.addTileOverlay(
+        cloudTileOverlay = mMap.addTileOverlay(
             TileOverlayOptions()
                 .tileProvider(tileProvider)
                 .transparency(0.9f)
@@ -309,6 +328,15 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
         var item7 = arrayListOf<String>("구미", "100", "Clouds")
         var itemList =
             arrayListOf<MutableList<String>>(item1, item2, item3, item4, item5, item6, item7)
+
+        val reykjavik = Place(0, "아이슬란드", "레이캬비크",64.133F, -21.933F, "https://i.pinimg.com/564x/0b/4c/83/0b4c8348f7e0e89fc9089d0d5b320d68.jpg")
+        val gullfoss = Place(1, "아이슬란드","굴포스", 64.32775F, -20.12133F, "https://i.pinimg.com/564x/bd/f9/28/bdf928c97305e58b071bd4d8b991b3bb.jpg")
+        val akureyri = Place(2, "아이슬란드", "아쿠레이리", 65.68389F, -18.11056F, "https://i.pinimg.com/564x/0e/ee/bd/0eeebdbf5f77ef94073a87a55a6ea916.jpg")
+        val jokulsarlon =
+            Place(3, "아이슬란드", "요쿨살론", 64.06883F, -16.206999F, "https://i.pinimg.com/564x/88/a9/95/88a9951d51ab01513d858c0355e5e371.jpg")
+        val vik = Place(4, "아이슬란드", "비크", 63.418633F, -19.006048F, "https://i.pinimg.com/564x/55/1e/db/551edb0faa57e8261d40d96905066c14.jpg")
+        val diamondBeach = Place(5, "아이슬란드", "다이아몬드비치",64.04307F, -16.17584F, "https://i.pinimg.com/564x/3c/76/dc/3c76dcd32c82b82197ab2c3128947499.jpg")
+        val placeList = arrayListOf<Place>(reykjavik, gullfoss, akureyri, jokulsarlon, vik, diamondBeach)
     }
 
     // override OnChartValueSelectedListener
@@ -319,4 +347,8 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
     override fun onNothingSelected() {
     } // End of onNothingSelected
 
-} // End of AuroraFragment
+    override fun onClusterItemClick(item: Place?): Boolean {
+        return false
+    } // End of onClusterItemClick
+
+}
