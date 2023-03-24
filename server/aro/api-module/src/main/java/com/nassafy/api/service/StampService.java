@@ -73,7 +73,7 @@ public class StampService {
 
 
     /**
-     * 31번 API
+     * 31번 API 사용 원하면 수정이 필요함
      * @param attractionId 명소Id
      * @return 국가명, 명소명, 명소설명, 인증여부, 명소컬러사진, 명소흑백사진, 명소 스탬프 사진
      */
@@ -90,7 +90,7 @@ public class StampService {
         Stamp stamp = stampRepository.findByAttractionIdAndMemberId(attraction.getId(), member.getId()).orElseThrow(
                 () -> new EntityNotFoundException("스탬프가 없습니다.")
         );
-        StampDTO stampDTO = new StampDTO(attractionId, attraction.getNation(), attraction.getAttractionName(), attraction.getDescription(), stamp.getCertification(), attraction.getColorAuth(), attraction.getGrayAuth(), attraction.getColorStamp());
+        StampDTO stampDTO = new StampDTO(attractionId, attraction.getAttractionName(), attraction.getDescription(), stamp.getCertification(), attraction.getColorAuth(), attraction.getColorStamp());
         return stampDTO;
     }
 
@@ -247,12 +247,15 @@ public class StampService {
         Long memberId = jwtService.getUserIdFromJWT();
         List<Attraction> stampLists = attractionRepository.findByNation(nationName);
         List<StampDTO> stampDTOS = new ArrayList<>();
+        String auth = "";
         for (Attraction attraction : stampLists) {
             Long attractionId = attraction.getId();
             Stamp stamp = stampRepository.findByAttractionIdAndMemberId(attractionId, memberId).orElse(null);
-            if (stamp != null) {
-                stampDTOS.add(new StampDTO(attractionId, nationName, attraction.getAttractionName(), attraction.getDescription(), stamp.getCertification(), attraction.getColorAuth(), attraction.getGrayAuth(), attraction.getColorStamp()));
-            }
+            if (stamp.getCertification() == true) {
+                auth = attraction.getColorAuth();
+            } else {
+                auth = attraction.getGrayAuth();
+            } stampDTOS.add(new StampDTO(attractionId, attraction.getAttractionName(), attraction.getDescription(), stamp.getCertification(), auth, attraction.getColorStamp()));
         } return stampDTOS;
     }
 }
