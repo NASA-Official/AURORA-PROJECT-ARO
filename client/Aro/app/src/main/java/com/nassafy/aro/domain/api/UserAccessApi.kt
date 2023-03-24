@@ -38,3 +38,10 @@ interface UserAccessApi {
     ): Response<Unit>
 
 } // End of UserAccessApi
+
+interface UserAccessUsingTokenApi {
+
+    @POST
+    suspend fun getUserInfoByEmailPassword(@Body loginBody: JsonObject): Response<UserTest>
+
+}

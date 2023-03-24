@@ -46,7 +46,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                 else -> { //토큰이 있으면
                     // TODO 자동로그인
                     Log.d("싸피", getUserAccessToken())
-//                    startMainActivity()
+                    startMainActivity()
                 } // End of else
             } // End of when
         } // End of apply
@@ -129,6 +129,28 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                     Application.sharedPreferencesUtil.addUserAccessToken(data?.accessToken ?: "")
                     Application.sharedPreferencesUtil.addUserRefreshToken(data?.refreshToken ?: "")
 
+                    CoroutineScope(Dispatchers.IO).launch {
+                        loginFragmentViewModel.getUserInfoByEmailPassword(binding.loginEmailIdEdittext.text.toString(), binding.loginPasswordEdittext.text.toString())
+                    }
+//                    startMainActivity()
+                }
+                is NetworkResult.Error -> {
+                    when (isTriedLoginState) {
+                        true -> {requireView().showSnackBarMessage("로그인에 실패했습니다.")}
+                        false -> {}
+                    }
+
+                }
+                is NetworkResult.Loading -> {
+                }
+            }
+            isTriedLoginState = false
+        }
+
+        loginFragmentViewModel.loginToken.observe(this.viewLifecycleOwner) {
+            when (it) {
+                is NetworkResult.Success -> {
+                    val data = it.data
                     startMainActivity()
                 }
                 is NetworkResult.Error -> {
