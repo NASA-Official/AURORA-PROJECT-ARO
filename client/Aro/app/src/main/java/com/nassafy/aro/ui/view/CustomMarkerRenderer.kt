@@ -2,6 +2,7 @@ package com.nassafy.aro.ui.view
 
 import android.content.Context
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
@@ -21,6 +22,12 @@ class CustomMarkerRenderer(
             .position(item.position)
             .title(item.title)
             .icon(customMarker)
+
         super.onBeforeClusterItemRendered(item, markerOptions)
+    }
+
+    override fun onClusterItemRendered(item: Place, marker: Marker) {
+        super.onClusterItemRendered(item, marker)
+        marker.tag = item
     }
 }
