@@ -139,5 +139,4 @@ public class StampController {
         List<StampDTO> stampDTOS = stampService.findAllStampdetail(nationName);
         return ResponseEntity.ok(stampDTOS);
     }
-
 }
