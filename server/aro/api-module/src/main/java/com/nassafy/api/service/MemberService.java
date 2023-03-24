@@ -19,7 +19,6 @@ public class MemberService {
 
     private static final Logger logger = LoggerFactory.getLogger(MemberService.class);
 
-
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -40,6 +39,8 @@ public class MemberService {
                 .auroraDisplay(true)
                 .refreshToken(null)
                 .build();
+
+
         member.getRoles().add("USER");
         logger.debug("\t member " + member);
         memberRepository.save(member);
