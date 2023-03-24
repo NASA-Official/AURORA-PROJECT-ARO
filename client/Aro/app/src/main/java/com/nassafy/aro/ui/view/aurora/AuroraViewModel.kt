@@ -11,8 +11,10 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Polyline
 import com.nassafy.aro.R
 import com.nassafy.aro.util.addInfoWindow
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 
+@HiltViewModel
 class AuroraViewModel : ViewModel() {
     private var _clickedLocation = MutableLiveData<LatLng>()
     val clickedLocation: LiveData<LatLng>
