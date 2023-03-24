@@ -36,8 +36,10 @@ import com.nassafy.aro.ui.view.login.viewmodel.JoinCountryPlaceSelectFragmentVie
 import com.nassafy.aro.ui.view.login.viewmodel.LoginActivityViewModel
 import com.nassafy.aro.util.NetworkResult
 import com.nassafy.aro.util.showSnackBarMessage
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 
+@AndroidEntryPoint
 class JoinCountryPlaceSelectFragment : BaseFragment<FragmentAroCountryPlaceSelectBinding>(
     FragmentAroCountryPlaceSelectBinding::inflate
 ) {
