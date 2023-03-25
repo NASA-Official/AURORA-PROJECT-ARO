@@ -135,6 +135,27 @@ object ApiModule {
             .create(TestApi::class.java)
     }
 
+    // ============================================ Main ============================================
+    @Provides
+    fun provideMainApi(@HeaderInterceptorOkHttpClient okHttpClient: OkHttpClient): MainApi {
+        return Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(provideBaseUrl())
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+            .create(MainApi::class.java)
+    } // End of provideMainApi)
+
+    // ============================================ Main ============================================
+    @Provides
+    fun provideMyPageApi(@HeaderInterceptorOkHttpClient okHttpClient: OkHttpClient): MyPageApi {
+        return Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(provideBaseUrl())
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+            .create(MyPageApi::class.java)
+    } // End of provideMyPageApi)
 
     // ============================================ Stamp ============================================
 
@@ -172,15 +193,6 @@ object ApiModule {
             .create(UserAccessApi::class.java)
     }
 
-    @Provides
-    fun provideUserAccessUsingTokenApi(@HeaderInterceptorOkHttpClient okHttpClient: OkHttpClient): UserAccessUsingTokenApi {
-        return Retrofit.Builder()
-            .client(okHttpClient)
-            .baseUrl(provideBaseUrl())
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
-            .create(UserAccessUsingTokenApi::class.java)
-    } // End of provideWithoutHeaderDiaryApi)
 
     // ============================================ Diary ============================================
     @Provides

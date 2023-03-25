@@ -8,17 +8,13 @@ import com.nassafy.aro.data.dto.LoginToken
 import com.nassafy.aro.data.dto.PlaceItem
 import com.nassafy.aro.data.dto.UserTest
 import com.nassafy.aro.domain.api.UserAccessApi
-import com.nassafy.aro.domain.api.UserAccessUsingTokenApi
 import com.nassafy.aro.util.NetworkResult
 import javax.inject.Inject
 
-class UserAccessRepository @Inject constructor(private val userAccessApi: UserAccessApi, private val userAccessUsingTokenApi: UserAccessUsingTokenApi) { // End of UserAccessRepository
+class UserAccessRepository @Inject constructor(private val userAccessApi: UserAccessApi) { // End of UserAccessRepository
 
     private val _loginToken = MutableLiveData<NetworkResult<LoginToken>>()
     val loginToken: LiveData<NetworkResult<LoginToken>> get() = _loginToken
-
-    private val _userInfo = MutableLiveData<NetworkResult<UserTest>>()
-    val userInfo: LiveData<NetworkResult<UserTest>> get() = _userInfo
 
     private val _isEmailValidated = MutableLiveData<Boolean>()
     val isEmailValidated get() = _isEmailValidated
@@ -78,30 +74,6 @@ class UserAccessRepository @Inject constructor(private val userAccessApi: UserAc
         }
     } // End of loginByIdPassword
 
-    suspend fun getUserInfoByEmailPassword(email: String, password: String) {
-        val response = userAccessUsingTokenApi.getUserInfoByEmailPassword(JsonObject().apply {
-            addProperty("email", email)
-            addProperty("password", password)
-        })
-        _userInfo.postValue(NetworkResult.Loading())
-
-        try {
-            when {
-                response.isSuccessful -> {
-                    _userInfo.postValue(
-                        NetworkResult.Success(
-                            response.body()!!
-                        )
-                    ) // End of postValue
-                } // End of response.isSuccessful
-                response.errorBody() != null -> {
-                    _userInfo.postValue(NetworkResult.Error(response.errorBody()!!.string()))
-                } // End of response.errorBody
-            } // End of when
-        } catch (e: java.lang.Exception) {
-            Log.e("ssafy", "getServerCallTest: ${e.message}")
-        }
-    }
 
     suspend fun validateEmialAuthenticationCode(email: String, code: String) {
         val response = userAccessApi.validateEmailAuthenticationCode(JsonObject().apply {

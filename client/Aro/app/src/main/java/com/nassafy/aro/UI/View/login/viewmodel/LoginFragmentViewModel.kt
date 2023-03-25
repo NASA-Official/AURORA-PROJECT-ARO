@@ -18,18 +18,10 @@ class LoginFragmentViewModel @Inject constructor(
 
     val loginToken: LiveData<NetworkResult<LoginToken>>
         get() = userAccessRepository.loginToken
-    val userInfo: LiveData<NetworkResult<UserTest>>
-        get() = userAccessRepository.userInfo
 
     suspend fun loginByIdPassword(email: String, password: String) {
         viewModelScope.launch {
             userAccessRepository.loginByIdPassword(email, password)
-        }
-    }
-
-    suspend fun getUserInfoByEmailPassword(email: String, password: String) {
-        viewModelScope.launch {
-            userAccessRepository.getUserInfoByEmailPassword(email, password)
         }
     }
 }
