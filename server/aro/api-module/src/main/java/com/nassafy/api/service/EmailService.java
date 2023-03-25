@@ -50,8 +50,6 @@ public class EmailService {
     //메일 양식 작성
     private MimeMessage createMessage(String to)throws Exception{
         createCode();
-        System.out.println("보내는 대상 : "+ to);
-        System.out.println("인증 번호 : "+ authNum);
         MimeMessage  message = emailSender.createMimeMessage();
 
         message.addRecipients(RecipientType.TO, to);//보내는 대상
