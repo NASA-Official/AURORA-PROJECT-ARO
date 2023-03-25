@@ -38,8 +38,6 @@ public class RegisterController {
         Long memberId = jwtService.getUserIdFromJWT();
         Member member = memberRepository.findById(memberId).get();
         logger.debug("\t Start memberRepository ");
-        System.out.println(member.getAuroraService());
-        System.out.println(serviceDTO.getAuroraService());
         if (member.getAuroraService() != serviceDTO.getAuroraService()) {
             member.toggleAuroraService();
             if (!member.getAuroraService()) {
