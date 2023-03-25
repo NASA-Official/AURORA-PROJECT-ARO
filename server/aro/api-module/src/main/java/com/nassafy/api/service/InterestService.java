@@ -70,10 +70,8 @@ public class InterestService {
      */
     public List<AttractionInterestOrNotDTO> getAttractionInterestOrNot(String nationName, Long memberId) {
         List<Attraction> attractionList = attractionRepository.findAll();
-        System.out.println(attractionList);
         List<Interest> interestList = interestRepository.findAllByMemberId(memberId)
                 .orElse(new ArrayList<>());
-        System.out.println(interestList);
         List<AttractionInterestOrNotDTO> attractionInterestOrNotDTOList = new ArrayList<>();
         for (Attraction attraction : attractionList) {
             if (!attraction.getNation().equals(nationName)) {
@@ -81,7 +79,6 @@ public class InterestService {
             }
             boolean isInterest = false;
             for (Interest interest : interestList) {
-                System.out.println(attraction.getId().equals(interest.getAttraction().getId()));
                 if (attraction.getId().equals(interest.getAttraction().getId())) {
                     isInterest = true;
                     break;
@@ -94,7 +91,6 @@ public class InterestService {
                     attraction.getDescription(),
                     isInterest
             );
-            System.out.println(dto);
             attractionInterestOrNotDTOList.add(dto);
         }
         return attractionInterestOrNotDTOList;

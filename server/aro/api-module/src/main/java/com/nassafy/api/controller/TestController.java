@@ -43,7 +43,6 @@ public class TestController {
     public ResponseEntity<String> deleteArticle (@RequestParam("url") String url) {
         log.info(url);
         log.info(url.substring(48));
-        System.out.println(url.substring(48));
         String result = s3Util.delete(url.substring(48));
 
         return new ResponseEntity<String>(result, HttpStatus.OK);
