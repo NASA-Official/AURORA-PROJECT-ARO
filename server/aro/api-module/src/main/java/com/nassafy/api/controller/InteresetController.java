@@ -1,5 +1,6 @@
 package com.nassafy.api.controller;
 import com.nassafy.api.dto.req.AttractionInterestOrNotDTO;
+import com.nassafy.api.dto.req.InterestListDTO;
 import com.nassafy.api.service.InterestService;
 import com.nassafy.api.service.JwtService;
 import com.nassafy.api.service.MemberService;
@@ -46,5 +47,11 @@ public class InteresetController {
     }
 
 
-
+    // 43번 Api
+    @GetMapping("")
+    public ResponseEntity<InterestListDTO> getInterest() {
+        Long memberId = jwtService.getUserIdFromJWT();
+        InterestListDTO interestListDTO = interestService.getInterest(memberId);
+        return ResponseEntity.ok(interestListDTO);
+    }
 }
