@@ -146,7 +146,7 @@ fun CountryPlaceLazyColumnItem(
             )
         } // End of Column
     } // End of Card
-}
+} // End of
 
 
 //@Preview(showBackground = true)

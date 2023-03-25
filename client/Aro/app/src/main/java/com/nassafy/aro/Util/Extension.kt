@@ -14,10 +14,13 @@ import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.compose.ui.graphics.Outline
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
 import com.google.android.material.snackbar.Snackbar
+import retrofit2.Response
 
 
 fun Context.showToastMessage(message: String) {
@@ -47,42 +50,10 @@ fun Polyline.addInfoWindow(map: GoogleMap, location: LatLng, title: String, mess
     marker?.showInfoWindow()
 } // End of addInfoWindow
 
-fun convertImageToBlurImage(context: Context?, image: Bitmap): Bitmap? {
-    val BITMAP_SCALE = 0.1f
-    val BLUR_RADIUS = 25f
-
-    val width = Math.round(image.width * BITMAP_SCALE)
-    val height = Math.round(image.height * BITMAP_SCALE)
-    val inputBitmap = Bitmap.createScaledBitmap(image, width, height, false)
-    val outputBitmap = Bitmap.createBitmap(inputBitmap)
-    val rs: RenderScript = RenderScript.create(context)
-    val intrinsicBlur: ScriptIntrinsicBlur = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs))
-    val tmpIn: Allocation = Allocation.createFromBitmap(rs, inputBitmap)
-    val tmpOut: Allocation = Allocation.createFromBitmap(rs, outputBitmap)
-    intrinsicBlur.setRadius(BLUR_RADIUS)
-    intrinsicBlur.setInput(tmpIn)
-    intrinsicBlur.forEach(tmpOut)
-    tmpOut.copyTo(outputBitmap)
-    return outputBitmap
-}
-
-fun setImageWithGrayScale(image: Bitmap?, imageView: ImageView): Int {
-    //image is null
-    image ?: return -1;
-
-    //grayScale
-    val matrix = ColorMatrix()
-    matrix.setSaturation(0f)
-    val filter = ColorMatrixColorFilter(matrix)
-    imageView.colorFilter = filter
-
-    imageView.setImageBitmap(image)
-    return 0;
-} // End of setImageWithGrayScale
-
 fun generateBitmapDescriptorFromRes(context: Context, resId: Int): BitmapDescriptor {
     val drawable = ContextCompat.getDrawable(context, resId)
-    drawable!!.setBounds(0, 0,
+    drawable!!.setBounds(
+        0, 0,
         drawable.intrinsicWidth,
         drawable.intrinsicHeight
     )
@@ -95,3 +66,23 @@ fun generateBitmapDescriptorFromRes(context: Context, resId: Int): BitmapDescrip
     drawable.draw(canvas)
     return BitmapDescriptorFactory.fromBitmap(bitmap)
 }
+
+fun <T> MutableLiveData<NetworkResult<T>>.setNetworkResult(response: Response<T>) {
+    this.postValue(NetworkResult.Loading())
+    try {
+        when {
+            response.isSuccessful -> {
+                this.postValue(
+                    NetworkResult.Success(
+                        response.body()!!
+                    )
+                )
+            }
+            response.errorBody() != null -> {
+                this.postValue(NetworkResult.Error(response.errorBody()!!.string()))
+            }
+        } // End of when
+    } catch (e: java.lang.Exception) {
+        Log.e("ssafy", "getServerCallTest: ${e.message}")
+    } // End of try-catch
+} // End of selectService
