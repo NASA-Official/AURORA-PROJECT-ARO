@@ -12,5 +12,6 @@ data class PlaceItem(
     @SerializedName("stamp") val stamp: String,
     @SerializedName("mapImage") val mapImage : String,
     @SerializedName("latitude") val latitude : Float,
-    @SerializedName("longitude") val longitude : Float
+    @SerializedName("longitude") val longitude : Float,
+    val interset: Boolean = false
 ) : Parcelable

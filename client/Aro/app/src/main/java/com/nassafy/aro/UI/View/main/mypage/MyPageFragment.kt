@@ -1,15 +1,48 @@
 package com.nassafy.aro.ui.view.main.mypage
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Done
+import androidx.compose.material3.*
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import coil.ImageLoader
+import coil.compose.LocalImageLoader
+import coil.compose.rememberImagePainter
+import coil.decode.SvgDecoder
+import coil.transform.GrayscaleTransformation
 import com.nassafy.aro.R
+import com.nassafy.aro.data.dto.PlaceItem
 import com.nassafy.aro.databinding.FragmentMyPageBinding
 import com.nassafy.aro.ui.view.BaseFragment
+import com.nassafy.aro.ui.view.custom.CountryPlaceChips
+import com.nassafy.aro.ui.view.custom.CountryPlaceLazyColumn
 import com.nassafy.aro.ui.view.dialog.OkDialog
 import com.nassafy.aro.ui.view.main.MainActivityViewModel
 import com.nassafy.aro.ui.view.main.mypage.viewmodel.MyPageFragmentViewModel
@@ -32,6 +65,9 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initObserve()
+        CoroutineScope(Dispatchers.IO).launch {
+            myPageFragmentViewModel.getSelectedServiceList()
+        }
         initView()
     } // End of onViewCreated
 
@@ -54,7 +90,51 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                 }
             } // End of when
         } // End of nicknameLiveData.observe
-    } // End of initObserve
+
+        myPageFragmentViewModel.selectedServiceNetworResultLiveData.observe(this.viewLifecycleOwner) {
+            when (it) {
+                is NetworkResult.Success -> {
+                    myPageFragmentViewModel.auroraService = it.data!!.auroraService
+                    myPageFragmentViewModel.meteorService = it.data!!.meteorService
+                    when (it.data!!.auroraService || it.data!!.meteorService) {
+                        true -> {
+                            binding.serviceSelectedGroup.isVisible = true
+                            binding.serviceNotSelectedGroup.isVisible = false
+                            initComposeView()
+                        }
+                        false -> {
+                            binding.serviceSelectedGroup.isVisible = false
+                            binding.serviceNotSelectedGroup.isVisible = true
+                        }
+                    } // End of when
+                } // End of NetworkResult.Success
+                is NetworkResult.Error -> {
+                    requireView().showSnackBarMessage("닉네임 재설정에 실패했습니다.")
+                } // End of NetworkResult.Error
+                is NetworkResult.Loading -> {
+
+                } // End of NetworkResult.Loading
+            }
+        }
+
+        myPageFragmentViewModel.favoriteListNetworkResultLiveData.observe(this.viewLifecycleOwner) {
+            when (it) {
+                is NetworkResult.Success -> {
+                    myPageFragmentViewModel.favoriteAuroraPlaceList.clear()
+                    myPageFragmentViewModel.favoriteAuroraPlaceList.addAll(
+                        it.data?.attractionInterestOrNotDTOList ?: emptyList()
+                    )
+//                    myPageFragmentViewModel.favoriteMeteorPlaceList.addAll(it.data?.memteorInterestOrNotDTO!!)
+                }// End of NetworkResult.Success
+                is NetworkResult.Error -> {
+                    requireView().showSnackBarMessage("닉네임 재설정에 실패했습니다.")
+                } // End of NetworkResult.Error
+                is NetworkResult.Loading -> {
+
+                } // End of NetworkResult.Loading
+            }
+        } // End of initObserve
+    }
 
     private fun initView() {
         binding.userNicknameEdittext.setText(mainActivityViewModel.nickname)
@@ -62,11 +142,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
         binding.nicknameChangeImagebutton.apply {
             setOnClickListener {
                 when (isSelected) {
-                    true -> {
+                    true -> {// 재설정 로직
                         val afterChangedNickname = binding.userNicknameEdittext.text.toString()
                         when (mainActivityViewModel.nickname != afterChangedNickname) {
                             true -> {
-                                when(afterChangedNickname.length in 3..10) {
+                                when (afterChangedNickname.length in 3..10) {
                                     true -> {
                                         CoroutineScope(Dispatchers.IO).launch {
                                             myPageFragmentViewModel.changeNickname(binding.userNicknameEdittext.text.toString())
@@ -81,16 +161,16 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                                         okDialog.show(
                                             childFragmentManager, "OkDialog"
                                         )
-                                        binding.userNicknameEdittext.setText(mainActivityViewModel.nickname)
+                                        binding.userNicknameEdittext.setText(
+                                            mainActivityViewModel.nickname
+                                        )
                                     }
                                 } // End of afterChangedNickname.length in 3..10
                             }
                             false -> {}
                         }  // End of when(mainActivityViewModel.nickname != binding.userNicknameEdittext.text.toString())
                     } // End of isSelected == true
-                    false -> {
-
-                    } // End of isSelected == false
+                    false -> {} // End of isSelected == false
                 } // End of when(isSelected)
                 isSelected = !isSelected
                 binding.userNicknameEdittext.isEnabled = isSelected
@@ -100,13 +180,144 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
             findNavController().popBackStack()
         } // End of cancelButton.setOnClickListener
         binding.serviceRegistButton.setOnClickListener {
-            findNavController().navigate(R.id.action_myPageFragment_to_myPageServiceRegisterFragment)
+            moveToServiceRegisterFragment()
         } // End of serviceRegistButton.setOnClickListener
         binding.myFavoriteAddImageButton.setOnClickListener {
-            findNavController().navigate(R.id.action_myPageFragment_to_myPageServiceRegisterFragment)
+            moveToFavoriteRegisterFragment()
         } // End of myFavoriteAddImageButton.setOnClickListener
         binding.serviceModifyButton.setOnClickListener {
-            findNavController().navigate(R.id.action_myPageFragment_to_myPageServiceRegisterFragment)
+            moveToServiceRegisterFragment()
         } // End of serviceModifyButton.setOnClickListener
     } // End of initVIew
+
+    fun moveToServiceRegisterFragment() {
+        val action = MyPageFragmentDirections.actionMyPageFragmentToMyPageServiceRegisterFragment(
+            myPageFragmentViewModel.auroraService,
+            myPageFragmentViewModel.meteorService,
+        )
+        findNavController().navigate(action)
+    }
+
+    fun moveToFavoriteRegisterFragment() {
+        val action = MyPageFragmentDirections.actionMyPageFragmentToMyPageFavoriteRegisterFragment(
+            //TODO add param
+        )
+        findNavController().navigate(action)
+    }
+
+    fun initComposeView() {
+        CoroutineScope(Dispatchers.IO).launch {
+            myPageFragmentViewModel.getFavoriteList()
+        }
+        binding.myFavoriteComposeview.apply {
+            // Dispose of the Composition when the view's LifecycleOwner
+            // is destroyed
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                val auroraFavoriteList =
+                    remember { myPageFragmentViewModel.favoriteAuroraPlaceList }
+                val memeorFavoriteList = mutableListOf<PlaceItem>()
+
+                LaunchedEffect(key1 = auroraFavoriteList) {
+                    Log.d("ssafy4", auroraFavoriteList.joinToString())
+                }
+
+                // In Compose world
+                MaterialTheme {
+                    Column(
+                        modifier = androidx.compose.ui.Modifier
+                            .height(this.height.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        LazyColumn(
+                            Modifier.fillMaxWidth(0.9f)
+                        ) {
+                            // TODO Change items DTO List
+                            items(auroraFavoriteList) {
+                                val imageLoader = ImageLoader.Builder(LocalContext.current)
+                                    .componentRegistry {
+                                        add(SvgDecoder(LocalContext.current))
+                                    }
+                                    .build()
+
+                                Card(
+                                    shape = RoundedCornerShape(4.dp),
+                                    modifier = Modifier
+                                        .padding(8.dp)
+                                        .fillMaxWidth()
+                                        .height(100.dp),
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = Color.Transparent,
+                                    )
+                                ) {
+                                    Column(
+                                        Modifier
+                                            .fillMaxWidth(1f)
+                                    ) {
+                                        Row(
+                                            modifier = Modifier.fillMaxHeight(0.95f),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            CompositionLocalProvider(LocalImageLoader provides imageLoader) {
+                                                val painter =
+                                                    rememberImagePainter(
+                                                        it.stamp,
+                                                        builder = { })
+                                                Image(
+                                                    painter = painter,
+                                                    contentDescription = "SVG Image",
+                                                    modifier = Modifier
+                                                        .weight(2f),
+                                                    contentScale = ContentScale.FillWidth,
+                                                )
+                                            }
+                                            Column(
+                                                modifier = Modifier
+                                                    .weight(7f),
+                                                verticalArrangement = Arrangement.Center,
+                                                horizontalAlignment = Alignment.CenterHorizontally
+                                            ) {
+                                                //TODO change text
+                                                Box(contentAlignment = Alignment.Center) {
+                                                    Text(
+                                                        text = it.placeName, fontSize = 20.sp,
+                                                        color = Color.White
+                                                    ) // End of Text
+                                                } // End of Box
+                                                Spacer(modifier = Modifier.height(4.dp))
+                                                Box(contentAlignment = Alignment.Center) {
+//                                                    TODO Active
+//                                                    Text(
+//                                                        text = it.description,
+//                                                        fontSize = 12.sp,
+//                                                        color = Color.White
+//                                                    )
+                                                } // End of Box
+                                            } // End of Column
+                                            IconButton(onClick = {
+
+                                            }) {
+                                                Icon(
+                                                    imageVector = Icons.Outlined.Close,
+                                                    contentDescription = "checked",
+                                                    tint = colorResource(id = R.color.light_dark_gray),
+                                                ) // End of Icon {
+                                            }
+                                        } // End of Row
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        Divider(
+                                            modifier = Modifier
+                                                .fillMaxWidth(1f)
+                                                .height(2.dp),
+                                            color = colorResource(id = R.color.main_app_color),
+                                        )
+                                    } // End of Column
+                                } // End of Card
+                            }
+                        }
+                    } // End of Column
+                } // End of MaterialTheme
+            } // End of setContent
+        } // ENd of binding.myFavoriteComposeview.apply
+    } // End of initComposeView
 }
