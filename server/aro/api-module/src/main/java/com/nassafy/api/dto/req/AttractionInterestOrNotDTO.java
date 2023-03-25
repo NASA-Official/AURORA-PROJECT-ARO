@@ -8,15 +8,15 @@ public class AttractionInterestOrNotDTO {
     public Long attractionId;
     public String stamp;
     public String attractionName;
-    public String desciption;
+    public String description;
     public Boolean interest = false;
 
     @Builder
-    public AttractionInterestOrNotDTO(Long attractionId, String stamp, String attractionName, String desciption, Boolean interest) {
+    public AttractionInterestOrNotDTO(Long attractionId, String stamp, String attractionName, String description, Boolean interest) {
         this.attractionId = attractionId;
         this.stamp = stamp;
         this.attractionName = attractionName;
-        this.desciption = desciption;
+        this.description = description;
         this.interest = interest;
     }
 }
