@@ -51,13 +51,14 @@ public class MemberController {
 
     /***
      * API 2
-     * @param memberLoginRequestDto
+     * @param
      * @return memberLoginResDto
      */
     @PostMapping("/memberInfo")
-    public ResponseEntity<?> memberInfo(@RequestBody MemberLoginReqDto memberLoginRequestDto) {
-        logger.debug("\t Start login");
-        String email = memberLoginRequestDto.getEmail();
+    public ResponseEntity<?> memberInfo() {
+        logger.debug("\t Start memberInfo");
+
+        String email = jwtService.getUserEmailFromJwt();
         Optional<Member> member = memberRepository.findByEmail(email);
         if(member.isEmpty()){
             return ResponseEntity.badRequest().body("Error: Member is not exist!!");

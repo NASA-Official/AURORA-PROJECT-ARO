@@ -27,6 +27,6 @@ public class StampDiaryReqDTO {
         ObjectMapper objectMapper = new ObjectMapper();
         this.deleteImageList = objectMapper.readValue(deleteImageList, new TypeReference<List<String>>() {});
         this.memo = memo;
-        this.newImageList = newImageList;
+        this.newImageList = newImageList == null? new ArrayList<MultipartFile>(): newImageList;
     }
 }
