@@ -2,6 +2,7 @@ package com.nassafy.api.service;
 
 import com.amazonaws.services.kms.model.NotFoundException;
 import com.amazonaws.services.kms.model.NotFoundException;
+import com.nassafy.api.dto.req.AttractionInterest;
 import com.nassafy.api.dto.req.AttractionInterestOrNotDTO;
 import com.nassafy.api.dto.req.InterestListDTO;
 import com.nassafy.core.entity.Attraction;
@@ -68,11 +69,11 @@ public class InterestService {
      * @param memberId
      * @return
      */
-    public List<AttractionInterestOrNotDTO> getAttractionInterestOrNot(String nationName, Long memberId) {
+    public List<AttractionInterest> getAttractionInterest(String nationName, Long memberId) {
         List<Attraction> attractionList = attractionRepository.findAll();
         List<Interest> interestList = interestRepository.findAllByMemberId(memberId)
                 .orElse(new ArrayList<>());
-        List<AttractionInterestOrNotDTO> attractionInterestOrNotDTOList = new ArrayList<>();
+        List<AttractionInterest> attractionInterestList = new ArrayList<>();
         for (Attraction attraction : attractionList) {
             if (!attraction.getNation().equals(nationName)) {
                 continue;
@@ -84,23 +85,23 @@ public class InterestService {
                     break;
                 }
             }
-            AttractionInterestOrNotDTO dto = new AttractionInterestOrNotDTO(
+            AttractionInterest dto = new AttractionInterest(
                     attraction.getId(),
                     attraction.getColorStamp(),
                     attraction.getAttractionName(),
                     attraction.getDescription(),
                     isInterest
             );
-            attractionInterestOrNotDTOList.add(dto);
+            attractionInterestList.add(dto);
         }
-        return attractionInterestOrNotDTOList;
+        return attractionInterestList;
     }
 
 
     /**
      * 43번 Api
      * @param memberId
-     * @return 리스트(명소Id, 스탬프, 명소명, 명소설명, 관심여부) + 메테오 더미 데이터 (서비스 추가시 수정 필요)
+     * @return 리스트(관심지역Id, 명소Id, 스탬프, 명소명, 명소설명, 관심여부) + 메테오 더미 데이터 (서비스 추가시 수정 필요)
      */
     public InterestListDTO getInterest(Long memberId) {
         List<Interest> interestList = interestRepository.findAllByMemberId(memberId)
@@ -108,7 +109,7 @@ public class InterestService {
         List<AttractionInterestOrNotDTO> attractionInterestOrNotDTOList = new ArrayList<>();
         for (Interest interest : interestList) {
             Attraction attraction = interest.getAttraction();
-            attractionInterestOrNotDTOList.add(new AttractionInterestOrNotDTO(attraction.getId(), attraction.getColorStamp(), attraction.getAttractionName(), attraction.getDescription(), true));
+            attractionInterestOrNotDTOList.add(new AttractionInterestOrNotDTO(interest.getId(), attraction.getId(), attraction.getColorStamp(), attraction.getAttractionName(), attraction.getDescription(), true));
         }
         InterestListDTO interestListDTO = new InterestListDTO(attractionInterestOrNotDTOList, "테스트");
         return interestListDTO;
