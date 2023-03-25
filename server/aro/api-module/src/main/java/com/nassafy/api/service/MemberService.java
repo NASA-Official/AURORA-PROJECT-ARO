@@ -61,4 +61,5 @@ public class MemberService {
 
         return memberRepository.findByEmail(email).get();
     }
+
 }
