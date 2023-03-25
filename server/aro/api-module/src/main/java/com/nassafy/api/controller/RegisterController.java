@@ -1,8 +1,9 @@
 package com.nassafy.api.controller;
 
 
+import com.nassafy.api.dto.req.ServiceDTO;
+import com.nassafy.api.service.InterestService;
 import com.nassafy.api.service.JwtService;
-import com.nassafy.core.DTO.ServiesRegisterDTO;
 import com.nassafy.core.entity.Member;
 import com.nassafy.core.respository.MemberRepository;
 import org.slf4j.Logger;
@@ -11,34 +12,42 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
-import java.util.List;
 
 @RestController
-@RequestMapping("/api/register")
+@RequestMapping("/api/members")
 public class RegisterController {
     private static final Logger logger = LoggerFactory.getLogger(RegisterController.class);
     @Autowired
     private MemberRepository memberRepository;
 
     @Autowired
+    private InterestService interestService;
+
+    @Autowired
     private JwtService jwtService;
 
     /***
-     * API 11
-     * @param serviesRegisterDTO
+     * API 11 오로라 서비스 등록 및 수정
+     * @param serviceDTO
      * @return
      */
     @PostMapping("/service")
-    public ResponseEntity<Void> serviceRegiser(@RequestBody ServiesRegisterDTO serviesRegisterDTO) {
+    public ResponseEntity<Void> serviceRegiser(@RequestBody ServiceDTO serviceDTO) {
         logger.debug("\t Start serviceRegister ");
 
-        Member member = jwtService.getUserFromEmail();
-        if (member.getAuroraService() != serviesRegisterDTO.getAuroraService()) {
+        Long memberId = jwtService.getUserIdFromJWT();
+        Member member = memberRepository.findById(memberId).get();
+        logger.debug("\t Start memberRepository ");
+        if (member.getAuroraService() != serviceDTO.getAuroraService()) {
             member.toggleAuroraService();
+            if (!member.getAuroraService()) {
+                // 오로라서비스가 false가 됐을 때 기존 명소 데이터 지우기
+                interestService.deleteAuroaAttraction(memberId);
+            }
         }
-        if (member.getMeteorService() != serviesRegisterDTO.getMeteorService()) {
+        if (member.getMeteorService() != serviceDTO.getMeteorService()) {
             member.toggleMeteorService();
+            // 메테오 서비스가 추가 되면 메테오 명소 지우는 로직도 추가 되어야 합니다.
         }
         memberRepository.save(member);
         return ResponseEntity.noContent().build();
@@ -113,6 +122,18 @@ public class RegisterController {
         member.toggleAuroraDisplay();
         memberRepository.save(member);
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * 18번 Api
+     * @return 오로라 서비스 등록 여부 메테오 서비스 등록 여부
+     */
+    @GetMapping("/service/all")
+    public ResponseEntity<ServiceDTO> getAllServiceRegisteration() {
+        Long memberId = jwtService.getUserIdFromJWT();
+        Member member = memberRepository.findById(memberId).get();
+        ServiceDTO serviceDTO = new ServiceDTO(member.getAuroraService(), member.getMeteorService());
+        return ResponseEntity.ok(serviceDTO);
     }
 
 }
