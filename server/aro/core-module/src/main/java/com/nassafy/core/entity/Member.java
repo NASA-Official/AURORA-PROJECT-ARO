@@ -110,14 +110,10 @@ public class Member implements UserDetails {
     }
 
     @Builder
-    public Member(String email, String password, String nickname, boolean alarm, boolean auroraDisplay, boolean auroraService, boolean meteorService) {
+    public Member(String email, String password, String nickname) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
-        this.alarm = alarm;
-        this.auroraDisplay = auroraDisplay;
-        this.auroraService = auroraService;
-        this.meteorService = meteorService;
     }
 
     @Override
