@@ -19,7 +19,7 @@ services:
       D106-network:
         ipv4_address: 172.19.0.7
   batch-server:
-    container_name: api-server
+    container_name: batch-server
     build: ./batch-module
     ports:
       - "8001:8001"
