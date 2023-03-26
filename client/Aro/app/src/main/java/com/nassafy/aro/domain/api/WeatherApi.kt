@@ -12,6 +12,7 @@ interface WeatherApi {
     suspend fun getCurrentWeather(
         @Query("lat") lat : String,
         @Query("lon") lon : String,
+        @Query("units") units : String,
         @Query("appid") appid : String
     ) : Response<WeatherResponse>
 }

@@ -56,8 +56,8 @@ private const val TAG = "AuroraFragment_sdr"
 class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding::inflate),
     OnChartValueSelectedListener,
     OnMapAndViewReadyListener.OnGlobalLayoutAndMapReadyListener,
-    ClusterManager.OnClusterItemClickListener<PlaceItem>
-
+    ClusterManager.OnClusterItemClickListener<PlaceItem>,
+    GoogleMap.OnInfoWindowCloseListener
 { // End of AuroraFragment
     private val auroraViewModel: AuroraViewModel by viewModels()
 
@@ -67,6 +67,7 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
     private var now = LocalDateTime.now()
     private var dateList = arrayListOf<String>()
     private var hourList = arrayListOf<ArrayList<String>>()
+    private var chartHourLabel = getChartHourLabel(now, now)
 
     private lateinit var mClusterManager : ClusterManager<PlaceItem>
 
@@ -77,7 +78,7 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
 
         initView()
 
-        initBottomSheetChart()
+        initBottomSheetChart(chartHourLabel)
 
         initBottomSheetRecyclerView()
 
@@ -85,7 +86,6 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
             childFragmentManager.findFragmentById(R.id.map_view) as SupportMapFragment
 
         OnMapAndViewReadyListener(mapFragment, this)
-
     } // End of onViewCreated
 
     override fun onMapReady(googleMap: GoogleMap?) {
@@ -112,7 +112,7 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
         mClusterManager = ClusterManager<PlaceItem>(requireContext(), mMap)
         mMap!!.setOnCameraIdleListener(mClusterManager)
         mClusterManager.renderer = CustomMarkerRenderer(requireContext(), mMap!!, mClusterManager)
-        mClusterManager.markerCollection.setInfoWindowAdapter(CustomMarkerInfoRenderer(layoutInflater, requireContext()))
+        mClusterManager.markerCollection.setInfoWindowAdapter(CustomMarkerInfoRenderer(layoutInflater, requireContext(), auroraViewModel))
         mClusterManager.setOnClusterItemClickListener(this@AuroraFragment)
 
         CoroutineScope(Dispatchers.Main).launch {
@@ -167,11 +167,9 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
         }
     } // End of initView
 
-    private fun initBottomSheetChart() {
+    private fun initBottomSheetChart(chartHourLabel : ArrayList<String>) {
+        Log.d(TAG, "initBottomSheetChart: hit")
         var kpLineChart = binding.bottomSheet.kpLinechart
-
-        // End - Now  < 23
-        // Start = Now - (End - Now)
 
         // Dummy Data
         var kpValues = arrayListOf<Entry>()
@@ -223,12 +221,7 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
                 setDrawGridLines(false)
                 textColor = Color.WHITE
                 valueFormatter = ChartAxisFormatter(
-                    arrayListOf(
-                        "10", "1", "2", "3", "4", "5",
-                        "6", "7", "8", "9", "10", "11",
-                        "12", "13", "14", "15", "16",
-                        "17","18","19","20","21","22","23"
-                    )
+                    chartHourLabel
                 )
             } // End of xAxis
 
@@ -286,9 +279,18 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
 
     } // End of initBottomSheetRecyclerView
 
-    fun setDateTimeLinearLayoutText(date: String, hour: String) {
+    fun changeDateTime(date: String, hour: String) {
         binding.dateTextview.text = date
         binding.hourTextview.text = hour
+
+        val formatter = DateTimeFormatter.ofPattern("yy/MM/dd HH:mm")
+        var selectedDate = LocalDateTime.parse("$date $hour", formatter)
+        initBottomSheetChart(getChartHourLabel(selectedDate, now))
+        binding.bottomSheet.kpLinechart.notifyDataSetChanged()
+        binding.bottomSheet.kpLinechart.invalidate()
+
+        Log.d(TAG, "changeDateTime: ${getChartHourLabel(selectedDate, now)}")
+        
     } // End of setDateTimeLinearLayoutText
 
     private fun closeBottomSheet() {
@@ -336,14 +338,10 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
 
     private fun getCurrentWeather(lat: Float, lng: Float) {
         CoroutineScope(Dispatchers.Main).launch {
-            withContext(Dispatchers.IO) {
+            withContext(Dispatchers.Main) {
                 auroraViewModel.getCurrentWeather(lat, lng)
             }
         }
-    }
-
-    private fun getFavoriteWeather() {
-
     }
 
     // Dummy Data
@@ -376,5 +374,14 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
         }
         return false
     } // End of onClusterItemClick
+
+    override fun onInfoWindowClose(marker: Marker) {
+        Log.d(TAG, "onInfoWindowClose: ${auroraViewModel.currentWeatherLiveData.hasActiveObservers()}")
+        
+        
+//        auroraViewModel.currentWeatherLiveData.removeObserver(
+//            
+//        )
+    }
 
 }
