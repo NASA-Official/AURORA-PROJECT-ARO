@@ -170,8 +170,8 @@ class JoinCountryPlaceSelectFragment : BaseFragment<FragmentAroCountryPlaceSelec
                         "ssafy_pcs", "로딩 중.."
                     )
                 }
-            }
-        }
+            } // End of when
+        } // End of .placeListLiveData.observe(this.viewLifecycleOwner)
 
         loginActivityViewModel.selectedAuroraPlaces.observe(this.viewLifecycleOwner) { selectedAuroraPlaces ->
 //            Log.d("ssafy_selected_prev", loginActivityViewModel.selectedAuroraPlaceList.toString())

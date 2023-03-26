@@ -35,8 +35,7 @@ import com.nassafy.aro.ui.view.ServiceViewModel
 fun CountryPlaceLazyColumnItem(
     place: PlaceItem,
     selectedPlaceList: MutableList<PlaceItem>,
-    viewModel: ServiceViewModel,
-    loadedList: SnapshotStateList<Boolean>
+    viewModel: ServiceViewModel
 ) {
     //TODO change isSelected to DTO's boolean type var
     var isSelected by remember { mutableStateOf(false) }
@@ -47,9 +46,12 @@ fun CountryPlaceLazyColumnItem(
         .build()
 
     DisposableEffect(key1 =  place, key2 = selectedPlaceList.size) {
-        isSelected = selectedPlaceList.contains(place)
+        Log.d("ssafy_pcs/compose_item", selectedPlaceList.joinToString())
+
+        isSelected = selectedPlaceList.any { it.placeName == place.placeName }
+        Log.d("ssafy_pcs/compose_item", "${selectedPlaceList.any { it.placeId == place.placeId }}")
         onDispose {
-            isSelected = selectedPlaceList.contains(place)
+            isSelected = selectedPlaceList.any { it.placeId == place.placeId }
         }
     }
 

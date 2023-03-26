@@ -23,8 +23,8 @@ class LoginActivityViewModel @Inject constructor(
     var nickname: String = ""
     override var isAuroraServiceSelected: Boolean = false
     override var isMeteorServiceSelected: Boolean = false
-    override val selectedAuroraPlaces: LiveData<MutableList<PlaceItem>> get() = userAccessRepository.selectedAuraraPlaceListLiveData
-    override val selectedMeteorPlaces: LiveData<MutableList<PlaceItem>> get() = userAccessRepository.selectedMeteorPlaceListLiveData
+    val selectedAuroraPlaces: LiveData<MutableList<PlaceItem>> get() = userAccessRepository.selectedAuraraPlaceListLiveData
+    val selectedMeteorPlaces: LiveData<MutableList<PlaceItem>> get() = userAccessRepository.selectedMeteorPlaceListLiveData
 
     val countryListLiveData: LiveData<NetworkResult<List<String>>>
         get() = userAccessRepository.countryListLiveData

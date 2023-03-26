@@ -67,15 +67,16 @@ fun generateBitmapDescriptorFromRes(context: Context, resId: Int): BitmapDescrip
     return BitmapDescriptorFactory.fromBitmap(bitmap)
 }
 
-fun <T> MutableLiveData<NetworkResult<T>>.setNetworkResult(response: Response<T>) {
+/**
+ * Codel: 204의 경우는 처리하지 못합니다.
+ */
+suspend fun <T> MutableLiveData<NetworkResult<T>>.setNetworkResult(response: Response<T>) {
     this.postValue(NetworkResult.Loading())
     try {
         when {
             response.isSuccessful -> {
                 this.postValue(
-                    NetworkResult.Success(
-                        response.body()!!
-                    )
+                    NetworkResult.Success(response.body()!!)
                 )
             }
             response.errorBody() != null -> {

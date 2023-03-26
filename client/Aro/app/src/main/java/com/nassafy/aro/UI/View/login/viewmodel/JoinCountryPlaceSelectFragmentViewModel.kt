@@ -21,5 +21,5 @@ class JoinCountryPlaceSelectFragmentViewModel @Inject constructor(
         viewModelScope.launch {
             userAccessRepository.join(user)
         }
-    }
+    } // End of join
 }
