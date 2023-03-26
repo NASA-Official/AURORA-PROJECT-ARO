@@ -3,6 +3,7 @@ package com.nassafy.aro.ui.view.main.stamp
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -15,6 +16,7 @@ import com.nassafy.aro.R
 import com.nassafy.aro.databinding.FragmentStampHomeBinding
 import com.nassafy.aro.ui.adapter.CountrySpinnerAdapter
 import com.nassafy.aro.ui.view.BaseFragment
+import com.nassafy.aro.ui.view.main.MainActivity
 import com.nassafy.aro.util.NetworkResult
 import com.nassafy.aro.util.showSnackBarMessage
 import com.squareup.picasso.Picasso
@@ -38,11 +40,16 @@ class StampHomeFragment :
     // ArrayAdapter
     private lateinit var arrayAdapter: ArrayAdapter<String>
 
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
     } // End of onAttach
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val main = requireActivity() as MainActivity
+        main.closeDrawer()
+    } // End of onCreate
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -56,8 +63,25 @@ class StampHomeFragment :
 
         // 이벤트 리스너들 등록
         initEventListeners()
-        Picasso.get().load(R.drawable.iceland_test_image).fit().centerCrop()
-            .into(binding.stampHomeImageview)
+
+        var moveX = 0f
+        var moveY = 0f
+        binding.stampHomeImageview.setOnTouchListener { view, motionEvent ->
+            when (motionEvent.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    moveX = view.x - motionEvent.rawX
+                    moveY = view.y - motionEvent.rawY
+                }
+
+                MotionEvent.ACTION_MOVE -> {
+                    view.animate().x(motionEvent.rawX + moveX).y(motionEvent.rawY + moveY)
+                        .setDuration(0).start()
+                }
+            }
+
+            true
+        }
+
     } // End of onViewCreated
 
     private fun initEventListeners() {
@@ -116,13 +140,18 @@ class StampHomeFragment :
         stampHomeViewModel.getUserStampDataGroupByCountryResponseLiveData.observe(this.viewLifecycleOwner) {
             binding.stampHomeProgressbar.visibility = View.GONE
             binding.stampHomeProgressbar.isVisible = false
+            Log.d(TAG, "getUserStampDataGroupByCountryResponseLiveDataObserve: 여기 동작하나요?")
 
             when (it) {
                 is NetworkResult.Success -> {
+                    requireView().showSnackBarMessage("통신 완료")
 //                    countryList = it.data as ArrayList<String>
 //                    initSpinner(countryList)
 
-                    requireView().showSnackBarMessage("통신 완료")
+                    Log.d(TAG, "getUserStampDataGroupByCountryResponseLiveData: ${it.data}")
+
+                    Picasso.get().load(it.data!!.mapImage).fit().centerCrop()
+                        .into(binding.stampHomeImageview)
                 }
 
                 is NetworkResult.Error -> {

@@ -1,23 +1,21 @@
 package com.nassafy.aro.ui.view.main
 
-import android.Manifest
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
 import com.nassafy.aro.R
 import com.nassafy.aro.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
+
+private const val TAG = "MainActivity_싸피"
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -47,6 +45,7 @@ class MainActivity : AppCompatActivity() {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
                 super.onDrawerSlide(drawerView, slideOffset)
             }
+
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
                 val nickname: TextView = findViewById<View>(R.id.nickname_textview) as TextView
@@ -75,7 +74,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun closeDrawer() {
+        Log.d(TAG, "closeDrawer: close 버튼 활성화됨")
         binding.mainDrawerlayout.closeDrawer(GravityCompat.END)
     }
 
-}
+} // End of MainActivity class

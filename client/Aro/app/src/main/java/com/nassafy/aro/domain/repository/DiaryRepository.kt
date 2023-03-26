@@ -27,7 +27,7 @@ class DiaryRepository @Inject constructor(
         get() = _getPlaceDiaryUserDataResponseLiveData
 
     suspend fun getPlaceDiaryUserData(
-        placeId: Int
+        placeId: Long
     ) {
         val response = headerDiaryApi.getPlaceUserDiary(placeId)
 
@@ -53,37 +53,19 @@ class DiaryRepository @Inject constructor(
         get() = _createPlaceDiaryResponseLiveData
 
     suspend fun createPlaceDiary(
-        placeId: Int,
-        newImageList: List<MultipartBody.Part?>,
+        placeId: Long,
+        newImageList: List<MultipartBody.Part?>?,
         requestHashMap: HashMap<String, RequestBody>,
     ) {
-
-        Log.d(TAG, "newImageList: $newImageList")
-
-//        Log.d(TAG, "createPlaceDiary: ${dataType.get("data").toString()}")
-//
-//        dataType.forEach {
-//            Log.d(TAG, "createPlaceDiary: ${it.key.toString()}")
-//            Log.d(TAG, "createPlaceDiary: ${it.value.contentType()}")
-//            Log.d(TAG, "createPlaceDiary: ${it.value.contentLength()}")
-//            Log.d(
-//                TAG, "createPlaceDiary: ${
-//                    it.value.apply {
-//
-//                    }
-//                }"
-//            )
-//        }
-
-
+        Log.d(TAG, "createPlaceDiary: $placeId , $newImageList , $requestHashMap")
         val response = headerDiaryApi.createStampDiary(
             placeId,
-            newImageList[0],
+            newImageList,
             requestHashMap
         )
-        Log.d(TAG, "다이어리 생성 Response: $response")
-        Log.d(TAG, "다이어리 생성 Response: ${response.body()} ")
-        Log.d(TAG, "다이어리 생성 Response: ${response.code()}")
+
+        Log.d(TAG, "createPlaceDiary: $response")
+        Log.d(TAG, "createPlaceDiary: ${response.body()}")
 
         _createPlaceDiaryResponseLiveData.postValue(NetworkResult.Loading())
 

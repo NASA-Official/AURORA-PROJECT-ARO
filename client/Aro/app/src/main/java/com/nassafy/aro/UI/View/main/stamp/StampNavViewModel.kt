@@ -1,5 +1,7 @@
 package com.nassafy.aro.ui.view.main.stamp
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.nassafy.aro.data.dto.UserStampPlace
 
@@ -25,6 +27,14 @@ class StampNavViewModel : ViewModel() {
         _userCountryPlaceDataList.addAll(dataList)
     } // End of setUserCountryPlaceData
 
+    // ======================================== 선택된 명소 데이터 ========================================
+    private val _selectedPlaceLiveData = MutableLiveData<UserStampPlace>()
+    val selectedPlaceLiveData: LiveData<UserStampPlace>
+        get() = _selectedPlaceLiveData
+
+    fun setSelectedPlaceLiveData(newSelectedPlace: UserStampPlace) {
+        _selectedPlaceLiveData.value = newSelectedPlace
+    } // End of setSelectedPlaceLiveData
 
     // ======================================== stampFragment 국가 리스트 ========================================
     private var _selectedCountry: String = ""
