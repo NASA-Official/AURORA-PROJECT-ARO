@@ -7,11 +7,12 @@ import java.util.List;
 
 @Getter
 public class CollectionsDTO {
-    public List<MapStampDTO> mapStampDTOS;
     public String mapImage;
+    public List<MapStampDTO> mapStampsItem;
 
-    public CollectionsDTO(List<MapStampDTO> mapStampDTOS, String mapImage) {
-        this.mapStampDTOS = mapStampDTOS;
+    public CollectionsDTO(String mapImage, List<MapStampDTO> mapStampDTOS) {
         this.mapImage = mapImage;
+        this.mapStampsItem = mapStampDTOS;
+
     }
 }

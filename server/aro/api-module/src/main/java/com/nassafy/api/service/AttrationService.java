@@ -135,7 +135,7 @@ public class AttrationService {
     public CollectionsDTO getCollections(String nation) {
         List<MapStampDTO> mapStampDTO = getStampsFormember(nation);
         String mapImage = getMapImage(nation);
-        CollectionsDTO collectionsDTO = new CollectionsDTO(mapStampDTO, mapImage);
+        CollectionsDTO collectionsDTO = new CollectionsDTO(mapImage, mapStampDTO);
         return collectionsDTO;
     }
 }
