@@ -4,22 +4,19 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.Done
 import androidx.compose.material3.*
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -36,17 +33,13 @@ import coil.ImageLoader
 import coil.compose.LocalImageLoader
 import coil.compose.rememberImagePainter
 import coil.decode.SvgDecoder
-import coil.transform.GrayscaleTransformation
 import com.nassafy.aro.R
 import com.nassafy.aro.data.dto.PlaceItem
 import com.nassafy.aro.databinding.FragmentMyPageBinding
 import com.nassafy.aro.ui.view.BaseFragment
-import com.nassafy.aro.ui.view.custom.CountryPlaceChips
-import com.nassafy.aro.ui.view.custom.CountryPlaceLazyColumn
 import com.nassafy.aro.ui.view.dialog.OkDialog
 import com.nassafy.aro.ui.view.main.MainActivityViewModel
 import com.nassafy.aro.ui.view.main.mypage.viewmodel.MyPageFragmentViewModel
-import com.nassafy.aro.ui.view.main.mypage.viewmodel.MyPageNavFavoriteRegisterViewModel
 import com.nassafy.aro.util.NetworkResult
 import com.nassafy.aro.util.showSnackBarMessage
 import dagger.hilt.android.AndroidEntryPoint
@@ -54,7 +47,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding::inflate) {
@@ -67,7 +59,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
         initObserve()
         CoroutineScope(Dispatchers.IO).launch {
             myPageFragmentViewModel.getSelectedServiceList()
-        }
+        } // End of CoroutineScope
         initView()
     } // End of onViewCreated
 
@@ -91,7 +83,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
             } // End of when
         } // End of nicknameLiveData.observe
 
-        myPageFragmentViewModel.selectedServiceNetworResultLiveData.observe(this.viewLifecycleOwner) {
+        myPageFragmentViewModel.getSelectedServiceNetworResultLiveData.observe(this.viewLifecycleOwner) {
             when (it) {
                 is NetworkResult.Success -> {
                     myPageFragmentViewModel.auroraService = it.data!!.auroraService
@@ -114,8 +106,8 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                 is NetworkResult.Loading -> {
 
                 } // End of NetworkResult.Loading
-            }
-        }
+            } // End of when
+        } // End of getSelectedServiceNetworResultLiveData.observe
 
         myPageFragmentViewModel.favoriteListNetworkResultLiveData.observe(this.viewLifecycleOwner) {
             when (it) {
@@ -132,9 +124,24 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                 is NetworkResult.Loading -> {
 
                 } // End of NetworkResult.Loading
-            }
-        } // End of initObserve
-    }
+            } // End of when
+        } // End of favoriteListNetworkResultLiveData.observe
+
+        myPageFragmentViewModel.deleteFavoriteNetworkResultLiveData.observe(this.viewLifecycleOwner) { result ->
+            when(result) {
+                is NetworkResult.Success -> {
+                    myPageFragmentViewModel.favoriteAuroraPlaceList.removeAll { it.interestId.equals(result.data!!) }
+                }
+                is NetworkResult.Error -> {
+                    requireView().showSnackBarMessage("관심지역 삭제에 실패했습니다.")
+                }
+                is NetworkResult.Loading -> {
+
+                }
+            } // End of when
+        } // End of deleteFavoriteNetworkResultLiveData.observe
+
+    } // End of initObserve
 
     private fun initView() {
         binding.userNicknameEdittext.setText(mainActivityViewModel.nickname)
@@ -166,7 +173,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                                         )
                                     }
                                 } // End of afterChangedNickname.length in 3..10
-                            }
+                            } // End of isSelected == true
                             false -> {}
                         }  // End of when(mainActivityViewModel.nickname != binding.userNicknameEdittext.text.toString())
                     } // End of isSelected == true
@@ -196,19 +203,20 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
             myPageFragmentViewModel.meteorService,
         )
         findNavController().navigate(action)
-    }
+    } // End of moveToServiceRegisterFragment
 
     fun moveToFavoriteRegisterFragment() {
         val action = MyPageFragmentDirections.actionMyPageFragmentToMyPageFavoriteRegisterFragment(
-            //TODO add param
+            myPageFragmentViewModel.auroraService,
+            myPageFragmentViewModel.meteorService,
         )
         findNavController().navigate(action)
-    }
+    } // End of moveToFavoriteRegisterFragment
 
     fun initComposeView() {
         CoroutineScope(Dispatchers.IO).launch {
             myPageFragmentViewModel.getFavoriteList()
-        }
+        } // End of CoroutineScope
         binding.myFavoriteComposeview.apply {
             // Dispose of the Composition when the view's LifecycleOwner
             // is destroyed
@@ -217,12 +225,13 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                 val auroraFavoriteList =
                     remember { myPageFragmentViewModel.favoriteAuroraPlaceList }
                 val memeorFavoriteList = mutableListOf<PlaceItem>()
+                // In Compose world
 
-                LaunchedEffect(key1 = auroraFavoriteList) {
-                    Log.d("ssafy4", auroraFavoriteList.joinToString())
+                LaunchedEffect(myPageFragmentViewModel.favoriteAuroraPlaceList) {
+                    auroraFavoriteList.clear()
+                    auroraFavoriteList.addAll(myPageFragmentViewModel.favoriteAuroraPlaceList)
                 }
 
-                // In Compose world
                 MaterialTheme {
                     Column(
                         modifier = androidx.compose.ui.Modifier
@@ -262,15 +271,15 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                                                 val painter =
                                                     rememberImagePainter(
                                                         it.stamp,
-                                                        builder = { })
+                                                        builder = { }) // End of rememberImagePainter
                                                 Image(
                                                     painter = painter,
                                                     contentDescription = "SVG Image",
                                                     modifier = Modifier
                                                         .weight(2f),
                                                     contentScale = ContentScale.FillWidth,
-                                                )
-                                            }
+                                                ) // End of Image
+                                            } // End of CompositionLocalProvider
                                             Column(
                                                 modifier = Modifier
                                                     .weight(7f),
@@ -287,22 +296,22 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                                                 Spacer(modifier = Modifier.height(4.dp))
                                                 Box(contentAlignment = Alignment.Center) {
 //                                                    TODO Active
-//                                                    Text(
-//                                                        text = it.description,
-//                                                        fontSize = 12.sp,
-//                                                        color = Color.White
-//                                                    )
+                                                    Text(
+                                                        text = it.description,
+                                                        fontSize = 12.sp,
+                                                        color = Color.White
+                                                    )
                                                 } // End of Box
                                             } // End of Column
                                             IconButton(onClick = {
-
+                                                myPageFragmentViewModel.deleteFavorite(it.interestId)
                                             }) {
                                                 Icon(
                                                     imageVector = Icons.Outlined.Close,
                                                     contentDescription = "checked",
                                                     tint = colorResource(id = R.color.light_dark_gray),
-                                                ) // End of Icon {
-                                            }
+                                                ) // End of Icon
+                                            } // End o f IconButton
                                         } // End of Row
                                         Spacer(modifier = Modifier.height(4.dp))
                                         Divider(
@@ -310,14 +319,14 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                                                 .fillMaxWidth(1f)
                                                 .height(2.dp),
                                             color = colorResource(id = R.color.main_app_color),
-                                        )
+                                        ) // End of Divider
                                     } // End of Column
                                 } // End of Card
-                            }
-                        }
+                            } //End of items
+                        } // End of LazyColum
                     } // End of Column
                 } // End of MaterialTheme
             } // End of setContent
         } // ENd of binding.myFavoriteComposeview.apply
     } // End of initComposeView
-}
+} // End of MyPageFragment

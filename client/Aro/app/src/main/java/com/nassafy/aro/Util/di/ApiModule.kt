@@ -157,6 +157,17 @@ object ApiModule {
             .create(MyPageApi::class.java)
     } // End of provideMyPageApi)
 
+    @Provides
+    fun provideWithoutHeaderMyPageApi(@WithoutHeaderInterceptorOkHttpClient okHttpClient: OkHttpClient): WithoutHeaderMyPageApi {
+        return Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(provideBaseUrl())
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+            .create(WithoutHeaderMyPageApi::class.java)
+    } // End of provideWithoutHeaderStampApi
+
+
     // ============================================ Stamp ============================================
 
     @Provides

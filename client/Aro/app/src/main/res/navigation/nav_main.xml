@@ -94,6 +94,14 @@
             app:exitAnim="@anim/exit_left_anim"
             app:popEnterAnim="@anim/enter_left_anim"
             app:popExitAnim="@anim/exit_right_anim" />
+        <argument
+            android:name="auroraService"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <argument
+            android:name="meteorService"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
     <fragment
         android:id="@+id/myPageServiceRegisterFragment"
