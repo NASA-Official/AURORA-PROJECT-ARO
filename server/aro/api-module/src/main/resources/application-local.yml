@@ -60,6 +60,10 @@ spring:
           starttls:
             enable: true
           auth: true
+  redis:
+    host: j8d106.p.ssafy.io
+    port: 6379
+    password: ssafy1234!
 jwt:
   header: Authorization
   #HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용해야 한다.
