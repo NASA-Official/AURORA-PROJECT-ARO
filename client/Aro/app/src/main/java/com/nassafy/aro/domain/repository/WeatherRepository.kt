@@ -26,7 +26,7 @@ class WeatherRepository @Inject constructor(
         get () = _weatherCurrentLiveData
 
     suspend fun getCurrentWeather(lat: String, lon: String) {
-        val response = weatherApi.getCurrentWeather(lat, lon, BuildConfig.WEATHER_API_KEY)
+        val response = weatherApi.getCurrentWeather(lat, lon, "metric", BuildConfig.WEATHER_API_KEY)
         _weatherCurrentLiveData.postValue(NetworkResult.Loading())
         when {
             response.isSuccessful && response.body() != null -> {
