@@ -40,36 +40,58 @@ class DiaryViewModel @Inject constructor(private val diaryRepository: DiaryRepos
 
 
     // 선택한 이미지 리스트
-    private val _selectImageListLiveData = MutableLiveData<LinkedList<Uri>>()
+    private val _selectImageListLiveData = MutableLiveData<LinkedList<Uri>>(LinkedList())
     val selectImageListLiveData: MutableLiveData<LinkedList<Uri>>
         get() = _selectImageListLiveData
 
+    fun setSelectImageListAddImage(savedImageList: MutableList<Uri>) {
+        savedImageList.forEach {
+            selectImageListAddImage(it)
+        }
+    } // End of setSelectImageListAddImage
+
     fun selectImageListAddImage(iamgeUri: Uri) {
         selectImageListLiveData.value!!.add(iamgeUri)
-    }
+    } // End of selectImageListAddImage
 
     fun selectImageListRemoveImage(index: Int) {
         selectImageListLiveData.value!!.removeAt(index)
+    } // End of selectImageListRemoveImage
+
+    // ===================================== ViewPager ImageList LiveData =====================================
+    // 뷰페이저에 들어가는 이미지 리스트를 관리
+
+    private val _viewPagerImageListSizeLiveData = MutableLiveData<Int>(0)
+    val viewPagerImageListSizeLiveData: LiveData<Int>
+        get() = _viewPagerImageListSizeLiveData
+
+    fun viewPagerImageListSizeMinus() {
+        _viewPagerImageListSizeLiveData.value = _viewPagerImageListSizeLiveData.value?.minus(1)
+    } // End of viewPagerImageListSizeReduce
+
+    fun viewPagerImageListSizePlus() {
+        _viewPagerImageListSizeLiveData.value = _viewPagerImageListSizeLiveData.value?.plus(1)
     }
+
 
     // ===================================== 명소별 유저 diary 데이터 가져오기 =====================================
     val getPlaceDiaryUserDataResponseLiveData: LiveData<NetworkResult<Diary>>
         get() = diaryRepository.getPlaceDiaryUserDataResponseLiveData
 
     suspend fun getPlaceDiaryUserData(
-        placeId: Int
+        placeId: Long
     ) {
         viewModelScope.launch {
             diaryRepository.getPlaceDiaryUserData(placeId)
         }
-    }
+    } // End of getPlaceDiaryUserData
 
     // ===================================== 명소별 다이어리 생성 =====================================
     val createPlaceDiaryResponseLiveData: LiveData<NetworkResult<Int>>
         get() = diaryRepository.createPlaceDiaryResponseLiveData
 
     suspend fun createPlaceDiary(
-        placeId: Int,
+        placeId: Long,
         deleteImageList: List<String>,
         newImageList: List<MultipartBody.Part?>,
         memo: String
@@ -89,13 +111,28 @@ class DiaryViewModel @Inject constructor(private val diaryRepository: DiaryRepos
         requestHashMap["deleteImageList"] =
             jsonArray.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull())
 
-
-
-        viewModelScope.launch {
-            diaryRepository.createPlaceDiary(
-                placeId, newImageList, requestHashMap
-            )
+        when (newImageList.isEmpty()) {
+            true -> {
+                viewModelScope.launch {
+                    diaryRepository.createPlaceDiary(
+                        placeId, null, requestHashMap
+                    )
+                }
+            }
+            false -> {
+                viewModelScope.launch {
+                    diaryRepository.createPlaceDiary(
+                        placeId, newImageList, requestHashMap
+                    )
+                }
+            }
         }
+
+//        viewModelScope.launch {
+//            diaryRepository.createPlaceDiary(
+//                placeId, newImageList, requestHashMap
+//            )
+//        }
     } // End of createPlaceDiary
 } // End of DiaryViewModel
 
