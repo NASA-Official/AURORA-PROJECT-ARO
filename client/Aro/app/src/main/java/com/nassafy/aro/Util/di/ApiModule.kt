@@ -5,11 +5,9 @@ import androidx.viewbinding.BuildConfig
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.nassafy.aro.Application
-import com.nassafy.aro.domain.api.DiaryApi
-import com.nassafy.aro.domain.api.StampApi
-import com.nassafy.aro.domain.api.TestApi
-import com.nassafy.aro.domain.api.UserAccessApi
+import com.nassafy.aro.domain.api.*
 import com.nassafy.aro.util.SERVER_URL
+import com.nassafy.aro.util.WEATHER_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -197,4 +195,39 @@ object ApiModule {
             .build()
             .create(DiaryApi::class.java)
     } // End of provideHeaderDiaryApi
+
+    // ============================================ Aurora ============================================
+    @Provides
+    @WithoutHeaderInterceptorApi
+    fun provideWithoutHeaderAuroraApi(@WithoutHeaderInterceptorOkHttpClient okHttpClient: OkHttpClient): AuroraApi {
+        return Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(provideBaseUrl())
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+            .create(AuroraApi::class.java)
+    } // End of provideWithoutHeaderAuroraApi
+
+    @Provides
+    @HeaderInterceptorApi
+    fun provideHeaderAuroraApi(@HeaderInterceptorOkHttpClient okHttpClient: OkHttpClient): AuroraApi {
+        return Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(provideBaseUrl())
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+            .create(AuroraApi::class.java)
+    } // End of provideHeaderDiaryApi
+
+    @Provides
+    @WithoutHeaderInterceptorApi
+    fun provideWithoutHeaderWeatherApi(@WithoutHeaderInterceptorOkHttpClient okHttpClient: OkHttpClient): WeatherApi {
+        return Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(WEATHER_URL)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+            .create(WeatherApi::class.java)
+    } // End of provideWithoutHeaderWeatherApi
+
 } // End of ApiModule
