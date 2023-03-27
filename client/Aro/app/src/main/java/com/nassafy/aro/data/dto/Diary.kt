@@ -3,9 +3,9 @@ package com.nassafy.aro.data.dto
 import java.util.*
 
 data class Diary @JvmOverloads constructor(
-    var imageList: LinkedList<String> = LinkedList(),
+    var images: LinkedList<String> = LinkedList(),
     var memo: String = "",
     var nation: String? = "",
-    var placeName: String? = "",
+    var attractionName: String? = "",
     var description: String? = "",
 ) : java.io.Serializable

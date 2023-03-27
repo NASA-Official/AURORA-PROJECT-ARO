@@ -6,10 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.core.net.toUri
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.nassafy.aro.R
-import com.nassafy.aro.data.dto.CountryTest
 import com.nassafy.aro.databinding.StampDiaryImageListItemBinding
 import com.squareup.picasso.Picasso
 import java.util.*
@@ -17,12 +16,12 @@ import java.util.*
 private const val TAG = "StampDiaryImageViewPage_싸피"
 
 class StampDiaryImageViewPagerAdapter(
-    private val placeDiaryImageList: LinkedList<String>
+    private val placeDiaryImageList: LinkedList<Uri>
 ) : RecyclerView.Adapter<StampDiaryImageViewPagerAdapter.StampDiaryPlaceHolder>() {
     private lateinit var binding: StampDiaryImageListItemBinding
 
     inner class StampDiaryPlaceHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bindInfo(data: CountryTest) {
+        fun bindInfo(data: Uri) {
 
         } // End of bindInfo
     } // End of StampDiaryPlaceHolder class
@@ -37,12 +36,13 @@ class StampDiaryImageViewPagerAdapter(
     override fun onBindViewHolder(holder: StampDiaryPlaceHolder, position: Int) {
         Log.d(TAG, "viewAdapter Image List : ${placeDiaryImageList}")
 
-        Picasso.get().load(placeDiaryImageList[position].toUri()).fit().centerCrop()
+        Picasso.get().load(placeDiaryImageList[position].toString()).fit().centerCrop()
             .into(holder.itemView.findViewById<ImageView>(R.id.stamp_diary_image_list_imageview))
 
-        binding.stampDiaryHistoryImageDeleteButton.setOnClickListener {
-            itemClickListener.imageRemoveButtonClick(position)
-        }
+        holder.itemView.findViewById<TextView>(R.id.stamp_diary_history_image_delete_button)
+            .setOnClickListener {
+                itemClickListener.imageRemoveButtonClick(position)
+            }
     } // End of onBindViewHolder
 
     override fun getItemCount(): Int = placeDiaryImageList.size
@@ -53,7 +53,7 @@ class StampDiaryImageViewPagerAdapter(
 
     internal fun addImage(newImageUri: Uri) {
         Log.d(TAG, "addImage: 이미지 들어가나?")
-        placeDiaryImageList.add(newImageUri.toString())
+        placeDiaryImageList.add(newImageUri)
         refreshAdapter()
     } // End of addImage
 

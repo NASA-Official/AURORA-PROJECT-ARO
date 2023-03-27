@@ -18,7 +18,7 @@ interface DiaryApi {
     @JvmSuppressWildcards
     @GET("/api/stamps/diary/{placeId}")
     suspend fun getPlaceUserDiary(
-        @Path("placeId") placeId: Int,
+        @Path("placeId") placeId: Long,
     ): Response<Diary>  // End of getPlaceUserDiary
 
 
@@ -28,8 +28,8 @@ interface DiaryApi {
     @JvmSuppressWildcards
     @POST("/api/stamps/diary/{placeId}")
     suspend fun createStampDiary(
-        @Path("placeId") placeId: Int,
-        @Part newImageList: MultipartBody.Part?,
+        @Path("placeId") placeId: Long,
+        @Part newImageList: List<MultipartBody.Part?>?,
         @PartMap() requestHashMap: HashMap<String, RequestBody>,
     ): Response<Void>
 } // End of DiaryApi interface
