@@ -52,6 +52,7 @@ public class Member implements UserDetails {
     private boolean meteorService = false;
 
     private String refreshToken;
+//    private String fcmToken;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
