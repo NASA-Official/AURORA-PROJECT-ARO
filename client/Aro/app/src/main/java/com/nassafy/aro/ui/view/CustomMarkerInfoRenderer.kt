@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.compose.runtime.DisposableEffectResult
@@ -42,19 +43,29 @@ class CustomMarkerInfoRenderer(
 
     override fun getInfoWindow(marker: Marker): View {
         if (lastMarker != marker) {
+            Log.d(TAG, "getInfoWindow: ${marker.title}")
+            Log.d(TAG, "position: ${marker.position}")
+            
             lastMarker = marker
             val placeItem: PlaceItem = marker.tag as PlaceItem
+
+            Log.d(TAG, "getInfoWindow: $placeItem")
 
             val infoImageView = infoWindow.findViewById<ImageView>(R.id.map_info_imageview)
             val infoNameTextView = infoWindow.findViewById<TextView>(R.id.map_info_name_textview)
             val infoTextView = infoWindow.findViewById<TextView>(R.id.map_info_textview)
 
+            val infoLinearLayout = infoWindow.findViewById<LinearLayout>(R.id.map_info_linearlayout)
+            val infoProgressBar = infoWindow.findViewById<ProgressBar>(R.id.map_info_progressbar)
+
+
+            infoProgressBar.visibility = View.VISIBLE
+            infoLinearLayout.visibility = View.INVISIBLE
             infoNameTextView.text = placeItem.placeName
-            infoTextView.visibility = View.INVISIBLE
-            infoImageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.loading_spinner))
+//            infoImageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.loading_spinner))
 
             CoroutineScope(Dispatchers.Main).launch {
-                val currentWeatherLiveData = auroraViewModel.currentWeatherLiveData
+//                val currentWeatherLiveData = auroraViewModel.currentWeatherLiveData
 
                 val resultPicture: Deferred<Int> = async {
                     val picasso = Picasso.get()
@@ -66,23 +77,27 @@ class CustomMarkerInfoRenderer(
                             override fun onSuccess() {
                                 when {
                                     marker.isInfoWindowShown -> {
-                                        currentWeatherLiveData.observeForever { result ->
-                                            when (result) {
-                                                is NetworkResult.Success -> {
-                                                    val weatherResponse = result.data
-                                                    Log.d(TAG, "onSuccess: ${placeItem.placeName}")
-                                                    Log.d(TAG, "onSuccess: ${weatherResponse?.weather?.get(0)?.main}")
-                                                    infoTextView.text = weatherResponse?.weather?.get(0)?.main ?: "NULL"
-                                                    infoImageView.visibility = View.VISIBLE
-                                                    infoTextView.visibility = View.VISIBLE
+                                                    infoTextView.text = "${marker.title}"
+                                                    infoProgressBar.visibility = View.VISIBLE
+                                                    infoLinearLayout.visibility = View.VISIBLE
                                                     marker.showInfoWindow()
-                                                }
-                                                is NetworkResult.Error -> {
-                                                    Log.e(TAG, "Error")
-                                                }
-                                                is NetworkResult.Loading -> {}
-                                            }
-                                        }
+//                                        currentWeatherLiveData.observeForever { result ->
+//                                            when (result) {
+//                                                is NetworkResult.Success -> {
+//                                                    val weatherResponse = result.data
+//                                                    infoTextView.text = weatherResponse?.weather?.get(0)?.main ?: "NULL"
+//                                                    infoProgressBar.visibility = View.INVISIBLE
+//                                                    infoLinearLayout.visibility = View.VISIBLE
+////                                                    infoImageView.visibility = View.VISIBLE
+////                                                    infoTextView.visibility = View.VISIBLE
+//                                                    marker.showInfoWindow()
+//                                                }
+//                                                is NetworkResult.Error -> {
+//                                                    Log.e(TAG, "Error")
+//                                                }
+//                                                is NetworkResult.Loading -> {}
+//                                            }
+//                                        }
                                     }
                                 }
                             }
