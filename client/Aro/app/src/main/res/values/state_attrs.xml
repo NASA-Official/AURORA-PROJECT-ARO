@@ -2,6 +2,7 @@
 <resources>
     <declare-styleable name="AroServiceCardView">
         <attr name="service_image"  format="integer|reference"/>
+        <attr name="service_name_text" format="string" />
         <attr name="android:state_selected" />
     </declare-styleable>
 </resources>

@@ -47,6 +47,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="2dp"
             android:layout_weight="1"
+            app:service_name_text="AURORA"
             app:service_image="@drawable/usa_fairbanks_color" />
 
         <com.nassafy.aro.ui.view.custom.AroServiceCardView
@@ -54,6 +55,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            app:service_name_text="METEOR SHOWER"
             app:service_image="@drawable/cook_county_image" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
