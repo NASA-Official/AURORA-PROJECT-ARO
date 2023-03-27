@@ -1,7 +1,12 @@
 package com.nassafy.aro
 
 import android.app.Application
+import android.util.Log
+import android.widget.Toast
 import androidx.viewbinding.BuildConfig
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.nassafy.aro.util.SERVER_URL
@@ -17,12 +22,15 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
+private const val TAG = "Application_싸피"
+
 @HiltAndroidApp
 class Application : Application() {
     override fun onCreate() {
         super.onCreate()
 
         sharedPreferencesUtil = SharedPreferencesUtil(applicationContext)
+
 
     } // End of onCreate
 
