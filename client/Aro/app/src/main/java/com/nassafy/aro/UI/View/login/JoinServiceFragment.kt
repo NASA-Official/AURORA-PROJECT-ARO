@@ -24,8 +24,8 @@ class JoinServiceFragment : BaseFragment<FragmentAroServiceSelectBinding>(Fragme
     private val joinSericeFragmentViewModel: JoinServiceFragmentViewModel by viewModels()
     override fun onResume() {
         super.onResume()
-        binding.auroraServiceCardview.isSelected = loginActivityViewModel.isAuroraServiceSelected
-        binding.meteorServiceCardview.isSelected = loginActivityViewModel.isMeteorServiceSelected
+        binding.auroraServiceCardview.setIsSelected(loginActivityViewModel.isAuroraServiceSelected)
+        binding.meteorServiceCardview.setIsSelected(loginActivityViewModel.isMeteorServiceSelected)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

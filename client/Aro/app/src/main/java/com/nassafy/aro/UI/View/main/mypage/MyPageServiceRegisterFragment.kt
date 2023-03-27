@@ -70,10 +70,8 @@ class MyPageServiceRegisterFragment :
 
     private fun initView() {
         binding.serviceSelectLaterGroup.isGone = true
-        binding.auroraServiceCardview.isSelected =
-            myPageServiceRegisterFragementViewModel.auroraService
-        binding.meteorServiceCardview.isSelected =
-            myPageServiceRegisterFragementViewModel.meteorService
+        binding.auroraServiceCardview.setIsSelected(myPageServiceRegisterFragementViewModel.auroraService)
+        binding.meteorServiceCardview.setIsSelected(myPageServiceRegisterFragementViewModel.meteorService)
 
         //커스텀 뷰는 setOnClickListener가 안먹힘;;; //TODO 나아아중에 개선
 //        binding.auroraServiceCardview.setOnClickListener {
