@@ -1,9 +1,9 @@
 package com.nassafy.aro.domain.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.nassafy.aro.data.dto.CountryTest
+import com.nassafy.aro.data.dto.MapStampItem
+import com.nassafy.aro.data.dto.StampHomeItem
 import com.nassafy.aro.data.dto.UserStampPlace
 import com.nassafy.aro.domain.api.StampApi
 import com.nassafy.aro.util.NetworkResult
@@ -46,8 +46,8 @@ class StampRepository @Inject constructor(
     // ================================= 유저별 국가 스탬프 데이터 가져오기 =================================
 
     private val _getUserStampDataGroupByCountryResponseLiveData =
-        MutableLiveData<NetworkResult<List<CountryTest>>>()
-    val getUserStampDataGroupByCountryResponseLiveData: LiveData<NetworkResult<List<CountryTest>>>
+        MutableLiveData<NetworkResult<StampHomeItem>>()
+    val getUserStampDataGroupByCountryResponseLiveData: LiveData<NetworkResult<StampHomeItem>>
         get() = _getUserStampDataGroupByCountryResponseLiveData
 
     suspend fun getUserStampDataGroupByCountry(countryName: String) {
@@ -81,10 +81,7 @@ class StampRepository @Inject constructor(
         get() = _getUserPlaceDataGroupByCountryResponseLiveData
 
     suspend fun getUserPlaceDataGroupByCountry(countryName: String) {
-        Log.d(TAG, "getUserPlaceDataGroupByCountry: ${countryName} ")
-
-        val response = stampHeaderApi.getUserPlaceDataGroupByCountry(countryName)
-        Log.d(TAG, "getUserPlaceDataGroupByCountry: $response")
+        val response = stampHeaderApi.getUserPlaceDataGroupByCountry(countryName.toString())
 
         _getUserPlaceDataGroupByCountryResponseLiveData.postValue(NetworkResult.Loading())
 

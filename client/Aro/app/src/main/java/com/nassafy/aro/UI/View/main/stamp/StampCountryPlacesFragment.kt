@@ -2,7 +2,6 @@ package com.nassafy.aro.ui.view.main.stamp
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
@@ -12,6 +11,7 @@ import com.nassafy.aro.R
 import com.nassafy.aro.databinding.FragmentStampCountryPlacesBinding
 import com.nassafy.aro.ui.view.BaseFragment
 import com.nassafy.aro.util.NetworkResult
+import com.nassafy.aro.util.showSnackBarMessage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 
@@ -25,11 +25,11 @@ class StampCountryPlacesFragment :
     // viewPager
     private lateinit var countryPlaceViewPager: CountryPlaceViewPagerAdapter
 
+    // Navigation ViewModel
+    private val stampHomeNavViewModel: StampNavViewModel by navGraphViewModels(R.id.nav_stamp_diary)
+
     // Fragment ViewModel
     private val stampCountryPlaceViewModel: StampCountryPlaceViewModel by viewModels()
-
-    // navigationViewModel
-    private val stampHomeNavViewModel: StampNavViewModel by navGraphViewModels(R.id.nav_stamp_diary)
 
 
     override fun onAttach(context: Context) {
@@ -58,11 +58,10 @@ class StampCountryPlacesFragment :
         /*
             stampHomeNavViewModel 에서 선택된 국가를 가져와서 통신
          */
-        Log.d(TAG, "initViewGetData: ${stampHomeNavViewModel.selectedCountry}")
         stampCountryPlaceViewModel.setSelectedCountry(stampCountryPlaceViewModel.selectedCountry)
 
         CoroutineScope(Dispatchers.IO).launch {
-            stampCountryPlaceViewModel.getUserPlaceDataGroupByCountry()
+            stampCountryPlaceViewModel.getUserPlaceDataGroupByCountry(stampHomeNavViewModel.selectedCountry)
         }
     } // End of initViewGetData
 
@@ -71,8 +70,7 @@ class StampCountryPlacesFragment :
 
     private fun initViewPagerAdapter() {
         countryPlaceViewPager = CountryPlaceViewPagerAdapter(
-            stampHomeNavViewModel.selectedCountry,
-            stampHomeNavViewModel.userCountryPlaceDataList
+            stampHomeNavViewModel.selectedCountry, stampHomeNavViewModel.userCountryPlaceDataList
         )
         binding.stampCountryCustomViewpager2.apply {
             adapter = countryPlaceViewPager
@@ -82,6 +80,8 @@ class StampCountryPlacesFragment :
         countryPlaceViewPager.setItemClickListener(object :
             CountryPlaceViewPagerAdapter.ItemClickListener {
             override fun writeDiaryButtonClick(position: Int) {
+                stampHomeNavViewModel.setSelectedPlaceLiveData(stampHomeNavViewModel.userCountryPlaceDataList[position])
+
                 // 해당 명소에 해당하는 일기 데이터를 가져옴.
                 Navigation.findNavController(binding.stampCountryCustomViewpager2.findViewById(R.id.stamp_country_place_write_diary_button))
                     .navigate(
@@ -91,7 +91,9 @@ class StampCountryPlacesFragment :
 
             // 검증 버튼 클릭 이벤트
             override fun validateButtonclick(position: Int) {
-                Log.d(TAG, "validateButtonclick: 검증 버튼 클릭")
+                requireView().showSnackBarMessage("${stampHomeNavViewModel.selectedCountry}의  ${position + 1} 내용 검증 버튼 클릭됨")
+                Navigation.findNavController(binding.stampCountryCustomViewpager2.findViewById(R.id.stamp_country_place_validate_button))
+                    .navigate(R.id.action_stampCountryPlacesFragment_to_stampValidateFragment)
             } // End of validateButtonclick
         })
     } // End of initViewPagerAdapter

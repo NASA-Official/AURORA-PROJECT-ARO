@@ -125,17 +125,7 @@ object ApiModule {
             .create(TestApi::class.java)
     }
 
-    @Provides
-    fun provideUserAccessApi(@WithoutHeaderInterceptorOkHttpClient okHttpClient: OkHttpClient): UserAccessApi {
-        return Retrofit.Builder()
-            .client(okHttpClient)
-            .baseUrl(provideBaseUrl())
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
-            .create(UserAccessApi::class.java)
-    }
-
-    @HeaderInterceptorApi
+  @HeaderInterceptorApi
     @Provides
     fun provideHeaderTestApi(@HeaderInterceptorOkHttpClient okHeaderOkHttpClient: OkHttpClient): TestApi {
         return Retrofit.Builder()
@@ -145,6 +135,38 @@ object ApiModule {
             .build()
             .create(TestApi::class.java)
     }
+
+    // ============================================ Main ============================================
+    @Provides
+    fun provideMainApi(@HeaderInterceptorOkHttpClient okHttpClient: OkHttpClient): MainApi {
+        return Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(provideBaseUrl())
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+            .create(MainApi::class.java)
+    } // End of provideMainApi)
+
+    // ============================================ Main ============================================
+    @Provides
+    fun provideMyPageApi(@HeaderInterceptorOkHttpClient okHttpClient: OkHttpClient): MyPageApi {
+        return Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(provideBaseUrl())
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+            .create(MyPageApi::class.java)
+    } // End of provideMyPageApi)
+
+    @Provides
+    fun provideWithoutHeaderMyPageApi(@WithoutHeaderInterceptorOkHttpClient okHttpClient: OkHttpClient): WithoutHeaderMyPageApi {
+        return Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(provideBaseUrl())
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+            .create(WithoutHeaderMyPageApi::class.java)
+    } // End of provideWithoutHeaderStampApi
 
 
     // ============================================ Stamp ============================================
@@ -171,6 +193,17 @@ object ApiModule {
             .build()
             .create(StampApi::class.java)
     } // End of provideHeaderStampApi
+
+    // ============================================ UserAccess ============================================
+    @Provides
+    fun provideUserAccessApi(@WithoutHeaderInterceptorOkHttpClient okHttpClient: OkHttpClient): UserAccessApi {
+        return Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(provideBaseUrl())
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+            .create(UserAccessApi::class.java)
+    }
 
 
     // ============================================ Diary ============================================

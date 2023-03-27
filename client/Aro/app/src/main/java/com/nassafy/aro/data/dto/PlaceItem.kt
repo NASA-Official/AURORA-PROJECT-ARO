@@ -9,13 +9,15 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PlaceItem(
-    @SerializedName("attraction_id") val placeId: Int,
     @SerializedName("attractionName") val placeName: String,
+    @SerializedName("attractionId") val placeId: Int,
     @SerializedName("description") val description: String,
     @SerializedName("stamp") val stamp: String,
     @SerializedName("mapImage") val mapImage : String,
     @SerializedName("latitude") val latitude : Float,
-    @SerializedName("longitude") val longitude : Float
+    @SerializedName("longitude") val longitude : Float,
+    val interest: Boolean = false,
+    val interestId: Long = 0
 ) : ClusterItem, Parcelable {
     override fun getPosition(): LatLng {
         return LatLng(latitude.toDouble(), longitude.toDouble())
