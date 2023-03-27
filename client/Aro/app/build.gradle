@@ -189,4 +189,8 @@ dependencies {
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-messaging-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
+
+    // scalablelayout
+    implementation 'com.ssomai:android.scalablelayout:2.1.6'
+
 }
