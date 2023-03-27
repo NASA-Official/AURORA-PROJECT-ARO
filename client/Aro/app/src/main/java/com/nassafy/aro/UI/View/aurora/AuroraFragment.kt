@@ -19,18 +19,15 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.maps.android.PolyUtil
 import com.google.maps.android.clustering.ClusterManager
-import com.google.maps.android.collections.MarkerManager
 import com.nassafy.aro.BuildConfig
 import com.nassafy.aro.R
-import com.nassafy.aro.data.dto.Place
+import com.nassafy.aro.ui.view.ChartAxisFormatter
 import com.nassafy.aro.data.dto.PlaceItem
-import com.nassafy.aro.data.dto.weather.WeatherResponse
 import com.nassafy.aro.databinding.FragmentAuroraBinding
 import com.nassafy.aro.ui.adapter.BottomSheetFavoriteAdapter
 import com.nassafy.aro.ui.view.*
@@ -47,7 +44,6 @@ import java.net.URL
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.math.log
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
@@ -168,7 +164,6 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
     } // End of initView
 
     private fun initBottomSheetChart(chartHourLabel : ArrayList<String>) {
-        Log.d(TAG, "initBottomSheetChart: hit")
         var kpLineChart = binding.bottomSheet.kpLinechart
 
         // Dummy Data
@@ -376,7 +371,8 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
     } // End of onClusterItemClick
 
     override fun onInfoWindowClose(marker: Marker) {
-        Log.d(TAG, "onInfoWindowClose: ${auroraViewModel.currentWeatherLiveData.hasActiveObservers()}")
+//        Log.d(TAG, "onInfoWindowClose: ${auroraViewModel.currentWeatherLiveData.hasActiveObservers()}")
+        Log.d(TAG, "onInfoWindowClose: ${marker.title}")
         
         
 //        auroraViewModel.currentWeatherLiveData.removeObserver(
