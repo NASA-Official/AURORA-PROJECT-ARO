@@ -1,5 +1,6 @@
 package com.nassafy.aro.ui.view.main.stamp
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,8 +9,10 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
+import coil.ImageLoader
+import coil.decode.SvgDecoder
+import coil.request.ImageRequest
 import com.nassafy.aro.R
-import com.nassafy.aro.data.dto.MapStampItem
 import com.nassafy.aro.data.dto.UserStampPlace
 import com.nassafy.aro.databinding.StampCountryPlaceListItemBinding
 import com.squareup.picasso.Picasso
@@ -17,6 +20,7 @@ import com.squareup.picasso.Picasso
 private const val TAG = "CountryPlaceViewPagerAd_싸피"
 
 class CountryPlaceViewPagerAdapter(
+    private val mContext: Context,
     private val countryName: String,
     private val countryPlaceList: List<UserStampPlace>
 ) : RecyclerView.Adapter<CountryPlaceViewPagerAdapter.CountryPlaceHolder>() {
@@ -33,14 +37,16 @@ class CountryPlaceViewPagerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CountryPlaceHolder {
         binding = StampCountryPlaceListItemBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
+            LayoutInflater.from(parent.context), parent, false
         )
         return CountryPlaceHolder(binding.root)
     } // End of onCreateViewHolder
 
     override fun onBindViewHolder(holder: CountryPlaceHolder, position: Int) {
+        val imageLoader = ImageLoader.Builder(mContext).componentRegistry {
+            add(SvgDecoder(mContext))
+        }.build()
+
         holder.itemView.findViewById<TextView>(R.id.stamp_country_name_textview).text = countryName
         holder.itemView.findViewById<TextView>(R.id.stamp_country_place_name_textview).text =
             countryPlaceList[position].attractionName.toString()
@@ -51,6 +57,12 @@ class CountryPlaceViewPagerAdapter(
         holder.itemView.findViewById<TextView>(R.id.stamp_country_place_inform_textview).text =
             countryPlaceList[position].description.toString()
 
+        // SVG 스탬프 파일 imageView에 띄우기.
+        val request = ImageRequest.Builder(mContext).crossfade(true).crossfade(500)
+            .data(countryPlaceList[position].stamp!!)
+            .target(holder.itemView.findViewById<ImageView>(R.id.stamp_country_place_stamp_imageview))
+            .build()
+        imageLoader.enqueue(request)
 
         /*
             인증하기 버튼일 때는 인증하는 화면으로 이동해야됨.

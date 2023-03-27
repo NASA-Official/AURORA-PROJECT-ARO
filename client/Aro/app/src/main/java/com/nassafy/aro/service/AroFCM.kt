@@ -57,28 +57,28 @@ class AroFCM : FirebaseMessagingService() {
 
             notificationChannel.enableLights(true)
             notificationChannel.lightColor =
-                ContextCompat.getColor(this, R.color.main_app_color_light)
+                ContextCompat.getColor(this, R.color.join_background_color)
             notificationChannel.enableVibration(true)
             notificationManager.createNotificationChannel(notificationChannel)
 
             builder = Notification.Builder(this, title)
                 //.setContent(contentView)
-                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setSmallIcon(R.drawable.aurora_icon)
                 .setLargeIcon(
                     BitmapFactory.decodeResource(
                         this.resources,
-                        R.drawable.ic_launcher_background
+                        R.drawable.aurora_icon
                     )
                 )
                 .setContentIntent(pendingIntent)
         } else {
             builder = Notification.Builder(this)
                 //.setContent(contentView)
-                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setLargeIcon(
                     BitmapFactory.decodeResource(
                         this.resources,
-                        R.drawable.ic_launcher_background
+                        R.drawable.ic_launcher_foreground
                     )
                 )
                 .setContentIntent(pendingIntent)

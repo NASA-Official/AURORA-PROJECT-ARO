@@ -64,6 +64,11 @@ class StampHomeFragment :
         // 이벤트 리스너들 등록
         initEventListeners()
 
+        // imageView Drag 구현
+        imageViewDragEventListener()
+    } // End of onViewCreated
+
+    private fun imageViewDragEventListener() {
         var moveX = 0f
         var moveY = 0f
         binding.stampHomeImageview.setOnTouchListener { view, motionEvent ->
@@ -82,7 +87,8 @@ class StampHomeFragment :
             true
         }
 
-    } // End of onViewCreated
+    } // End of imageViewDragEventListener
+
 
     private fun initEventListeners() {
         // 뒤로가기 버튼 클릭 이벤트
@@ -147,8 +153,6 @@ class StampHomeFragment :
                     requireView().showSnackBarMessage("통신 완료")
 //                    countryList = it.data as ArrayList<String>
 //                    initSpinner(countryList)
-
-                    Log.d(TAG, "getUserStampDataGroupByCountryResponseLiveData: ${it.data}")
 
                     Picasso.get().load(it.data!!.mapImage).fit().centerCrop()
                         .into(binding.stampHomeImageview)
