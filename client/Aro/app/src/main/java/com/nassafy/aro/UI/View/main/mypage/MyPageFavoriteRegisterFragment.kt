@@ -159,7 +159,8 @@ class MyPageFavoriteRegisterFragment :
                     when(myPageFavoriteRegisterFragmentViewModel.isMeteorServiceSelected) {
                         true -> {
                             requireView().showSnackBarMessage("유성우 서비스는 준비 중입니다.!!")
-                            findNavController().navigate(R.id.action_myPageFavoriteRegisterFragment_to_myPageFragment)
+                            findNavController()
+                                .navigate(R.id.action_myPageFavoriteRegisterFragment_to_myPageFragment)
                         }
                         false -> {
                             findNavController().navigate(R.id.action_myPageFavoriteRegisterFragment_to_myPageFragment)
@@ -194,17 +195,10 @@ class MyPageFavoriteRegisterFragment :
 
                     // TODO ACTIVE
                     CoroutineScope(Dispatchers.IO).launch {
-                        when (myPageFavoriteRegisterFragmentViewModel.isMeteorServiceSelected) {
-                            true -> {
-                                //TODO navigate to meteorFavorite
-                            } // End of true
-                            false -> {
-                                myPageFavoriteRegisterFragmentViewModel.selectService(
-                                    myPageFavoriteRegisterFragmentViewModel.isAuroraServiceSelected,
-                                    myPageFavoriteRegisterFragmentViewModel.isMeteorServiceSelected
-                                ) // End of selectService
-                            } // End of false
-                        } // End of when
+                        myPageFavoriteRegisterFragmentViewModel.selectService(
+                            myPageFavoriteRegisterFragmentViewModel.isAuroraServiceSelected,
+                            myPageFavoriteRegisterFragmentViewModel.isMeteorServiceSelected
+                        ) // End of selectService
                     } // End of CoroutineScope
                 } // End of myPageFavoriteRegisterFragmentViewModel.apply
             } // End of nextButton.setOnClickListener

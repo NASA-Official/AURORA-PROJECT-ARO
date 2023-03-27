@@ -113,12 +113,14 @@
             android:name="com.nassafy.aro.ui.view.main.mypage.MyPageFavoriteRegisterFragment"
             android:label="MyPageFavoriteRegisterFragment">
         <action
-                android:id="@+id/action_myPageFavoriteRegisterFragment_to_myPageFragment"
-                app:destination="@id/myPageFragment"
-                app:enterAnim="@anim/enter_right_anim"
-                app:exitAnim="@anim/exit_left_anim"
-                app:popEnterAnim="@anim/enter_left_anim"
-                app:popExitAnim="@anim/exit_right_anim" />
+            android:id="@+id/action_myPageFavoriteRegisterFragment_to_myPageFragment"
+            app:destination="@id/myPageFragment"
+            app:enterAnim="@anim/enter_right_anim"
+            app:exitAnim="@anim/exit_left_anim"
+            app:popEnterAnim="@anim/enter_left_anim"
+            app:popExitAnim="@anim/exit_right_anim"
+            app:popUpTo="@id/myPageFragment"
+            app:popUpToInclusive="true" />
         <argument
                 android:name="auroraService"
                 app:argType="boolean"

@@ -10,6 +10,8 @@ import com.nassafy.aro.databinding.AroServiceCardviewLayoutBinding
 import com.squareup.picasso.Picasso
 import jp.wasabeef.picasso.transformations.BlurTransformation
 import jp.wasabeef.picasso.transformations.GrayscaleTransformation
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 
 class AroServiceCardView @JvmOverloads constructor(
@@ -22,6 +24,12 @@ class AroServiceCardView @JvmOverloads constructor(
         AroServiceCardviewLayoutBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
+    interface OnSelectedChangeListener  {
+        fun onSelectedChanged (isSelected: Boolean)
+    }
+
+    private var onSelectedChangeListener: OnSelectedChangeListener? = null
+
     init {
         val view = binding.root
 
@@ -30,38 +38,49 @@ class AroServiceCardView @JvmOverloads constructor(
         val resourceId =
             styledAttributes.getResourceId(R.styleable.AroServiceCardView_service_image, 0)
 
-        //TODO 이미지 블러 최적화
-        //get Blur 이미지
-//        val blurImage = convertImageToBlurImage(context, BitmapFactory.decodeResource(resources, resourceId))
-//        setImageWithGrayScale(blurImage, binding.serviceImageview)
-//        styledAttributes.recycle()
+        binding.serviceTextview.text =
+            styledAttributes.getText(R.styleable.AroServiceCardView_service_name_text)
+        styledAttributes.recycle()
 
-        val picasso = Picasso.get()
-            .load(resourceId)
-            .transform(
-                listOf(
-                    BlurTransformation(context, 25, 1),
-                    GrayscaleTransformation()
-                )
-            ).fit().centerCrop()
+        onSelectedChangeListener = object: OnSelectedChangeListener {
+            override fun onSelectedChanged(isSelected: Boolean) {
 
-        picasso.into(binding.serviceImageview)
+                val picasso = Picasso.get()
+                    .load(resourceId)
+                    .transform(
+                        listOf(
+                            BlurTransformation(context, 25, 1),
+                            GrayscaleTransformation()
+                        )
+                    ).fit().centerCrop()
 
-        view.setOnClickListener {
-            when (view.isSelected) {
-                false -> {
-                    binding.serviceImageview.colorFilter = null
-                    binding.serviceImageview.setImageResource(resourceId)
-                }
-                true -> {
-                    picasso.into(binding.serviceImageview)
+                when (isSelected) {
+                    true -> {
+                        binding.serviceImageview.colorFilter = null
+                        binding.serviceImageview.setImageResource(resourceId)
+                    }
+                    false -> {
+                        picasso.into(binding.serviceImageview)
+                    }
                 }
             }
+        } //
+
+        view.setOnClickListener {
             view.isSelected = !view.isSelected
+            onSelectedChangeListener?.onSelectedChanged(view.isSelected)
         }
 
     } // End of Init
 
     fun getIsSelected() = binding.root.isSelected
 
+    fun setIsSelected(selected: Boolean) {
+        binding.root.isSelected = selected
+        onSelectedChangeListener?.onSelectedChanged(selected)
+    }
+
+    fun setOnSelectedChangeListener(listener: OnSelectedChangeListener) {
+        onSelectedChangeListener = listener
+    }
 } // End of AroServiceCarView
