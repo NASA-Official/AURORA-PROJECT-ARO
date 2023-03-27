@@ -1,20 +1,24 @@
 package com.nassafy.aro.ui.view.main.stamp
 
-import android.app.Activity.*
+import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
+import android.view.Gravity
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
+import com.nassafy.aro.R
 import com.nassafy.aro.data.dto.Diary
-import com.nassafy.aro.data.dto.PlaceDiaryTest
 import com.nassafy.aro.databinding.FragmentStampDiaryBinding
 import com.nassafy.aro.ui.view.BaseFragment
 import com.nassafy.aro.util.ChangeMultipartUtil
@@ -44,18 +48,24 @@ class StampDiaryFragment() :
     // viewPageAdapter
     private lateinit var stampDiaryImageViewpagerAdapter: StampDiaryImageViewPagerAdapter
 
-    // viewModel
+    // Navigation ViewModel
+    private val stampNavViewModel: StampNavViewModel by navGraphViewModels(R.id.nav_stamp_diary)
+
+    // Fragment ViewModel
     private val diaryViewModel: DiaryViewModel by viewModels()
 
     // 기존에 있던 이미지 파일
-    private var savedImageList: MutableList<String> = LinkedList()
+    //private var savedImageList: MutableList<String> = LinkedList()
 
     // 새로 추가한 이미지 파일들
     private var newImageList: MutableList<MultipartBody.Part?> = LinkedList()
+    private var newImageStringList: MutableList<Uri> = LinkedList()
 
     // 삭제할 이미지
     private var deleteImageList: MutableList<String> = LinkedList()
 
+    // 어댑터에 들어가는 전체 이미지 리스트
+    private var viewPagerAdapterWholeImageList: MutableList<Uri> = LinkedList()
 
     // userDiaryData
     private lateinit var userDiaryData: Diary
@@ -65,23 +75,17 @@ class StampDiaryFragment() :
         mContext = context
     } // End of onAttach
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    } // End of onCreate
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // 번들 가져오기
-        val placeDiaryTest = requireArguments().getParcelable<PlaceDiaryTest>("placeDiaryTest")
-
+        // observers
         getPlaceDiaryUserDataResponseLiveDataObserve()
         selectImageLiveDataObserve()
         createPlaceDiaryResponseLiveDataObserve()
-
+        viewPagerImageListObserve()
 
         // getData
         CoroutineScope(Dispatchers.IO).launch {
-            diaryViewModel.getPlaceDiaryUserData(1)
+            diaryViewModel.getPlaceDiaryUserData(stampNavViewModel.selectedPlaceLiveData.value!!.attractionId!!)
 
             withContext(Dispatchers.Main) {
                 initViewPagerAdapter()
@@ -89,39 +93,14 @@ class StampDiaryFragment() :
         }
 
         initEventListeners()
-
-//        when (diaryImageList.isEmpty()) {
-//            true -> {
-//                binding.stampDiaryImagePagerInformTextTextview.visibility = View.VISIBLE
-//                binding.stampDiaryCountryPlaceInformTextview.visibility = View.VISIBLE
-//            }
-//            false -> {
-//                initViewPagerAdapter()
-//                selectImageLiveDataObserve()
-//                binding.stampDiaryImagePagerInformTextTextview.visibility = View.GONE
-//                binding.stampDiaryCountryPlaceInformTextview.visibility = View.GONE
-//            }
-//        }
-
-
-        binding.stampDiaryCountryNameTextview.text = placeDiaryTest!!.countryName.toString()
-        binding.stampDiaryCountryPlaceNameTextview.text = placeDiaryTest!!.placeName.toString()
-        binding.stampDiaryCountryPlaceInformTextview.text =
-            placeDiaryTest.placeExplanation.toString()
-        binding.stampDiaryHistoryEdittext.setText(placeDiaryTest.diaryContent.toString())
-
-        // 이미지가 5개가 될 경우 더이상 추가할 수 없으므로 버튼을 보이지 않도록 함
-//        when (diaryImageList.size) {
-//            5 -> binding.stampDiaryHistoryImageAddButton.visibility = View.GONE
-//            else -> binding.stampDiaryHistoryImageAddButton.visibility = View.VISIBLE
-//        }
     } // End of onViewCreated
 
-
+    // 뷰 페이저에 들어가는 이미지 리스트 상태값을 위해서 LiveData를 사용
     private fun initViewPagerAdapter() {
         stampDiaryImageViewpager = binding.stampDiaryImageViewpager2
         stampDiaryImageViewpagerAdapter =
-            StampDiaryImageViewPagerAdapter(savedImageList as LinkedList<String>)
+            StampDiaryImageViewPagerAdapter(viewPagerAdapterWholeImageList as LinkedList<Uri>)
+        diaryViewModel.setSelectImageListAddImage(viewPagerAdapterWholeImageList)
 
         stampDiaryImageViewpager.apply {
             adapter = stampDiaryImageViewpagerAdapter
@@ -130,16 +109,27 @@ class StampDiaryFragment() :
 
         stampDiaryImageViewpagerAdapter.setItemClickListener(object :
             StampDiaryImageViewPagerAdapter.ItemClickListener {
+            // 이미지 삭제하기 버튼 눌렀을 때 이벤트 처리
             override fun imageRemoveButtonClick(position: Int) {
-
                 // position 번째의 이미지를 삭제함
-                diaryViewModel.selectImageListRemoveImage(position)
+                // 새로운 이미지를 삭제할 때,
+                if (newImageStringList.contains(viewPagerAdapterWholeImageList[position])) {
+                    val index = newImageStringList.indexOf(viewPagerAdapterWholeImageList[position])
+                    newImageList.removeAt(index)
+                    newImageStringList.removeAt(index)
+                    viewPagerAdapterWholeImageList.removeAt(position)
+                    diaryViewModel.viewPagerImageListSizeMinus()
+                } else {
+                    deleteImageList.add(viewPagerAdapterWholeImageList[position].toString())
+                    viewPagerAdapterWholeImageList.removeAt(position)
+                }
+
+                stampDiaryImageViewpagerAdapter.refreshAdapter()
             }
         })
 
         stampDiaryImageViewpagerAdapter.refreshAdapter()
         stampDiaryImageViewpagerAdapter.notifyDataSetChanged()
-
 
         TabLayoutMediator(
             binding.stampDiaryImageIndicator, binding.stampDiaryImageViewpager2
@@ -161,10 +151,8 @@ class StampDiaryFragment() :
 
     private fun selectImageLiveDataObserve() {
         diaryViewModel.selectImageLiveData.observe(this.viewLifecycleOwner) {
-
             CoroutineScope(Dispatchers.Main).launch {
-                //diaryViewModel.selectImageListLiveData.value!!.add(it)
-                //newImageList.add(it)
+                diaryViewModel.selectImageListAddImage(it)
                 stampDiaryImageViewpagerAdapter.addImage(it)
             }
         }
@@ -201,7 +189,14 @@ class StampDiaryFragment() :
     } // End of selectGallery
 
     private fun initViewGetData() {
+        // 현재 선택되어있는 명소와 국가 데이터를 가져옴
+        val selectedPlace = stampNavViewModel.selectedPlaceLiveData.value
+        val selectedCountry = stampNavViewModel.selectedCountry
 
+        binding.stampDiaryCountryNameTextview.text = selectedCountry
+        binding.stampDiaryCountryPlaceNameTextview.text = selectedPlace!!.attractionName.toString()
+        binding.stampDiaryCountryPlaceInformTextview.text = selectedPlace.description.toString()
+        binding.stampDiaryHistoryEdittext.setText(userDiaryData.memo)
     } // End of initViewGetData
 
     private val imageResult = registerForActivityResult(
@@ -211,6 +206,8 @@ class StampDiaryFragment() :
         if (result.resultCode == RESULT_OK) {
             val imageUri = result.data?.data ?: return@registerForActivityResult
             stampDiaryImageViewpagerAdapter.addImage(imageUri)
+            newImageStringList.add(imageUri)
+            diaryViewModel.viewPagerImageListSizePlus()
 
             val file = File(
                 ChangeMultipartUtil().changeAbsoluteyPath(imageUri, mContext)
@@ -224,9 +221,16 @@ class StampDiaryFragment() :
     private fun getPlaceDiaryUserDataResponseLiveDataObserve() {
         diaryViewModel.getPlaceDiaryUserDataResponseLiveData.observe(this.viewLifecycleOwner) {
             userDiaryData = it.data ?: Diary()
-            Log.d(TAG, "getPlaceDiaryUserDataResponseLiveDataObserve: $userDiaryData")
 
-            savedImageList = userDiaryData.imageList as LinkedList<String>
+            if (userDiaryData.images.isNotEmpty()) {
+                userDiaryData.images.forEach {
+                    viewPagerAdapterWholeImageList.add(it.toUri())
+                    diaryViewModel.viewPagerImageListSizePlus()
+                }
+            }
+
+            initViewGetData()
+            initViewPagerAdapter()
         }
     } // End of getPlaceDiaryUserDataResponseLiveDataObserve
 
@@ -238,14 +242,21 @@ class StampDiaryFragment() :
 
         // 저장 버튼 클릭
         binding.stampDiarySaveButton.setOnClickListener {
-            requireView().showSnackBarMessage("저장 버튼 클릭됨")
-
             CoroutineScope(Dispatchers.IO).launch {
+                withContext(Dispatchers.Main) {
+                    binding.stampDiaryProgressbar.visibility = View.VISIBLE
+                    binding.stampDiaryProgressbar.isVisible = true
+                    binding.stampDiaryProgressbarInformText.visibility = View.VISIBLE
+                    binding.stampDiaryProgressbarInformText.isVisible = true
+                    binding.stampDiaryNestedscrollview.visibility = View.INVISIBLE
+                    binding.stampDiaryNestedscrollview.isVisible = false
+                }
+
                 diaryViewModel.createPlaceDiary(
-                    1,
+                    stampNavViewModel.selectedPlaceLiveData.value!!.attractionId!!,
                     deleteImageList,
                     newImageList,
-                    userDiaryData.memo
+                    binding.stampDiaryHistoryEdittext.text.toString()
                 )
             }
         }
@@ -255,7 +266,16 @@ class StampDiaryFragment() :
         diaryViewModel.createPlaceDiaryResponseLiveData.observe(this.viewLifecycleOwner) {
             binding.stampDiaryProgressbar.visibility = View.GONE
             binding.stampDiaryProgressbar.isVisible = false
+            binding.stampDiaryProgressbarInformText.visibility = View.GONE
+            binding.stampDiaryProgressbarInformText.isVisible = false
 
+            val layout = layoutInflater.inflate(R.layout.custom_toast, null)
+
+            Toast(mContext).apply {
+                duration = Toast.LENGTH_SHORT
+                setGravity(Gravity.CENTER, 0, 0)
+                view = layout
+            }.show()
 
             when (it) {
                 is NetworkResult.Success -> {
@@ -271,11 +291,37 @@ class StampDiaryFragment() :
                 is NetworkResult.Loading -> {
                     binding.stampDiaryProgressbar.visibility = View.VISIBLE
                     binding.stampDiaryProgressbar.isVisible = true
+                    binding.stampDiaryProgressbarInformText.visibility = View.VISIBLE
+                    binding.stampDiaryProgressbarInformText.isVisible = true
                 }
             }
-
         }
     } // End of createPlaceDiaryResponseLiveDataObserve
+
+    private fun viewPagerImageListObserve() {
+        diaryViewModel.viewPagerImageListSizeLiveData.observe(this.viewLifecycleOwner) {
+
+            if (it >= 5) {
+                binding.stampDiaryHistoryImageAddButton.visibility = View.GONE
+                binding.stampDiaryHistoryImageAddButton.isVisible = false
+            } else if (it < 5) {
+                binding.stampDiaryHistoryImageAddButton.visibility = View.VISIBLE
+                binding.stampDiaryHistoryImageAddButton.isVisible = true
+            }
+
+            if (it == 0) {
+                binding.stampDiaryImagePagerInformTextTextview.visibility = View.VISIBLE
+                binding.stampDiaryImagePagerInformTextTextview.isVisible = true
+                binding.stampDiaryImagePagerSubInformTextTextview.visibility = View.VISIBLE
+                binding.stampDiaryImagePagerSubInformTextTextview.isVisible = true
+            } else if (it >= 1) {
+                binding.stampDiaryImagePagerInformTextTextview.visibility = View.GONE
+                binding.stampDiaryImagePagerInformTextTextview.isVisible = false
+                binding.stampDiaryImagePagerSubInformTextTextview.visibility = View.GONE
+                binding.stampDiaryImagePagerSubInformTextTextview.isVisible = false
+            }
+        }
+    } // End of viewPagerImageListObserve
 
     companion object {
         const val REQ_GALLERY = 1

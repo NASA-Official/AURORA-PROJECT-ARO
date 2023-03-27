@@ -15,6 +15,7 @@
             app:exitAnim="@anim/exit_left_anim"
             app:popEnterAnim="@anim/enter_left_anim"
             app:popExitAnim="@anim/exit_right_anim" />
+<<<<<<< HEAD
         <action
             android:id="@+id/action_mainFragment_to_myPageFragment"
             app:destination="@id/myPageFragment"
@@ -22,6 +23,8 @@
             app:exitAnim="@anim/exit_left_anim"
             app:popEnterAnim="@anim/enter_left_anim"
             app:popExitAnim="@anim/exit_right_anim" />
+=======
+>>>>>>> feature/fe/stamp
 
     </fragment>
 
@@ -67,6 +70,33 @@
                 app:exitAnim="@anim/exit_left_anim"
                 app:popEnterAnim="@anim/enter_left_anim"
                 app:popExitAnim="@anim/exit_right_anim" />
+<<<<<<< HEAD
+=======
+
+            <action
+                android:id="@+id/action_stampCountryPlacesFragment_to_stampValidateFragment"
+                app:destination="@id/stampValidateFragment"
+                app:enterAnim="@anim/enter_right_anim"
+                app:exitAnim="@anim/exit_left_anim"
+                app:popEnterAnim="@anim/enter_left_anim"
+                app:popExitAnim="@anim/exit_right_anim" />
+
+        </fragment>
+
+        <fragment
+            android:id="@+id/stampValidateFragment"
+            android:name="com.nassafy.aro.ui.view.main.stamp.StampValidateFragment"
+            android:label="stampValidateFragmentDirection">
+
+            <action
+                android:id="@+id/action_stampValidateFragment_to_stampCountryPlacesFragment"
+                app:destination="@id/stampCountryPlacesFragment"
+                app:enterAnim="@anim/enter_right_anim"
+                app:exitAnim="@anim/exit_left_anim"
+                app:popEnterAnim="@anim/enter_left_anim"
+                app:popExitAnim="@anim/exit_right_anim" />
+
+>>>>>>> feature/fe/stamp
         </fragment>
     </navigation>
 
