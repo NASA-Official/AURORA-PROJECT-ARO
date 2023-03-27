@@ -8,16 +8,17 @@ import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import com.nassafy.aro.R
 import com.nassafy.aro.data.dto.Place
+import com.nassafy.aro.data.dto.PlaceItem
 import com.nassafy.aro.util.generateBitmapDescriptorFromRes
 
 class CustomMarkerRenderer(
-    context: Context, googleMap: GoogleMap, clusterManager: ClusterManager<Place>) :
-    DefaultClusterRenderer<Place>(context, googleMap, clusterManager) {
+    context: Context, googleMap: GoogleMap, clusterManager: ClusterManager<PlaceItem>) :
+    DefaultClusterRenderer<PlaceItem>(context, googleMap, clusterManager) {
 
     private val customMarker = generateBitmapDescriptorFromRes(context, R.drawable.map_marker)
 
 
-    override fun onBeforeClusterItemRendered(item: Place, markerOptions: MarkerOptions) {
+    override fun onBeforeClusterItemRendered(item: PlaceItem, markerOptions: MarkerOptions) {
         markerOptions
             .position(item.position)
             .title(item.title)
@@ -26,7 +27,7 @@ class CustomMarkerRenderer(
         super.onBeforeClusterItemRendered(item, markerOptions)
     }
 
-    override fun onClusterItemRendered(item: Place, marker: Marker) {
+    override fun onClusterItemRendered(item: PlaceItem, marker: Marker) {
         super.onClusterItemRendered(item, marker)
         marker.tag = item
     }
