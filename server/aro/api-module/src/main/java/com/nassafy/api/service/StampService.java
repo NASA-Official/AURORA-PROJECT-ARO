@@ -135,31 +135,6 @@ public class StampService {
         return attractions.size();
     }
 
-//    public void createStampDiary(String nation, String attraction, Long memberId, StampDiaryReqDTO stampDiaryReqDTO) throws IllegalArgumentException, IOException {
-//
-//        log.info("start create stamp diary service");
-//
-//        Stamp stamp = stampRepository
-//                .findByAttraction_attractionNameAndMemberId(attraction, memberId)
-//                .orElseThrow(IllegalArgumentException::new);
-//
-//        log.info("find stamp success");
-//
-//        stamp.editMemo(stampDiaryReqDTO.getMemo());
-//
-//        Stamp savedStamp = stampRepository.save(stamp);
-//
-//        log.info("image upload start");
-//        for (MultipartFile file: stampDiaryReqDTO.getFiles()) {
-//            String imageUrl = s3Util.upload(file, "diary/" + memberId.toString() + "/" + nation + "/" + attraction);
-//
-//            StampImage stampImage = StampImage.builder().image(imageUrl).stamp(savedStamp).build();
-//
-//            stampImageRepository.save(stampImage);
-//        }
-//        log.info("image upload stop");
-//    }
-
     public StampDiaryResDTO getStampDiary(Long attractionId, String email) {
         Stamp stamp = stampRepository
                 .findByAttractionIdAndMember_email(attractionId, email)
@@ -189,12 +164,13 @@ public class StampService {
         stamp.editMemo(stampDiaryReqDTO.getMemo());
         Stamp savedStamp = stampRepository.save(stamp);
 
-        int imageCnt = stampImageRepository.findByStampId(savedStamp.getId()).size();
-
+        List<StampImage> stampImages = stampImageRepository.findByStampId(savedStamp.getId());
+        int imageCnt = stampImages.size();
 
         // 삭제 요청이 들어온 이미지 삭제하기
         log.info("delete start");
         int deleteCnt = 0;
+        List<StampImage> deleteList = new ArrayList<>();
         for (String url: stampDiaryReqDTO.getDeleteImageList()) {
             String result = s3Util.delete(url.substring(48));  // s3에서 이미지 삭제
 
@@ -203,16 +179,17 @@ public class StampService {
             }
 
             try {
-                StampImage stampImage = stampImageRepository.findByImage(url).orElseThrow(IllegalArgumentException::new);
-                stampImageRepository.delete(stampImage);
+                deleteList.add(stampImages.stream().filter(stampImage -> stampImage.getImage().equals(url))
+                        .findFirst().orElseThrow(IllegalArgumentException::new));
             } catch (Exception e) {
                 log.debug(url + "의 삭제가 정상적으로 완료되지 않았습니다. ");
             }
         }
+        stampImageRepository.deleteAllInBatch(deleteList);
         log.debug(String.valueOf(deleteCnt) + "개의 사진이 삭제되었습니다.");
 
         imageCnt -= deleteCnt;
-
+        List<StampImage> newList = new ArrayList<>();
         // 추가된 이미지 저장하기
         List<MultipartFile> newImageList = stampDiaryReqDTO.getNewImageList();
         for (int i = 0; i < newImageList.size(); i++) {
@@ -231,10 +208,11 @@ public class StampService {
 
             StampImage stampImage = StampImage.builder().image(imageUrl).stamp(stamp).build();
 
-            stampImageRepository.save(stampImage);
+            newList.add(stampImage);
 
             imageCnt += 1;
         }
+        stampImageRepository.saveAll(newList);
     }
 
     /**
