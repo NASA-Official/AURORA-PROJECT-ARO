@@ -5,7 +5,7 @@ server:
 logging:
   level:
     root: warn
-    com.nassafy.api: DEBUG
+    com.nassafy.batch: DEBUG
     org.hibernate.type.descriptor.sql: DEBUG
 
 spring:
@@ -43,6 +43,7 @@ fcm :
     path :  nassafy-aro-firebase-adminsdk-b1oip-f2accc8ad7.json
 #    path : nassafy-test-firebase-adminsdk-ctf7k-d63e1660f8.json
     scope : https://www.googleapis.com/auth/cloud-platform
-  projectID : nassafy-test
+#  projectID : nassafy-test
+  projectID : nassafy-aro
   api_url : https://fcm.googleapis.com/v1/projects/nassafy-aro/messages:send
 #  api_url: https://fcm.googleapis.com/v1/projects/nassafy-test/messages:send

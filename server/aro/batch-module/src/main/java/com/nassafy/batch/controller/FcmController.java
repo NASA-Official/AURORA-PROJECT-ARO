@@ -1,6 +1,8 @@
 package com.nassafy.batch.controller;
 
 import com.google.firebase.messaging.FirebaseMessagingException;
+import com.nassafy.batch.dto.notificcation.NotificationData;
+import com.nassafy.batch.dto.notificcation.NotificationRequestDTO;
 import com.nassafy.batch.dto.notificcation.RequestDTO;
 import com.nassafy.batch.fcm.FirebaseCloudMessageService;
 import com.nassafy.core.entity.Member;
@@ -56,6 +58,17 @@ public class FcmController {
                 token,
             "NASSAFY - Title",
                 "NASSAFY - Body");
+
+//        NotificationRequestDTO msgDTO = new NotificationRequestDTO();
+//
+//        NotificationData notificationData = new NotificationData();
+//        notificationData.setTitle("NASSAFY");
+//        notificationData.setBody("NASSAFY-PUSH TEST");
+//
+//        msgDTO.setRegistration_ids(token);
+//        msgDTO.setNotification(notificationData);
+//
+//        String response = firebaseCloudMessageService.sendPushToDevice(msgDTO);
 
         return ResponseEntity.ok("");
 

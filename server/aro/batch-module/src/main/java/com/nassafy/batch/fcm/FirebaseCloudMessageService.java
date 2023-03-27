@@ -7,11 +7,19 @@ import com.google.common.net.HttpHeaders;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.Notification;
 import com.google.gson.JsonParseException;
+import com.nassafy.batch.controller.FcmController;
 import com.nassafy.batch.dto.notificcation.FcmMessage;
+import com.nassafy.batch.dto.notificcation.NotificationData;
+import com.nassafy.batch.dto.notificcation.NotificationRequestDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -29,7 +37,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class FirebaseCloudMessageService {
-    private FirebaseApp firebaseApp;
+    private static final Logger logger = LoggerFactory.getLogger(FirebaseCloudMessageService.class);
+
 
     // application yml 설정파일에 설정한 값 사용
     @Value("${fcm.key.path}")
@@ -43,19 +52,44 @@ public class FirebaseCloudMessageService {
 
     private final ObjectMapper objectMapper;
 
+    public String sendPushToDevice(NotificationRequestDTO msgDTO){
+        String response = null;
+
+        try{
+            if(msgDTO != null && msgDTO.getRegistration_ids() != null && !msgDTO.getRegistration_ids().equals("")){
+                NotificationData notificationData = msgDTO.getNotification();
+
+                Message message = Message.builder()
+                        .setToken(msgDTO.getRegistration_ids())
+                        .setNotification(new Notification(notificationData.getTitle(), notificationData.getBody()))
+                        .putData("content", notificationData.getTitle())
+                        .putData("body", notificationData.getBody())
+                        .build();
+
+                response = FirebaseMessaging.getInstance().send(message);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
     public void sendMessageTo(String targetToken, String title, String body) throws IOException {
         String message = makeMessage(targetToken, title, body);
 
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = RequestBody.create(message,
                 MediaType.get("application/json; charset=utf-8"));
+        String accessToken = getAccessToken();
         Request request = new Request.Builder()
                 .url(API_URL)
                 .post(requestBody)
-                .addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken())
+                .addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .addHeader(HttpHeaders.CONTENT_TYPE, "application/json; UTF-8")
                 .build();
 
+        log.info(request.toString());
         Response response = client.newCall(request).execute();
 
         log.info(response.body().string());
