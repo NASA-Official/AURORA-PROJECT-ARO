@@ -38,6 +38,7 @@ import com.nassafy.aro.data.dto.PlaceItem
 import com.nassafy.aro.databinding.FragmentMyPageBinding
 import com.nassafy.aro.ui.view.BaseFragment
 import com.nassafy.aro.ui.view.dialog.OkDialog
+import com.nassafy.aro.ui.view.main.MainActivity
 import com.nassafy.aro.ui.view.main.MainActivityViewModel
 import com.nassafy.aro.ui.view.main.mypage.viewmodel.MyPageFragmentViewModel
 import com.nassafy.aro.util.NetworkResult
@@ -53,6 +54,12 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
 
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
     private val myPageFragmentViewModel: MyPageFragmentViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val main = requireActivity() as MainActivity
+        main.closeDrawer()
+    } // End of onCreate
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
