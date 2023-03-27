@@ -10,8 +10,6 @@ import javax.inject.Inject
 abstract class ServiceViewModel: ViewModel() {
     abstract var isAuroraServiceSelected: Boolean
     abstract var isMeteorServiceSelected: Boolean
-    abstract val selectedAuroraPlaces: LiveData<MutableList<PlaceItem>>
-    abstract val selectedMeteorPlaces: LiveData<MutableList<PlaceItem>>
     abstract fun selectAuroraPlace(placeItem: PlaceItem)
     abstract fun unSelectAuroraPlace(placeItem: PlaceItem)
 }

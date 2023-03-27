@@ -128,7 +128,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                     val data = it.data
                     Application.sharedPreferencesUtil.addUserAccessToken(data?.accessToken ?: "")
                     Application.sharedPreferencesUtil.addUserRefreshToken(data?.refreshToken ?: "")
-
                     startMainActivity()
                 }
                 is NetworkResult.Error -> {
@@ -158,6 +157,21 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             githubLogin()
         }
         binding.loginButton.setOnClickListener {
+            when(binding.loginEmailIdEdittext.text.toString().trim().length) {
+                0 ->  {
+                    requireView().showSnackBarMessage(getString(R.string.email_empty_text))
+                    return@setOnClickListener
+                }
+                else -> {}
+            }
+            when(binding.loginPasswordEdittext.text.toString().trim().length) {
+                0 ->  {
+                    requireView().showSnackBarMessage(getString(R.string.password_empty_text))
+                    return@setOnClickListener
+                }
+                else -> {}
+            }
+
             isTriedLoginState = true
             CoroutineScope(Dispatchers.IO).launch {
                 loginFragmentViewModel.loginByIdPassword(

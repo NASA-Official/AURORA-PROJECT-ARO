@@ -27,9 +27,9 @@ class StampCountryPlaceViewModel @Inject constructor(private val stampRepository
     val getUserPlaceDataGroupByCountryResponseLiveData: LiveData<NetworkResult<List<UserStampPlace>>>
         get() = stampRepository.getUserPlaceDataGroupByCountryResponseLiveData
 
-    suspend fun getUserPlaceDataGroupByCountry() {
+    suspend fun getUserPlaceDataGroupByCountry(countryName : String) {
         viewModelScope.launch {
-            stampRepository.getUserPlaceDataGroupByCountry(_selectedCountry)
+            stampRepository.getUserPlaceDataGroupByCountry(countryName)
         }
     } // End of getUserPlaceDataGroupByCountry
 } // End of StampCountryPlaceViewModel

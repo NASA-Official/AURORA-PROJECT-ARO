@@ -11,20 +11,12 @@ import com.nassafy.aro.ui.view.ServiceViewModel
 
 @Composable
 fun CountryPlaceLazyColumn(placeList: MutableList<PlaceItem>, selectedPlaceList: MutableList<PlaceItem>, viewModel: ServiceViewModel ) {
-    val loadedList = remember {
-        mutableStateListOf<Boolean>()
-    }
     LazyColumn (
         Modifier.fillMaxWidth(0.9f)
             ){
         // TODO Change items DTO List
         items(placeList) {
-            CountryPlaceLazyColumnItem(it, selectedPlaceList, viewModel, loadedList)
+            CountryPlaceLazyColumnItem(it, selectedPlaceList, viewModel)
         }
-//
-//        items(placeList) {
-//            CountryPlaceLazyColumnItem(, selectedPlaceList)
-//            Log.d("ssafy", "$it")
-//        }
     }
 }
