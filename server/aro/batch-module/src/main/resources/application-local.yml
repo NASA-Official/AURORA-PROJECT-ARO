@@ -36,3 +36,13 @@ jwt:
   #echo 'silvernine-tech-spring-boot-jwt-tutorial-secret-silvernine-tech-spring-boot-jwt-tutorial-secret'|base64
   secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
   token-validity-in-seconds: 86400
+
+
+fcm :
+  key :
+    path :  nassafy-aro-firebase-adminsdk-b1oip-f2accc8ad7.json
+#    path : nassafy-test-firebase-adminsdk-ctf7k-d63e1660f8.json
+    scope : https://www.googleapis.com/auth/cloud-platform
+  projectID : nassafy-test
+  api_url : https://fcm.googleapis.com/v1/projects/nassafy-aro/messages:send
+#  api_url: https://fcm.googleapis.com/v1/projects/nassafy-test/messages:send

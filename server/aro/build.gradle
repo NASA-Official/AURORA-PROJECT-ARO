@@ -249,7 +249,6 @@ project(':batch-module') {
 		implementation 'com.google.code.gson:gson:2.8.5'
 		compileOnly 'org.projectlombok:lombok'
 		annotationProcessor 'org.projectlombok:lombok'
-		testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 //		runtimeOnly 'com.h2database:h2'
 
@@ -257,6 +256,7 @@ project(':batch-module') {
 
 		implementation 'com.google.firebase:firebase-admin:6.8.1'
 		implementation 'com.google.gms:google-services:3.0.0'
+		implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2'
 
 		implementation group: 'com.github.scribejava', name: 'scribejava-core', version: '8.3.1'
 		implementation group: 'com.github.scribejava', name: 'scribejava-apis', version: '8.3.1'
