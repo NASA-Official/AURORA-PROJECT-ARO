@@ -10,11 +10,13 @@ import android.graphics.BitmapFactory
 import android.os.Build
 import android.util.Log
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.*
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.FirebaseMessagingService
+import com.google.firebase.messaging.RemoteMessage
 import com.nassafy.aro.R
 import com.nassafy.aro.ui.view.main.MainActivity
 
-private const val TAG = "AroFCM"
+private const val TAG = "AroFCM_싸피"
 
 class AroFCM : FirebaseMessagingService() {
     lateinit var notificationManager: NotificationManager
@@ -22,17 +24,15 @@ class AroFCM : FirebaseMessagingService() {
     lateinit var builder: Notification.Builder
 
 
-    @Override
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         Log.d(TAG, "onNewToken: $token")
     } // End of onNewToken
 
-    @Override
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        Log.d(TAG, "remoteMessage: $remoteMessage ")
+        // Log.d(TAG, "remoteMessage: $remoteMessage ")
 
         if (remoteMessage.notification != null) {
             showNotifictaion(
@@ -57,7 +57,6 @@ class AroFCM : FirebaseMessagingService() {
             notificationChannel.enableLights(true)
             notificationChannel.lightColor =
                 ContextCompat.getColor(this, R.color.join_background_color)
-            notificationChannel.enableVibration(true)
             notificationManager.createNotificationChannel(notificationChannel)
 
             builder = Notification.Builder(this, title)
@@ -84,4 +83,14 @@ class AroFCM : FirebaseMessagingService() {
         }
         notificationManager.notify(1234, builder.build())
     } // End of showNotifictaion
+
+    fun getFirebaseToken(): String {
+        var token = ""
+        FirebaseMessaging.getInstance().token.addOnSuccessListener {
+            Log.d(TAG, "getFirebaseToken : ${it}")
+            token = it.toString()
+        }
+
+        return token
+    } // End of getFirebaseToken
 } // End of AroFCM class
