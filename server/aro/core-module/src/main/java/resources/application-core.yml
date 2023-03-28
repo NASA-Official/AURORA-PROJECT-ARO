@@ -1,13 +1,6 @@
 server:
   port:
     8002
-openweathermap:
-  api-key: 3c00ed5138fdec34a21d07af76ce749a
-
-spring:
-  batch:
-    job:
-      enabled: false
 #spring:
 #  datasource:
 #    driver-class-name: org.mariadb.jdbc.Driver
