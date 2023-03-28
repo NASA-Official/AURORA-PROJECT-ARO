@@ -21,8 +21,7 @@ class AroFCM : FirebaseMessagingService() {
     lateinit var notificationManager: NotificationManager
     lateinit var notificationChannel: NotificationChannel
     lateinit var builder: Notification.Builder
-
-
+    0
     @Override
     override fun onNewToken(token: String) {
         super.onNewToken(token)

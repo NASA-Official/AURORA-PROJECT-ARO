@@ -180,7 +180,6 @@ dependencies {
 
     // imagePicker
     implementation 'com.github.dhaval2404:imagepicker:2.1'
-
     // FCM
     // Import the BoM for the Firebase platform
     implementation platform('com.google.firebase:firebase-bom:28.4.1')
@@ -189,8 +188,10 @@ dependencies {
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-messaging-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
-
     // scalablelayout
     implementation 'com.ssomai:android.scalablelayout:2.1.6'
 
+
+    // ExifInterface
+    implementation 'androidx.exifinterface:exifinterface:1.3.3'
 }

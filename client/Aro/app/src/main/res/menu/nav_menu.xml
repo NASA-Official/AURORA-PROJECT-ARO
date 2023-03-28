@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-            android:id="@+id/mypage_item"
+            android:id="@+id/action_mainFragment_to_myPageFragment"
             android:icon="@drawable/menu_mypage_icon"
             android:title="@string/my_page_main_title_textview_text" />
     <item
