@@ -112,7 +112,7 @@ public class FirebaseCloudMessageService {
 
     private String getAccessToken() throws IOException {
 //        String firebaseConfigPath = "firebase/" + firebaseConfig;
-        String firebaseConfigPath = firebaseConfig;
+        String firebaseConfigPath = "firebase/" + firebaseConfig;
         GoogleCredentials googleCredentials = GoogleCredentials
                 .fromStream(new ClassPathResource(firebaseConfigPath).getInputStream())
                 .createScoped(List.of(scope));

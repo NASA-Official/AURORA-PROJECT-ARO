@@ -254,9 +254,10 @@ project(':batch-module') {
 
 		implementation 'net.rakugakibox.util:yaml-resource-bundle:1.1'
 
-		implementation 'com.google.firebase:firebase-admin:6.8.1'
+		implementation 'com.google.firebase:firebase-admin:8.1.0'
+		implementation group: 'com.google.firebase', name: 'firebase-admin', version: '8.1.0'
 		implementation 'com.google.gms:google-services:3.0.0'
-		implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2'
+		implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.0'
 
 		implementation group: 'com.github.scribejava', name: 'scribejava-core', version: '8.3.1'
 		implementation group: 'com.github.scribejava', name: 'scribejava-apis', version: '8.3.1'

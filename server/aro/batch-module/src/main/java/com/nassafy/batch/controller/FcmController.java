@@ -10,6 +10,7 @@ import com.nassafy.core.respository.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,6 +29,9 @@ import java.io.IOException;
 public class FcmController {
     private final MemberRepository memberRepository;
     private final FirebaseCloudMessageService firebaseCloudMessageService;
+
+    @Value("${fcm.fcm_token}")
+    private String FCM_TOKEN;
 
     public FcmController(MemberRepository memberRepository, FirebaseCloudMessageService firebaseCloudMessageService) {
         this.memberRepository = memberRepository;
@@ -53,9 +57,9 @@ public class FcmController {
 //                requestDTO.getTitle(),
 //                requestDTO.getBody());
 
-        String token = "dI4MUZQKQym7ZhayQVTa_s:APA91bFXkz6cYoM2gO7KGzVxH1G48D4KDk2czfUnqtF5y_zaFokh4Ho_MXo0GCs9-WDnNlv9Lt_E2Cilk9PUR3DW4D0ghaugMy8Aik10S3Vqs03SAgtC62lqS--y6C38tXo6PdHRlu-r";
+//        String token = "dI4MUZQKQym7ZhayQVTa_s:APA91bFXkz6cYoM2gO7KGzVxH1G48D4KDk2czfUnqtF5y_zaFokh4Ho_MXo0GCs9-WDnNlv9Lt_E2Cilk9PUR3DW4D0ghaugMy8Aik10S3Vqs03SAgtC62lqS--y6C38tXo6PdHRlu-r";
         firebaseCloudMessageService.sendMessageTo(
-                token,
+                FCM_TOKEN,
             "NASSAFY - Title",
                 "NASSAFY - Body");
 

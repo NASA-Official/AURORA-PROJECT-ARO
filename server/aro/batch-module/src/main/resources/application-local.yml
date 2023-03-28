@@ -40,10 +40,14 @@ jwt:
 
 fcm :
   key :
-    path :  nassafy-aro-firebase-adminsdk-b1oip-f2accc8ad7.json
-#    path : nassafy-test-firebase-adminsdk-ctf7k-d63e1660f8.json
     scope : https://www.googleapis.com/auth/cloud-platform
-#  projectID : nassafy-test
-  projectID : nassafy-aro
+#
+#    path : nassafy-push-test-firebase-adminsdk-tsno6-c5364d0263.json
+#  api_url : https://fcm.googleapis.com/v1/projects/nassafy-push-test/messages:send
+#  fcm_token : ejVFij7mTwqxt6Z2tO2q-O:APA91bGhCQtXGmonPI6T3aB0CF2peRsxXJpE28PKgehZ6zw13FcWqSg3YlvtSbFkbv3gb7Zt2p7LKhQStOA10dWbiogMW8M_ZWV2IdiNeyNq7_OV-KrIPOKTRQI3QlcYmsB3lWRgAGwk
+#  projectID : nassafy-push-test
+
+    path :  nassafy-aro-firebase-adminsdk-b1oip-f2accc8ad7.json
   api_url : https://fcm.googleapis.com/v1/projects/nassafy-aro/messages:send
-#  api_url: https://fcm.googleapis.com/v1/projects/nassafy-test/messages:send
+  fcm_token : dI4MUZQKQym7ZhayQVTa_s:APA91bFXkz6cYoM2gO7KGzVxH1G48D4KDk2czfUnqtF5y_zaFokh4Ho_MXo0GCs9-WDnNlv9Lt_E2Cilk9PUR3DW4D0ghaugMy8Aik10S3Vqs03SAgtC62lqS--y6C38tXo6PdHRlu-r
+  projectID: nassafy-aro
