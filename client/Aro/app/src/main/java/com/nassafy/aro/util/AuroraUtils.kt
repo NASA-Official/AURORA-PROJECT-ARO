@@ -8,64 +8,39 @@ import com.nassafy.aro.R
 
 fun getKpPolylineOptions(kpIndex: Float) : PolylineOptions {
     val polylineOptions = PolylineOptions()
-    var radian = 4
     when {
       kpIndex >= 9 -> {
           polylineOptions.add(
-              LatLng(38.0, -80.0),
-              LatLng(41.0, -60.0),
-              LatLng(46.0,  -40.0),
-              LatLng(50.0, -20.0),
-              LatLng(52.0,0.0),
-              LatLng(52.1, 20.0),
-              LatLng(52.2, 40.0),
-              LatLng(52.5, 60.0),
-              LatLng(52.8, 80.0),
-              LatLng(53.0, 100.0),
-              LatLng(53.0,120.0),
-              LatLng(54.5, 140.0),
-              LatLng(54.2, 160.0),
-              LatLng(53.2, 180.0),
-              LatLng(50.2, -160.0),
-              LatLng(48.0, -140.0),
-              LatLng(42.5, -120.0),
-              LatLng(39.0, -100.0),
+              LatLng(38.0, -80.0), LatLng(41.0, -60.0),
+              LatLng(46.0,  -40.0), LatLng(50.0, -20.0),
+              LatLng(52.0, 0.0), LatLng(52.1, 20.0),
+              LatLng(52.2, 40.0), LatLng(52.5, 60.0),
+              LatLng(52.8, 80.0), LatLng(53.0, 100.0),
+              LatLng(53.0, 120.0), LatLng(54.5, 140.0),
+              LatLng(54.2, 160.0), LatLng(53.2, 180.0),
+              LatLng(50.2, -160.0), LatLng(48.0, -140.0),
+              LatLng(42.5, -120.0), LatLng(39.0, -100.0),
               LatLng(38.0, -80.0)
           )
-              .color(Color.RED)
-              .width(12.0F)
-              .clickable(false)
-              .geodesic(true)
-              .zIndex(-1.0F)
-      }
+              .color(Color.HSVToColor(150, floatArrayOf(8F, 0.81F, 1.0F)))
+          // Red
+      } // End of kpIndex 9
       kpIndex >= 7 -> {
           polylineOptions.add(
-              LatLng(42.0, -80.0),
-              LatLng(45.0, -60.0),
-              LatLng(50.0, -40.0),
-              LatLng(53.0, -20.0),
-              LatLng(55.0, 0.0),
-              LatLng(56.0, 20.0),
-              LatLng(56.2, 40.0),
-              LatLng(56.5, 60.0),
-              LatLng(56.8, 80.0),
-              LatLng(57.0, 100.0),
-              LatLng(57.5, 120.0),
-              LatLng(58.5, 140.0),
-              LatLng(58.5,160.0),
-              LatLng(57.5, 180.0),
-              LatLng(55.0, -160.0),
-              LatLng(50.5, -140.0),
-              LatLng(46.5, -120.0),
-              LatLng(42.5, -100.0),
+              LatLng(42.0, -80.0), LatLng(45.0, -60.0),
+              LatLng(50.0, -40.0), LatLng(53.0, -20.0),
+              LatLng(55.0, 0.0), LatLng(56.0, 20.0),
+              LatLng(56.2, 40.0), LatLng(56.5, 60.0),
+              LatLng(56.8, 80.0), LatLng(57.0, 100.0),
+              LatLng(57.5, 120.0), LatLng(58.5, 140.0),
+              LatLng(58.5, 160.0), LatLng(57.5, 180.0),
+              LatLng(55.0, -160.0), LatLng(50.5, -140.0),
+              LatLng(46.5, -120.0), LatLng(42.5, -100.0),
               LatLng(42.0, -80.0),
               )
-              .color(Color.YELLOW)
-              .width(12.0F)
-              .clickable(false)
-              .geodesic(true)
-              .zIndex(-1.0F)
-      }
+              .color(Color.HSVToColor(150, floatArrayOf(60F, 0.50F, 1.0F)))
+          // Yellow
+      } // End of kpIndex 7
       kpIndex >= 5 -> {
           polylineOptions.add(
               LatLng(46.0, -80.0), LatLng(49.1, -60.0),
@@ -79,8 +54,9 @@ fun getKpPolylineOptions(kpIndex: Float) : PolylineOptions {
               LatLng(50.2, -120.0), LatLng(47.0, -100.0),
               LatLng(46.0, -80.0),
           )
-              .color(Color.GREEN)
-      }
+              .color(Color.HSVToColor(150, floatArrayOf(144F, 0.58564F, 0.7098F)))
+          // Green
+      } // End of kpIndex 5
       else -> {
           polylineOptions.add(
                   LatLng(50.1, -80.0), LatLng(53.0,-60.0),
@@ -94,11 +70,12 @@ fun getKpPolylineOptions(kpIndex: Float) : PolylineOptions {
                   LatLng(54.6, -120.0), LatLng(51.5, -100.0),
                   LatLng(50.1, -80.0)
               )
-              .color(Color.HSVToColor(80, floatArrayOf(144F, 0.58564F, 0.7098F)))
-      }
+              .color(Color.HSVToColor(150, floatArrayOf(199F, 0.901F, 0.988F)))
+          // Blue
+      } // End of else
     }
     with (polylineOptions) {
-        width(50F)
+        width(40F)
         startCap(RoundCap())
         endCap(RoundCap())
         jointType(JointType.ROUND)
