@@ -8,21 +8,11 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.compose.runtime.DisposableEffectResult
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
 import com.nassafy.aro.R
-import com.nassafy.aro.data.dto.Place
 import com.nassafy.aro.data.dto.PlaceItem
-import com.nassafy.aro.data.dto.weather.WeatherResponse
-import com.nassafy.aro.domain.repository.WeatherRepository
 import com.nassafy.aro.ui.view.aurora.AuroraViewModel
-import com.nassafy.aro.ui.view.main.MainActivity
-import com.nassafy.aro.util.NetworkResult
-import com.nassafy.aro.util.showSnackBarMessage
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.*
@@ -49,8 +39,6 @@ class CustomMarkerInfoRenderer(
             lastMarker = marker
             val placeItem: PlaceItem = marker.tag as PlaceItem
 
-            Log.d(TAG, "getInfoWindow: $placeItem")
-
             val infoImageView = infoWindow.findViewById<ImageView>(R.id.map_info_imageview)
             val infoNameTextView = infoWindow.findViewById<TextView>(R.id.map_info_name_textview)
             val infoTextView = infoWindow.findViewById<TextView>(R.id.map_info_textview)
@@ -58,15 +46,13 @@ class CustomMarkerInfoRenderer(
             val infoLinearLayout = infoWindow.findViewById<LinearLayout>(R.id.map_info_linearlayout)
             val infoProgressBar = infoWindow.findViewById<ProgressBar>(R.id.map_info_progressbar)
 
-
-            infoProgressBar.visibility = View.VISIBLE
+//            infoProgressBar.visibility = View.VISIBLE
             infoLinearLayout.visibility = View.INVISIBLE
             infoNameTextView.text = placeItem.placeName
 //            infoImageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.loading_spinner))
 
             CoroutineScope(Dispatchers.Main).launch {
 //                val currentWeatherLiveData = auroraViewModel.currentWeatherLiveData
-
                 val resultPicture: Deferred<Int> = async {
                     val picasso = Picasso.get()
                         .load(placeItem.mapImage)
@@ -77,9 +63,8 @@ class CustomMarkerInfoRenderer(
                             override fun onSuccess() {
                                 when {
                                     marker.isInfoWindowShown -> {
-                                                    infoTextView.text = "${marker.title}"
-                                                    infoProgressBar.visibility = View.VISIBLE
-                                                    infoLinearLayout.visibility = View.VISIBLE
+                                                    infoTextView.text = "${marker.position}"
+                                                     infoLinearLayout.visibility = View.VISIBLE
                                                     marker.showInfoWindow()
 //                                        currentWeatherLiveData.observeForever { result ->
 //                                            when (result) {
