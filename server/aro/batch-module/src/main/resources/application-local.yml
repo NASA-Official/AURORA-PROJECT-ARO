@@ -8,7 +8,14 @@ logging:
     com.nassafy.api: DEBUG
     org.hibernate.type.descriptor.sql: DEBUG
 
+openweathermap:
+  api-key: bde174932a0010cfd281d38a28820cb2
 spring:
+  batch:
+    jdbc:
+      initialize-schema: always
+    job:
+      enabled: false
   config:
     activate:
       on-profile: local
@@ -36,3 +43,6 @@ jwt:
   #echo 'silvernine-tech-spring-boot-jwt-tutorial-secret-silvernine-tech-spring-boot-jwt-tutorial-secret'|base64
   secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
   token-validity-in-seconds: 86400
+
+
+

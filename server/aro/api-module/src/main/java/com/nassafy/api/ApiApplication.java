@@ -1,5 +1,6 @@
 package com.nassafy.api;
 
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -11,8 +12,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 @EnableJpaAuditing
 @EnableCaching
-@ComponentScan({"com.nassafy.core"})
-@ComponentScan({"com.nassafy.api"})
+@EnableBatchProcessing
+@ComponentScan({"com.nassafy.core", "com.nassafy.api", "com.nassafy.batch"})
 @EntityScan("com.nassafy.core")
 @EnableJpaRepositories("com.nassafy.core")
 public class ApiApplication {

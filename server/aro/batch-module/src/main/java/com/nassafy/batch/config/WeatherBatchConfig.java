@@ -8,6 +8,7 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableBatchProcessing
@@ -81,9 +83,10 @@ public class WeatherBatchConfig {
     }
 
     @Bean
+    @JobScope
     public Step weatherStep() {
         return stepBuilderFactory.get("weatherStep")
-                .<float[], Weather[]>chunk(1)
+                .<float[], List<Weather>>chunk(1)
                 .reader(coordinatesReader())
                 .processor(weatherDataProcessor())
                 .writer(weatherDataWriter())
@@ -96,14 +99,16 @@ public class WeatherBatchConfig {
     }
 
     @Bean
-    public ItemProcessor<float[], Weather[]> weatherDataProcessor() {
+    public ItemProcessor<float[], List<Weather>> weatherDataProcessor() {
         return coordinates -> openWeatherMapService.fetchWeatherData(coordinates[0], coordinates[1]);
     }
 
+
     @Bean
-    public ItemWriter<Weather[]> weatherDataWriter() {
+    public ItemWriter<List<Weather>> weatherDataWriter(){
+//        weatherRepository.deleteAll();
         return items -> {
-            for (Weather[] weatherData : items) {
+            for (List<Weather> weatherData : items) {
                 for (Weather weather : weatherData) {
                     weatherRepository.save(weather);
                 }
