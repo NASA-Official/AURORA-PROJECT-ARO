@@ -5,21 +5,30 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.nassafy.aro.R
 import com.nassafy.aro.databinding.ActivityMainBinding
+import com.nassafy.aro.util.NetworkResult
+import com.nassafy.aro.util.showSnackBarMessage
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 private const val TAG = "MainActivity_싸피"
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private val mainActivityViewModel by viewModels<MainActivityViewModel>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,8 +41,29 @@ class MainActivity : AppCompatActivity() {
 
         binding.mainNavigation.setupWithNavController(navController)
 
+        initObserver()
         initDrawer()
+        CoroutineScope(Dispatchers.IO).launch {
+            mainActivityViewModel.getUserInfo()
+        }
     } // End of onCreate
+
+    private fun initObserver() {
+        mainActivityViewModel.userInfo.observe(this) {
+            when (it) {
+                is NetworkResult.Success -> {
+                    Log.d("ssafy/memberInfo/result", it.data.toString())
+                    mainActivityViewModel.email = it.data!!.email
+                    mainActivityViewModel.nickname = it.data!!.nickname
+                }
+                is NetworkResult.Error -> {
+                    binding.root.showSnackBarMessage("유저 정보를 불러오는데 실패했습니다.")
+                }
+                is NetworkResult.Loading -> {
+                }
+            }
+        }
+    }
 
     private fun initDrawer() {
         val toggle: ActionBarDrawerToggle = object : ActionBarDrawerToggle(

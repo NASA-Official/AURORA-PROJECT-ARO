@@ -128,5 +128,4 @@ class StampCountryPlacesFragment :
             }
         }
     } // End of getUserPlaceDataGroupByCountryResponseLiveDataObserve
-
 } // End of StampHomeFragment class

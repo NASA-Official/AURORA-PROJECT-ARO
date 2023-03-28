@@ -74,6 +74,7 @@ class UserAccessRepository @Inject constructor(private val userAccessApi: UserAc
         }
     } // End of loginByIdPassword
 
+
     suspend fun validateEmialAuthenticationCode(email: String, code: String) {
         val response = userAccessApi.validateEmailAuthenticationCode(JsonObject().apply {
             addProperty("email", email)
