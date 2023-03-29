@@ -6,7 +6,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -16,7 +15,6 @@ import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -49,7 +47,6 @@ class MainActivity : AppCompatActivity() {
     private val PERMISSION_REQUEST_CODE = 100
 
     // 권한 목록
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     var REQUIRED_PERMISSIONS = arrayOf(
         android.Manifest.permission.ACCESS_FINE_LOCATION,
         android.Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -81,9 +78,6 @@ class MainActivity : AppCompatActivity() {
     } // End of onCreate
 
     private fun checkPermission() {
-        // Notification 권한도 찾아야됨.
-
-
         // 1. GPS가 켜져 있는지를 확인
         if (!isLocationServicesAvailable()) {
             // GPS가 켜져있지 않다면 dialog창을 띄워서 위치설정 할 수 있는 다이얼로그 창을 띄움

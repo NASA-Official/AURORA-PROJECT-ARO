@@ -2,7 +2,6 @@ package com.nassafy.aro.ui.view.main.stamp
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
@@ -142,10 +141,6 @@ class StampHomeFragment :
 
             when (it) {
                 is NetworkResult.Success -> {
-                    Log.d(TAG, "getUserStampDataGroupByCountryResponseLiveDataObserve: ${it.data}")
-
-                    requireView().showSnackBarMessage("통신 완료")
-
                     Picasso.get().load(it.data!!.mapImage).fit().centerCrop()
                         .into(binding.stampHomeImageview)
                 }
