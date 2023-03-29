@@ -1,6 +1,7 @@
 package com.nassafy.api.dto.req;
 
 
+import com.nassafy.core.entity.ProviderType;
 import lombok.Data;
 import lombok.ToString;
 
@@ -9,6 +10,9 @@ import java.util.List;
 @Data
 @ToString
 public class SignupReqDto {
+
+    private ProviderType providerType;
+
     // 유저정보
     private String email;
     private String password;

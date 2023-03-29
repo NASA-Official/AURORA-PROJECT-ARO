@@ -34,6 +34,8 @@ public class Member implements UserDetails {
     @Column(name = "member_id")
     private Long id;
 
+    private ProviderType providerType;
+
     @Column(updatable = false, unique = true, nullable = false)
     private String email;
 
@@ -52,7 +54,7 @@ public class Member implements UserDetails {
     private boolean meteorService = false;
 
     private String refreshToken;
-//    private String fcmToken;
+    private String fcmToken;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default

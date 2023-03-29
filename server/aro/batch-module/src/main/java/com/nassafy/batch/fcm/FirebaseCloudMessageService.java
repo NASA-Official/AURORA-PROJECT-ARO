@@ -17,6 +17,8 @@ import com.nassafy.batch.controller.FcmController;
 import com.nassafy.batch.dto.notificcation.FcmMessage;
 import com.nassafy.batch.dto.notificcation.NotificationData;
 import com.nassafy.batch.dto.notificcation.NotificationRequestDTO;
+import com.nassafy.core.entity.Member;
+import com.nassafy.core.respository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
@@ -40,6 +42,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class FirebaseCloudMessageService {
+    private final MemberRepository memberRepository;
     private static final Logger logger = LoggerFactory.getLogger(FirebaseCloudMessageService.class);
 
     private FCMInitializer fcmInitializer;
@@ -133,11 +136,23 @@ public class FirebaseCloudMessageService {
 //    @Scheduled(cron = 0 0 0 * * ?")
     @Scheduled(cron = "0/10 * * * * ?")
     public void pushMessage() throws IOException {
-        log.info("pushMessage");
-        sendMessageTo(
-                FCM_TOKEN,
-                "NASSAFY - Title",
-                "NASSAFY - Body " + count++);
+        log.info("pushMessage - scheduler");
+
+        List<Member> members = memberRepository.findAll();
+        for(Member member : members){
+
+            sendMessageTo(
+                    member.getFcmToken(),
+                    "Email : " + member.getEmail(),
+                    "Email : " + member.getEmail() +
+                    ", Nickname : " + member.getNickname());
+        }
+
+//        sendMessageTo(
+//                FCM_TOKEN,
+//                "NASSAFY - Title",
+//                "NASSAFY - Body " + count++);
+
 
     }
 }

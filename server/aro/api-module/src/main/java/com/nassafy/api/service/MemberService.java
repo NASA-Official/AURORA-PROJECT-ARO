@@ -30,6 +30,7 @@ public class MemberService {
         }
 
         Member member = Member.builder()
+                .providerType(signupReqDto.getProviderType())
                 .email(signupReqDto.getEmail())
                 .password(passwordEncoder.encode(signupReqDto.getPassword()))
                 .nickname(signupReqDto.getNickname())
