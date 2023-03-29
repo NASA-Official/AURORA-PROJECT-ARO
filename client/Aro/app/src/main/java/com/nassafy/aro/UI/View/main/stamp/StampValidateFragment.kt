@@ -11,6 +11,8 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.normal.TedPermission
 import com.nassafy.aro.databinding.FragmentStampValidateBinding
 import com.nassafy.aro.ui.view.BaseFragment
 import com.nassafy.aro.util.showSnackBarMessage
@@ -34,20 +36,24 @@ class StampValidateFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val takePhotoIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        //val filePhoto = PhotoFil
-
         // 사진 찍어서 가져오기
         binding.stampValidateCameraButton.setOnClickListener {
-            openCamera()
+            // cameraPermissionCheck
+            if (tedPermissionCheck(android.Manifest.permission.READ_EXTERNAL_STORAGE, "갤러리")) {
+                openGallery()
+            } else {
+                requireView().showSnackBarMessage("카메라 권한을 허용하지 않을 경우 사진 촬영이 불가능합니다.")
+            }
         }
 
         // 갤러리에서 가져온 사진.
         binding.stampValidateGalleryButton.setOnClickListener {
-            openGallery()
+            if (tedPermissionCheck(android.Manifest.permission.CAMERA, "카메라")) {
+                openCamera()
+            } else {
+                requireView().showSnackBarMessage("갤러리 권한을 허용하지 않을 경우 사진을 가져올 수 없습니다.")
+            }
         }
-
-        // 촬영한 이미지의 결과를 가져옴
     } // End of onViewCreated
 
     private fun openCamera() {
@@ -61,7 +67,28 @@ class StampValidateFragment :
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = MediaStore.Images.Media.CONTENT_TYPE
         startActivityForResult(intent, REQUEST_STORAGE)
-    }
+    } // End of openGallery
+
+    private fun tedPermissionCheck(permission: String, msg: String): Boolean {
+        var flg = false
+
+        TedPermission.create()
+            .setPermissionListener(object : PermissionListener {
+                // 권한이 허용됬을 때,
+                override fun onPermissionGranted() {
+                    flg = true
+                }
+
+                // 권한이 거부됐을 때,
+                override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
+                    flg = false
+                }
+            })
+            .setDeniedMessage("$msg 권한을 허용해주세요")
+            .setPermissions(permission).check()
+
+        return flg
+    } // End of tedPermissionCheck
 
 
     private fun selectGallery() {
@@ -109,8 +136,7 @@ class StampValidateFragment :
 //                }
             }
         }
-
-    }
+    } // End of onActivityResult
 
     private val imageResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -150,8 +176,6 @@ class StampValidateFragment :
 ////            val body =
 ////                MultipartBody.Part.createFormData("newImageList", file.name, requestFile)
 //        }
-
-
     } // End of registerForActivityResult
 
     private suspend fun locationCarc(nowLat: Double, nowLng: Double) {
@@ -170,7 +194,6 @@ class StampValidateFragment :
         if (result != -1) {
             // 지역이 맞는거임
         }
-
 
     } // End of getAddress
 
@@ -207,10 +230,6 @@ class StampValidateFragment :
 
         return address
     } // End of getAddressByCoordinates
-
-    private fun imageCoordinatesCalc() {
-
-    } // End of imageCoordinatesCalc
 
 
     companion object {

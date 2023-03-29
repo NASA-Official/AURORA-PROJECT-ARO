@@ -139,15 +139,12 @@ class StampHomeFragment :
         stampHomeViewModel.getUserStampDataGroupByCountryResponseLiveData.observe(this.viewLifecycleOwner) {
             binding.stampHomeProgressbar.visibility = View.GONE
             binding.stampHomeProgressbar.isVisible = false
-            Log.d(TAG, "getUserStampDataGroupByCountryResponseLiveDataObserve: 여기 동작하나요?")
 
             when (it) {
                 is NetworkResult.Success -> {
-                    requireView().showSnackBarMessage("통신 완료")
-//                    countryList = it.data as ArrayList<String>
-//                    initSpinner(countryList)
+                    Log.d(TAG, "getUserStampDataGroupByCountryResponseLiveDataObserve: ${it.data}")
 
-                    Log.d(TAG, "getUserStampDataGroupByCountryResponseLiveData: ${it.data}")
+                    requireView().showSnackBarMessage("통신 완료")
 
                     Picasso.get().load(it.data!!.mapImage).fit().centerCrop()
                         .into(binding.stampHomeImageview)
