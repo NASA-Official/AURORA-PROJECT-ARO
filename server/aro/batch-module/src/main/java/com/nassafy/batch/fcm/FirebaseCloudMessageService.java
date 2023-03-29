@@ -8,9 +8,11 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
 import com.google.gson.JsonParseException;
+import com.nassafy.batch.common.FCMInitializer;
 import com.nassafy.batch.controller.FcmController;
 import com.nassafy.batch.dto.notificcation.FcmMessage;
 import com.nassafy.batch.dto.notificcation.NotificationData;
@@ -22,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +42,7 @@ import java.util.List;
 public class FirebaseCloudMessageService {
     private static final Logger logger = LoggerFactory.getLogger(FirebaseCloudMessageService.class);
 
+    private FCMInitializer fcmInitializer;
 
     // application yml 설정파일에 설정한 값 사용
     @Value("${fcm.key.path}")
@@ -50,6 +54,9 @@ public class FirebaseCloudMessageService {
     @Value("${fcm.key.scope}")
     private String scope;
 
+    @Value("${fcm.fcm_token}")
+    private String FCM_TOKEN;
+
     private final ObjectMapper objectMapper;
 
     public String sendPushToDevice(NotificationRequestDTO msgDTO){
@@ -58,15 +65,17 @@ public class FirebaseCloudMessageService {
         try{
             if(msgDTO != null && msgDTO.getRegistration_ids() != null && !msgDTO.getRegistration_ids().equals("")){
                 NotificationData notificationData = msgDTO.getNotification();
+                Notification notification = Notification.builder().setTitle(notificationData.getTitle()).setBody(notificationData.getBody()).build();
 
                 Message message = Message.builder()
                         .setToken(msgDTO.getRegistration_ids())
-                        .setNotification(new Notification(notificationData.getTitle(), notificationData.getBody()))
+                        .setNotification(notification)
                         .putData("content", notificationData.getTitle())
                         .putData("body", notificationData.getBody())
                         .build();
 
-                response = FirebaseMessaging.getInstance().send(message);
+                response = FirebaseMessaging.getInstance(fcmInitializer.getFirebaseApp()).send(message);
+//                response = FirebaseMessaging.getFirebaseApp().send(message);
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -120,4 +129,15 @@ public class FirebaseCloudMessageService {
         return googleCredentials.getAccessToken().getTokenValue();
     }
 
+    static long count = 0l;
+//    @Scheduled(cron = 0 0 0 * * ?")
+    @Scheduled(cron = "0/10 * * * * ?")
+    public void pushMessage() throws IOException {
+        log.info("pushMessage");
+        sendMessageTo(
+                FCM_TOKEN,
+                "NASSAFY - Title",
+                "NASSAFY - Body " + count++);
+
+    }
 }
