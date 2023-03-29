@@ -1,6 +1,6 @@
 package com.nassafy.aro.ui.view.main.stamp
 
-import android.app.Activity.RESULT_OK
+import android.app.Activity.*
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -11,7 +11,6 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import coil.decode.EmptyDecoder.result
 import com.nassafy.aro.databinding.FragmentStampValidateBinding
 import com.nassafy.aro.ui.view.BaseFragment
 import com.nassafy.aro.util.showSnackBarMessage
@@ -65,7 +64,6 @@ class StampValidateFragment :
     }
 
 
-
     private fun selectGallery() {
 //        val writePermission = ContextCompat.checkSelfPermission(
 //            mContext, android.Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -105,10 +103,10 @@ class StampValidateFragment :
                     val bitmap = data?.extras?.get("data") as Bitmap
                     binding.stampValidateImageview.setImageBitmap(bitmap)
                 }
-                REQUEST_STORAGE -> {
-                    val imageUri = result.data?.data ?: return@registerForActivityResult
-                    binding.stampValidateImageview.setImageURI(uri)
-                }
+//                REQUEST_STORAGE -> {
+//                    val imageUri = result.data?.data ?: return@registerForActivityResult
+//                    binding.stampValidateImageview.setImageURI(uri)
+//                }
             }
         }
 
