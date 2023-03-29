@@ -167,12 +167,12 @@ class StampHomeFragment :
                     countryList = it.data as ArrayList<String>
                     stampHomeNavViewModel.setCountryList(countryList)
 
-
                     CoroutineScope(Dispatchers.Main).launch {
                         val spinnerDef: Deferred<Int> = async {
                             initSpinner(countryList)
                             1
                         }
+
 
                         spinnerDef.await()
 
