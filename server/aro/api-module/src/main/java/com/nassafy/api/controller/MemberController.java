@@ -55,7 +55,7 @@ public class MemberController {
      * @return memberLoginResDto
      */
     @PostMapping("/memberInfo")
-    public ResponseEntity<?> memberInfo() {
+    public ResponseEntity<?> memberInfo(@RequestBody FcmTokenReqDTO fcmTokenReqDTO) {
         logger.debug("\t Start memberInfo");
 
         String email = jwtService.getUserEmailFromJwt();
@@ -63,6 +63,11 @@ public class MemberController {
         if(member.isEmpty()){
             return ResponseEntity.badRequest().body("Error: Member is not exist!!");
         }
+
+        Member member1 = member.get();
+        String fcmToken = fcmTokenReqDTO.getFcmToken();
+        member1.setFcmToken(fcmToken);
+        memberRepository.save(member1);
 
         MemberLoginResDto memberLoginResDto = MemberLoginResDto.builder()
                 .email(member.get().getEmail())
