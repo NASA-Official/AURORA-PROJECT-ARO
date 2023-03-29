@@ -2,6 +2,7 @@ package com.nassafy.batch.job;
 
 import com.nassafy.core.entity.Forecast;
 import com.nassafy.core.respository.ForecastRepository;
+import com.nassafy.core.respository.RedisDAO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.rosuda.REngine.RList;
@@ -22,6 +23,7 @@ import org.springframework.context.annotation.Configuration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Configuration
 @RequiredArgsConstructor
@@ -33,6 +35,8 @@ public class ThreeDaysPredictJopConfig {
     private final StepBuilderFactory stepBuilderFactory;
 
     private final ForecastRepository forecastRepository;
+
+    private final RedisDAO redisDAO;
 
     @Bean
     public Job threeDaysPredictJop() {
@@ -68,7 +72,7 @@ public class ThreeDaysPredictJopConfig {
             public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
                 RConnection conn = null;
                 try {
-                    conn = new RConnection("rstudio", 6311);  // // 로컬에서는 host를 j8d106.p.ssafy.io로, 코드 올릴 때는 rstudio로 변경하기
+                    conn = new RConnection("j8d106.p.ssafy.io", 6311);  // // 로컬에서는 host를 j8d106.p.ssafy.io로, 코드 올릴 때는 rstudio로 변경하기
 
                     // 현재 시간으로부터 1달 전 날짜 계산
                     LocalDateTime now = LocalDateTime.now();
@@ -94,11 +98,15 @@ public class ThreeDaysPredictJopConfig {
                     int day = days[days.length - 1];
                     int time = times[times.length - 1] == 0 ? times[times.length - 1] : times[times.length - 1] / 100;
 
-                    LocalDateTime datetime = LocalDateTime.of(year, month, day, time, 0);
+                    double[] kps = rList.at("KP").asDoubles();
+                    Float kp = (float) kps[kps.length - 1];
 
+                    LocalDateTime datetime = LocalDateTime.of(year, month, day, time, 0);
 
                     // 데이터 생성
                     List<Forecast> forecasts = new ArrayList<>();
+                    forecasts.add(Forecast.builder().kp(kp).dateTime(datetime).build());
+
                     for (int i = 0; i < 72; i++) {
                         datetime = datetime.plusHours(1);
                         Forecast forecast = Forecast.builder().kp((float) predictKp[i]).dateTime(datetime).build();
@@ -107,8 +115,11 @@ public class ThreeDaysPredictJopConfig {
                     }
 
                     // 테이블 비우기 및 데이터 삽입
+                    List<Forecast> forecastAll = forecastRepository.findAll();
+                    redisDAO.setString("forecast", forecastAll.toString(), 1L, TimeUnit.HOURS);
                     forecastRepository.deleteAllInBatch();
                     forecastRepository.saveAll(forecasts);
+                    redisDAO.deleteString("forecast");
 
                 }  catch (Exception e) {
                     e.printStackTrace();
@@ -119,5 +130,4 @@ public class ThreeDaysPredictJopConfig {
             }
         };
     }
-
 }
