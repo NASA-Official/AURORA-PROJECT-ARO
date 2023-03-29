@@ -1,6 +1,6 @@
 package com.nassafy.aro.ui.view.main.stamp
 
-import android.app.Activity.*
+import android.app.Activity.RESULT_OK
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -15,13 +15,17 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.exifinterface.media.ExifInterface
+import androidx.fragment.app.viewModels
 import com.nassafy.aro.databinding.FragmentStampValidateBinding
 import com.nassafy.aro.ui.view.BaseFragment
 import com.nassafy.aro.ui.view.main.MainActivity
 import com.nassafy.aro.util.ChangeMultipartUtil
+import com.nassafy.aro.util.NetworkResult
 import com.nassafy.aro.util.showSnackBarMessage
 import com.squareup.picasso.Picasso
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -32,9 +36,13 @@ import java.util.*
 
 private const val TAG = "StampValidateFragment_싸피"
 
+@AndroidEntryPoint
 class StampValidateFragment :
     BaseFragment<FragmentStampValidateBinding>(FragmentStampValidateBinding::inflate) {
     private lateinit var mContext: Context
+
+    // ViewModel
+    private val validateViewModel: ValidateViewModel by viewModels()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -43,6 +51,8 @@ class StampValidateFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        postImageValidateResponseLiveDataObserve()
 
         // 사진 찍어서 가져오기
         binding.stampValidateCameraButton.setOnClickListener {
@@ -94,7 +104,7 @@ class StampValidateFragment :
 
         if (hasCameraPermission != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
-                requireContext() as MainActivity,
+                mContext as MainActivity,
                 arrayOf(android.Manifest.permission.CAMERA),
                 REQUEST_CAMERA
             )
@@ -201,11 +211,18 @@ class StampValidateFragment :
 
                     val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
                     val body =
-                        MultipartBody.Part.createFormData("newImageList", file.name, requestFile)
+                        MultipartBody.Part.createFormData("validateImage", file.name, requestFile)
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        validateViewModel.imageValidate(body)
+                    }
+
+
                 }
             }
         }
     } // End of onActivityResult
+
 
     private val imageResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -297,6 +314,35 @@ class StampValidateFragment :
 
         return address
     } // End of getAddressByCoordinates
+
+
+    private fun postImageValidateResponseLiveDataObserve() {
+        validateViewModel.postImageValidateResponseLiveData.observe(this.viewLifecycleOwner) {
+            binding.stampValidateProgressbar.visibility = View.INVISIBLE
+            binding.stampValidateProgressbar.isVisible = false
+            binding.validateConstraintLayout.visibility = View.VISIBLE
+            binding.validateConstraintLayout.isVisible = true
+
+            when (it) {
+                is NetworkResult.Success -> {
+                    if (it.data == 200) {
+                        requireView().showSnackBarMessage("이미지 오로라 맞음!")
+                    }
+                }
+
+                is NetworkResult.Error -> {
+                    requireView().showSnackBarMessage("이거 오로라 아님!")
+                }
+
+                is NetworkResult.Loading -> {
+                    binding.stampValidateProgressbar.visibility = View.VISIBLE
+                    binding.stampValidateProgressbar.isVisible = true
+                    binding.validateConstraintLayout.visibility = View.INVISIBLE
+                    binding.validateConstraintLayout.isVisible = false
+                }
+            }
+        }
+    } // End of postImageValidate
 
 
     companion object {
