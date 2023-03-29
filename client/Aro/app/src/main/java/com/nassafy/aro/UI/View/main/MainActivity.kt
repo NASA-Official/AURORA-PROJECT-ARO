@@ -47,9 +47,18 @@ class MainActivity : AppCompatActivity() {
             mainActivityViewModel.getUserInfo()
         }
 
-        AroFCM().getFirebaseToken()
+
+        /*
+            JWT토큰을 보내서 회원정보를 가져오는데,Body에 FCM토큰을 담아서 요청을 보냄
+         */
+        callFcmToken()
+
 
     } // End of onCreate
+
+    private fun callFcmToken(): String {
+        return AroFCM().getFirebaseToken()
+    } // End of callFcmToken
 
     private fun initObserver() {
         mainActivityViewModel.userInfo.observe(this) {
