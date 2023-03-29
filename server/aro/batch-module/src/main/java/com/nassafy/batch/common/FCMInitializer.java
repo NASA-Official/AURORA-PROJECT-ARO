@@ -25,7 +25,9 @@ public class FCMInitializer {
     @Value("${fcm.projectID}")
     private String projectID;
 
-
+    public FirebaseApp getFirebaseApp(){
+        return this.firebaseApp;
+    }
     @PostConstruct
     private void initialize() {
         try {
