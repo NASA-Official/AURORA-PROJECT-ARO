@@ -52,7 +52,7 @@ public class DailyPredictJobConfig {
 
     /*
      * 해당 tasklet은 72시간 데이터를
-     * 0. R에서 분석 데이터 가지고 와서 redis에 넣어두기
+     * 0. R에서 분석 데이터 가지고 오기
      * 1. 날짜가 최신 날짜가 맞는지 확인
      * 2. 날짜가 최신 날짜가 아니라면 종료, 최신 날짜라면 업데이트하기
      */
@@ -64,7 +64,7 @@ public class DailyPredictJobConfig {
             public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
                 RConnection conn = null;
                 try {
-                    conn = new RConnection("rstudio", 6311);  // // 로컬에서는 host를 j8d106.p.ssafy.io로, 코드 올릴 때는 rstudio로 변경하기
+                    conn = new RConnection("j8d106.p.ssafy.io", 6311);  // // 로컬에서는 host를 j8d106.p.ssafy.io로, 코드 올릴 때는 rstudio로 변경하기
 
                     // input date 계산하기(1달 전)
                     LocalDateTime now = LocalDateTime.now();
@@ -92,9 +92,6 @@ public class DailyPredictJobConfig {
 
                     now = LocalDateTime.now().minusHours(9); // 현재 한국 시간을 utc시간이랑 맞춰주기
                     now = LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), now.getHour(), 0); // 분 정보는 삭제하기
-
-                    System.out.println(now.toString());
-                    System.out.println(datetime.toString());
 
 
                     // 만약 저장할 데이터가 없다면 작업을 중지합니다.

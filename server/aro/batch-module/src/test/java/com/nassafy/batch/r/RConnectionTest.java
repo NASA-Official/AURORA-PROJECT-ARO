@@ -36,7 +36,7 @@ public class RConnectionTest {
         RConnection conn = null;
         double[] x;
         try {
-            conn = new RConnection("rstudio", 6311);  // 로컬에서는 host를 j8d106.p.ssafy.io로, 코드 올릴 때는 rstudio로 변경하기
+            conn = new RConnection("j8d106.p.ssafy.io", 6311);  // 로컬에서는 host를 j8d106.p.ssafy.io로, 코드 올릴 때는 rstudio로 변경하기
             REXP exp = conn.eval("source('/home/rstudio/getAceLocData2.R')");
             RList rList = conn.eval("getAceLocData()").asList();
 
@@ -58,7 +58,7 @@ public class RConnectionTest {
 
         RConnection conn = null;
         try {
-            conn = new RConnection("rstudio", 6311);  // // 로컬에서는 host를 j8d106.p.ssafy.io로, 코드 올릴 때는 rstudio로 변경하기
+            conn = new RConnection("j8d106.p.ssafy.io", 6311);  // // 로컬에서는 host를 j8d106.p.ssafy.io로, 코드 올릴 때는 rstudio로 변경하기
 
             // 현재 시간으로부터 1달 전 날짜 계산
             LocalDateTime now = LocalDateTime.now();
@@ -111,7 +111,7 @@ public class RConnectionTest {
     public void test2 (){
         RConnection conn = null;
         try {
-            conn = new RConnection("rstudio", 6311);  // // 로컬에서는 host를 j8d106.p.ssafy.io로, 코드 올릴 때는 rstudio로 변경하기
+            conn = new RConnection("j8d106.p.ssafy.io", 6311);  // // 로컬에서는 host를 j8d106.p.ssafy.io로, 코드 올릴 때는 rstudio로 변경하기
 
             // input date 계산하기(1달 전)
             LocalDateTime now = LocalDateTime.now();
