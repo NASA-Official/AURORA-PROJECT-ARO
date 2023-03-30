@@ -12,6 +12,7 @@ import org.springframework.batch.core.repository.JobExecutionAlreadyRunningExcep
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
@@ -28,8 +29,36 @@ public class RScheduler {
 
     private final DailyPredictJobConfig dailyPredictJobConfig;
 
+    // batch 서버가 처음 올라갈 때 데이터 초기화 시키기 위해서
+    @PostConstruct
+    public void initialization() {
+        // 3일치 데이터 넣기
+        Map<String, JobParameter> jobParameterMap = new HashMap<>();
+        jobParameterMap.put("time", new JobParameter(System.currentTimeMillis()));
+        JobParameters jobParameters = new JobParameters(jobParameterMap);
 
-    @Scheduled(cron = "0 * * * * *") // 0 0 0 * * *(초, 분, 시, 일, 월, 요일) 매일
+        try {
+            jobLauncher.run(threeDaysPredictJopConfig.threeDaysPredictJop(), jobParameters);
+
+        } catch (JobExecutionAlreadyRunningException | JobInstanceAlreadyCompleteException
+                 | JobParametersInvalidException |
+                 org.springframework.batch.core.repository.JobRestartException e) {
+            log.error(e.getMessage());
+        }
+
+        // 하루치 데이터 넣기
+        try {
+            jobLauncher.run(dailyPredictJobConfig.dailyPredictJob(), jobParameters);
+
+        } catch (JobExecutionAlreadyRunningException | JobInstanceAlreadyCompleteException
+                 | JobParametersInvalidException |
+                 org.springframework.batch.core.repository.JobRestartException e) {
+            log.error(e.getMessage());
+        }
+    }
+
+
+    @Scheduled(cron = "0 0 */3 * * *") // 0 0 0 * * *(초, 분, 시, 일, 월, 요일) 0시 부터 3시간 단위로 실행
     public void runThreeDaysPredictJob() {
         Map<String, JobParameter> jobParameterMap = new HashMap<>();
         jobParameterMap.put("time", new JobParameter(System.currentTimeMillis()));
@@ -45,7 +74,7 @@ public class RScheduler {
         }
     }
 
-    @Scheduled(cron = "0 * * * * *") // 0 0 * * * *(초, 분, 시, 일, 월, 요일) 매시간
+    @Scheduled(cron = "0 0 * * * *") // 0 0 * * * *(초, 분, 시, 일, 월, 요일) 매시간
     public void runDailyPredictJob() {
         Map<String, JobParameter> jobParameterMap = new HashMap<>();
         jobParameterMap.put("time", new JobParameter(System.currentTimeMillis()));
