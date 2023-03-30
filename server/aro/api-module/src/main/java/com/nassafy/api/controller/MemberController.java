@@ -56,7 +56,11 @@ public class MemberController {
         String email = memberLoginRequestDto.getEmail();
         ProviderType providerType = memberLoginRequestDto.getProviderType();
 
-        TokenDto tokenDto = jwtService.login(email, providerType);
+        String psssword = email;
+        if(memberLoginRequestDto.getProviderType().equals(ProviderType.LOCAL))
+            psssword = memberLoginRequestDto.getPassword();
+
+        TokenDto tokenDto = jwtService.login(email, psssword, providerType);
 
         return ResponseEntity.ok(tokenDto);
     }
@@ -123,7 +127,11 @@ public class MemberController {
         logger.debug("\t attractionIds " + signupReqDto.getAuroraPlaces());
         interestService.registerInterest(memberId, signupReqDto.getAuroraPlaces());
 
-        TokenDto tokenDto = jwtService.login(signupReqDto.getEmail(), signupReqDto.getProviderType());
+        String psssword = signupReqDto.getEmail();
+        if(signupReqDto.getProviderType().equals(ProviderType.LOCAL))
+            psssword = signupReqDto.getPassword();
+
+        TokenDto tokenDto = jwtService.login(signupReqDto.getEmail(), psssword, signupReqDto.getProviderType());
         return ResponseEntity.ok(tokenDto);
     }
 
@@ -229,7 +237,7 @@ public class MemberController {
 
         ProviderType providerType = accessTokenDto.getProviderType();
 
-        if(providerType.equals("NAVER")) {
+        if(providerType.equals(ProviderType.NAVER)) {
             String url = "https://openapi.naver.com/v1/nid/me";
             String accessToken = accessTokenDto.getAccessToken();
 
@@ -260,7 +268,7 @@ public class MemberController {
             snsLoginResDto.setSignup(isSignup);
 
             return ResponseEntity.ok(snsLoginResDto);
-        }else if(providerType.equals("GITHUB")) {
+        }else if(providerType.equals(ProviderType.GITHUB)) {
 
             return ResponseEntity.ok("GitHub Login Success");
         }
