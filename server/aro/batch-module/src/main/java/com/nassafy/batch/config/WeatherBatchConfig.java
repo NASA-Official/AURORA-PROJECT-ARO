@@ -3,7 +3,6 @@ package com.nassafy.batch.config;
 
 import com.nassafy.batch.service.OpenWeatherMapService;
 import com.nassafy.core.entity.Weather;
-import com.nassafy.core.respository.WeatherRepository;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
