@@ -14,14 +14,12 @@ import org.springframework.stereotype.Service;
 public class WeatherService {
     private static final Logger LOGGER = LoggerFactory.getLogger(WeatherService.class);
 
-    @Autowired
-    private JobLauncher jobLauncher;
 
     @Autowired
     private Job weatherJob;
 
 
-    public void runWeatherJob() throws Exception {
+    public void runWeatherJob(JobLauncher jobLauncher) throws Exception {
         LOGGER.debug("runWeatherJob() is executed");
         jobLauncher.run(weatherJob, new JobParametersBuilder()
                 .addLong("timestamp", System.currentTimeMillis())
