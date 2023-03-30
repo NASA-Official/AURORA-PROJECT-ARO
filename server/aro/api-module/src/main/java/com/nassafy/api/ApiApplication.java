@@ -11,8 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 @EnableJpaAuditing
 @EnableCaching
-@ComponentScan({"com.nassafy.core"})
-@ComponentScan({"com.nassafy.api"})
+@ComponentScan({"com.nassafy.core", "com.nassafy.api"})
 @EntityScan("com.nassafy.core")
 @EnableJpaRepositories("com.nassafy.core")
 public class ApiApplication {
