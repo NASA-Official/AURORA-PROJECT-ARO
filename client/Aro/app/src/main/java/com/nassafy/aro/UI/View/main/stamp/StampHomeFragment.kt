@@ -138,6 +138,9 @@ class StampHomeFragment :
         stampHomeViewModel.getUserStampDataGroupByCountryResponseLiveData.observe(this.viewLifecycleOwner) {
             binding.stampHomeProgressbar.visibility = View.GONE
             binding.stampHomeProgressbar.isVisible = false
+            binding.stampHomeConstlayout.visibility = View.VISIBLE
+            binding.stampHomeConstlayout.isVisible = true
+
 
             when (it) {
                 is NetworkResult.Success -> {
@@ -152,6 +155,8 @@ class StampHomeFragment :
                 is NetworkResult.Loading -> {
                     binding.stampHomeProgressbar.visibility = View.VISIBLE
                     binding.stampHomeProgressbar.isVisible = true
+                    binding.stampHomeConstlayout.visibility = View.INVISIBLE
+                    binding.stampHomeConstlayout.isVisible = false
                 }
             }
         }
@@ -161,6 +166,8 @@ class StampHomeFragment :
         stampHomeViewModel.getAllNationListResponseLiveData.observe(this.viewLifecycleOwner) {
             binding.stampHomeProgressbar.visibility = View.GONE
             binding.stampHomeProgressbar.isVisible = false
+            binding.stampHomeConstlayout.visibility = View.VISIBLE
+            binding.stampHomeConstlayout.isVisible = true
 
             when (it) {
                 is NetworkResult.Success -> {
@@ -176,10 +183,12 @@ class StampHomeFragment :
 
                         spinnerDef.await()
 
-                        withContext(Dispatchers.IO) {
+                        withContext(Dispatchers.Default) {
                             spinnerEventListener()
                         }
                     }
+
+
                 }
 
                 is NetworkResult.Error -> {
@@ -189,6 +198,8 @@ class StampHomeFragment :
                 is NetworkResult.Loading -> {
                     binding.stampHomeProgressbar.visibility = View.VISIBLE
                     binding.stampHomeProgressbar.isVisible = true
+                    binding.stampHomeConstlayout.visibility = View.INVISIBLE
+                    binding.stampHomeConstlayout.isVisible = false
                 }
             }
         }

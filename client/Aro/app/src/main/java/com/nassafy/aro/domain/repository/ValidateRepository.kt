@@ -1,6 +1,5 @@
 package com.nassafy.aro.domain.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nassafy.aro.domain.api.ValidateApi
@@ -22,11 +21,6 @@ class ValidateRepository @Inject constructor(
 
     suspend fun postImageValidate(validateImage: MultipartBody.Part?) {
         val response = validateApi.postImageValidate(validateImage)
-
-        Log.d(TAG, "postImageValidate : $response ")
-        Log.d(TAG, "postImageValidate: ${response.body()}")
-        Log.d(TAG, "postImageValidate: ${response.code()}")
-        Log.d(TAG, "postImageValidate: ${response.errorBody()!!.string()}")
 
         _postImageValidateResponseLiveData.postValue(NetworkResult.Loading())
 
