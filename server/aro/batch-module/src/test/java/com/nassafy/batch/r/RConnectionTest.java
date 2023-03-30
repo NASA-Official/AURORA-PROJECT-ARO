@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
-@RunWith(SpringRunner.class)
+//@RunWith(SpringRunner.class)
 public class RConnectionTest {
 
     @Autowired
@@ -36,7 +36,7 @@ public class RConnectionTest {
         RConnection conn = null;
         double[] x;
         try {
-            conn = new RConnection("rstudio", 6311);  // 로컬에서는 host를 j8d106.p.ssafy.io로, 코드 올릴 때는 rstudio로 변경하기
+            conn = new RConnection("j8d106.p.ssafy.io", 6311);  // 로컬에서는 host를 j8d106.p.ssafy.io로, 코드 올릴 때는 rstudio로 변경하기
             REXP exp = conn.eval("source('/home/rstudio/getAceLocData2.R')");
             RList rList = conn.eval("getAceLocData()").asList();
 
