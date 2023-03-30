@@ -4,7 +4,7 @@ import com.nassafy.core.DTO.ProviderType;
 import lombok.Data;
 
 @Data
-public class NaverLoginResDto {
+public class SnsLoginResDto {
     ProviderType providerType;
     String email;
     boolean isSignup;
