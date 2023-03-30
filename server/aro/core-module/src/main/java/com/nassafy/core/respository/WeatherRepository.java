@@ -10,8 +10,4 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface WeatherRepository extends JpaRepository<Weather, Long> {
-    @Transactional
-    @Modifying
-    @Query("DELETE FROM WeatherTemp")
-    void deleteAllTemp();
 }
