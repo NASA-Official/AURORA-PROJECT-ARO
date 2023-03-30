@@ -132,7 +132,6 @@ public class FirebaseCloudMessageService {
         return googleCredentials.getAccessToken().getTokenValue();
     }
 
-    static long count = 0l;
 //    @Scheduled(cron = 0 0 0 * * ?")
     @Scheduled(cron = "0/10 * * * * ?")
     public void pushMessage() throws IOException {
@@ -140,10 +139,10 @@ public class FirebaseCloudMessageService {
 
         List<Member> members = memberRepository.findAll();
         for(Member member : members){
-
+            if(!member.getAlarm() || member.getFcmToken() == null) continue;
             sendMessageTo(
                     member.getFcmToken(),
-                    "Email : " + member.getEmail(),
+                    "Nassafy!",
                     "Email : " + member.getEmail() +
                     ", Nickname : " + member.getNickname());
         }

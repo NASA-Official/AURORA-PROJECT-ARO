@@ -34,14 +34,14 @@ public class JwtService {
     private Set<String> blacklist = new HashSet<>();
 
     @Transactional
-    public TokenDto login(String email, ProviderType providerType) {
+    public TokenDto login(String email, String password, ProviderType providerType) {
         logger.debug("\t Start login");
 
         Member member = memberRepository.findByEmailAndAndProviderType(email, providerType).orElseThrow(
                 () -> new EntityNotFoundException("회원이 없습니다.")
         );
 
-        String password = member.getPassword();
+        logger.debug("\t email, password : " + email + ", " + password);
 
         // 1. Login ID/PW 를 기반으로 Authentication 객체 생성
         // 이때 authentication 는 인증 여부를 확인하는 authenticated 값이 false
