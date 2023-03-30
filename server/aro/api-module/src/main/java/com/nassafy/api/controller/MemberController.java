@@ -209,40 +209,49 @@ public class MemberController {
      * API 10
      * @return
      */
-    @PostMapping("/naverlogin")
-    public ResponseEntity<?> naverlogin(@RequestBody AccessTokenDto accessTokenDto) throws JSONException, ParseException {
-        logger.debug("\t Start naverlogin : " + accessTokenDto.getAccessToken());
+    @PostMapping("/snslogin")
+    public ResponseEntity<?> snslogin(@RequestBody AccessTokenDto accessTokenDto) throws JSONException, ParseException {
+        logger.debug("\t Start naverlogin : " + accessTokenDto.getAccessToken() + ", type : " + accessTokenDto.getProviderType());
 
-        String url = "https://openapi.naver.com/v1/nid/me";
-        String accessToken = accessTokenDto.getAccessToken();
+        ProviderType providerType = accessTokenDto.getProviderType();
 
-        RestTemplate restTemplate = new RestTemplate();
+        if(providerType.equals("NAVER")) {
+            String url = "https://openapi.naver.com/v1/nid/me";
+            String accessToken = accessTokenDto.getAccessToken();
 
-        // Header set
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(accessToken);
+            RestTemplate restTemplate = new RestTemplate();
 
-        String result = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(headers), String.class).getBody();
+            // Header set
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setBearerAuth(accessToken);
 
-        JSONParser jsonParser = new JSONParser();
-        JSONObject jsonObject = (JSONObject) jsonParser.parse(result);
-        String response = jsonObject.get("response").toString();
+            String result = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(headers), String.class).getBody();
 
-        jsonObject = (JSONObject) jsonParser.parse(response);
-        String email = (String)jsonObject.get("email");
+            JSONParser jsonParser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(result);
+            String response = jsonObject.get("response").toString();
 
-        boolean isSignup = false;
-        if(memberRepository.findByEmail(email).isPresent()){
-            isSignup = true;
+            jsonObject = (JSONObject) jsonParser.parse(response);
+            String email = (String) jsonObject.get("email");
+
+            boolean isSignup = false;
+            if (memberRepository.findByEmail(email).isPresent()) {
+                isSignup = true;
+            }
+
+            NaverLoginResDto naverLoginResDto = new NaverLoginResDto();
+            naverLoginResDto.setProviderType(ProviderType.NAVER);
+            naverLoginResDto.setEmail(email);
+            naverLoginResDto.setSignup(isSignup);
+
+            return ResponseEntity.ok(naverLoginResDto);
+        }else if(providerType.equals("GITHUB")) {
+            return ResponseEntity.ok("GitHub Login Success");
         }
 
-        NaverLoginResDto naverLoginResDto = new NaverLoginResDto();
-        naverLoginResDto.setProviderType(ProviderType.NAVER);
-        naverLoginResDto.setEmail(email);
-        naverLoginResDto.setSignup(isSignup);
 
-        return ResponseEntity.ok(naverLoginResDto);
+        return ResponseEntity.ok("Not SNS Login");
     }
 
     @GetMapping("/naverlogin")
