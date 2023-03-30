@@ -1,5 +1,6 @@
 package com.nassafy.core.entity;
 
+import com.nassafy.core.DTO.ProviderType;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicUpdate;
