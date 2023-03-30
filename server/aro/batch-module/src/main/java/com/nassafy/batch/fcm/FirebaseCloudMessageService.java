@@ -62,30 +62,30 @@ public class FirebaseCloudMessageService {
 
     private final ObjectMapper objectMapper;
 
-    public String sendPushToDevice(NotificationRequestDTO msgDTO){
-        String response = null;
-
-        try{
-            if(msgDTO != null && msgDTO.getRegistration_ids() != null && !msgDTO.getRegistration_ids().equals("")){
-                NotificationData notificationData = msgDTO.getNotification();
-                Notification notification = Notification.builder().setTitle(notificationData.getTitle()).setBody(notificationData.getBody()).build();
-
-                Message message = Message.builder()
-                        .setToken(msgDTO.getRegistration_ids())
-                        .setNotification(notification)
-                        .putData("content", notificationData.getTitle())
-                        .putData("body", notificationData.getBody())
-                        .build();
-
-                response = FirebaseMessaging.getInstance(fcmInitializer.getFirebaseApp()).send(message);
-//                response = FirebaseMessaging.getFirebaseApp().send(message);
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-
-        return response;
-    }
+//    public String sendPushToDevice(NotificationRequestDTO msgDTO){
+//        String response = null;
+//
+//        try{
+//            if(msgDTO != null && msgDTO.getRegistration_ids() != null && !msgDTO.getRegistration_ids().equals("")){
+//                NotificationData notificationData = msgDTO.getNotification();
+//                Notification notification = Notification.builder().setTitle(notificationData.getTitle()).setBody(notificationData.getBody()).build();
+//
+//                Message message = Message.builder()
+//                        .setToken(msgDTO.getRegistration_ids())
+//                        .setNotification(notification)
+//                        .putData("content", notificationData.getTitle())
+//                        .putData("body", notificationData.getBody())
+//                        .build();
+//
+//                response = FirebaseMessaging.getInstance(fcmInitializer.getFirebaseApp()).send(message);
+////                response = FirebaseMessaging.getFirebaseApp().send(message);
+//            }
+//        } catch (Exception e){
+//            e.printStackTrace();
+//        }
+//
+//        return response;
+//    }
 
     public void sendMessageTo(String targetToken, String title, String body) throws IOException {
         String message = makeMessage(targetToken, title, body);
@@ -107,7 +107,6 @@ public class FirebaseCloudMessageService {
         log.info(response.body().string());
     }
 
-    // 파라미터를 FCM이 요구하는 body 형태로 만들어준다.
     private String makeMessage(String targetToken, String title, String body) throws JsonParseException, JsonProcessingException {
         FcmMessage fcmMessage = FcmMessage.builder()
                 .message(FcmMessage.Message.builder()
@@ -123,7 +122,7 @@ public class FirebaseCloudMessageService {
     }
 
     private String getAccessToken() throws IOException {
-//        String firebaseConfigPath = "firebase/" + firebaseConfig;
+
         String firebaseConfigPath = "firebase/" + firebaseConfig;
         GoogleCredentials googleCredentials = GoogleCredentials
                 .fromStream(new ClassPathResource(firebaseConfigPath).getInputStream())
@@ -146,12 +145,6 @@ public class FirebaseCloudMessageService {
                     "Email : " + member.getEmail() +
                     ", Nickname : " + member.getNickname());
         }
-
-//        sendMessageTo(
-//                FCM_TOKEN,
-//                "NASSAFY - Title",
-//                "NASSAFY - Body " + count++);
-
 
     }
 }
