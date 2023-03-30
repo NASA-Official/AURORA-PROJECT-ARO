@@ -92,7 +92,8 @@ public class StampService {
                 () -> new EntityNotFoundException("스탬프가 없습니다.")
         );
         StampDTO stampDTO = new StampDTO(attractionId, attraction.getAttractionName(), attraction.getDescription(),
-                stamp.getCertification(), attraction.getColorAuth(), attraction.getColorStamp(), stamp.getCertificationDate().toString());
+                stamp.getCertification(), attraction.getColorAuth(), attraction.getColorStamp(),
+                stamp.getCertificationDate() == null? null : stamp.getCertificationDate().toString());
         return stampDTO;
     }
 
