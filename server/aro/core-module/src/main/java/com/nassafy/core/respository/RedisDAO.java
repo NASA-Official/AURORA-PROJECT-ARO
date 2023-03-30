@@ -1,10 +1,12 @@
 package com.nassafy.core.respository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -37,5 +39,15 @@ public class RedisDAO {
     public String deleteString(String key) {
         ValueOperations<String, String> stringValueOperations = redisTemplate.opsForValue();
         return stringValueOperations.getAndDelete(key);
+    }
+
+    public void setList(String key, List<String> values) {
+        ListOperations<String, String> stringListOperations = redisTemplate.opsForList();
+        stringListOperations.rightPushAll(key, values);
+    }
+
+    public String listLeftPop(String key) {
+        ListOperations<String, String> stringListOperations = redisTemplate.opsForList();
+        return stringListOperations.leftPop(key);
     }
 }
