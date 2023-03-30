@@ -2,27 +2,18 @@ package com.nassafy.api.controller;
 
 
 import com.nassafy.api.dto.req.SingupAttractionDTO;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nassafy.api.dto.req.SingupAttractionDTO;
 import com.nassafy.api.dto.req.StampDTO;
 import com.nassafy.api.dto.req.StampDiaryReqDTO;
 import com.nassafy.api.dto.res.StampDiaryResDTO;
 import com.nassafy.api.service.JwtService;
 import com.nassafy.api.service.StampService;
-import com.nassafy.core.DTO.MapStampDTO;
-import com.nassafy.core.DTO.RegisterStampDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.plaf.PanelUI;
 import java.io.IOException;
 import java.util.List;
 
@@ -55,32 +46,6 @@ public class StampController {
         StampDTO stampDTO = stampService.getStampDetail(attractionId);
         return ResponseEntity.ok(stampDTO);
     }
-
-
-//    @PostMapping(value = "diary/{nation}/{attraction}/{memberId}",
-//            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-//    public ResponseEntity<?> createStampDiary (
-//            @RequestPart("files") List<MultipartFile> files,
-//            @RequestPart("memo") String memo,
-//            @PathVariable String nation,
-//            @PathVariable String attraction,
-//            @PathVariable Long memberId) {
-//
-//        log.info("start create stamp diary");
-//        log.info("memo:" + memo);
-//        log.info("file size: " + files.size());
-//        log.info(String.valueOf(files.getClass()));
-//
-//        try {
-//            stampService.createStampDiary(nation, attraction, memberId,
-//                    StampDiaryReqDTO.builder().memo(memo).files(files).build());
-//            return new ResponseEntity<>(HttpStatus.CREATED);
-//        } catch (IllegalArgumentException | IOException e) {
-//            log.debug(e.getMessage());
-//            log.debug("BAD REQUEST");
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//    }
 
     @PostMapping(value = "diary/{attractionId}",
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -135,5 +100,19 @@ public class StampController {
     public ResponseEntity<List<StampDTO>> getAllStampdetail(@PathVariable String nationName) {
         List<StampDTO> stampDTOS = stampService.findAllStampdetail(nationName);
         return ResponseEntity.ok(stampDTOS);
+    }
+
+
+    // 32번 api
+    @PostMapping("certification/{attractionId}")
+    public ResponseEntity<?> updateCertification (@PathVariable Long attractionId) {
+        String email = jwtService.getUserEmailFromJwt();
+        try {
+            stampService.updateCertification(attractionId, email);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }

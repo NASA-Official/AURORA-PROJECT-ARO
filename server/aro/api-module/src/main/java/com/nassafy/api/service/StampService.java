@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.EntityNotFoundException;
 import javax.swing.*;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -90,7 +91,9 @@ public class StampService {
         Stamp stamp = stampRepository.findByAttractionIdAndMemberId(attraction.getId(), member.getId()).orElseThrow(
                 () -> new EntityNotFoundException("스탬프가 없습니다.")
         );
-        StampDTO stampDTO = new StampDTO(attractionId, attraction.getAttractionName(), attraction.getDescription(), stamp.getCertification(), attraction.getColorAuth(), attraction.getColorStamp());
+        StampDTO stampDTO = new StampDTO(attractionId, attraction.getAttractionName(), attraction.getDescription(),
+                stamp.getCertification(), attraction.getColorAuth(), attraction.getColorStamp(),
+                stamp.getCertificationDate() == null? null : stamp.getCertificationDate().toString());
         return stampDTO;
     }
 
@@ -233,7 +236,16 @@ public class StampService {
                 auth = attraction.getColorAuth();
             } else {
                 auth = attraction.getGrayAuth();
-            } stampDTOS.add(new StampDTO(attractionId, attraction.getAttractionName(), attraction.getDescription(), stamp.getCertification(), auth, attraction.getColorStamp()));
+            } stampDTOS.add(new StampDTO(attractionId, attraction.getAttractionName(), attraction.getDescription(),
+                    stamp.getCertification(), auth, attraction.getColorStamp(),
+                    stamp.getCertificationDate() == null? null : stamp.getCertificationDate().toString()));
         } return stampDTOS;
+    }
+    
+    public void updateCertification(Long attractionId, String email) {
+        LocalDate localDate = LocalDate.now();
+        Stamp stamp = stampRepository.findByAttractionIdAndMember_email(attractionId, email).orElseThrow(IllegalArgumentException::new);
+        stamp.updateCertification(localDate);
+        stampRepository.save(stamp);
     }
 }
