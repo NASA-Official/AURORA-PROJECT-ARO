@@ -280,6 +280,9 @@ project(':batch-module') {
 		// Rserve 의존성 추가
 		implementation group: 'org.rosuda.REngine', name: 'Rserve', version: '1.8.1'
 
+		//batch
+		implementation 'org.springframework.boot:spring-boot-starter-batch'
+
 
 	}
 }
