@@ -30,7 +30,6 @@ public class OpenWeatherMapService {
     public List<Weather> fetchWeatherData(float lat, float lon) {
         String apiKey = "bde174932a0010cfd281d38a28820cb2";
         String url = String.format("%s?lat=%s&lon=%s&appid=%s", API_BASE_URL, lat, lon, apiKey);
-        LOGGER.debug(">>>>>>>>>>>>>>>>>> Api 콜");
         RestTemplate restTemplate = new RestTemplate();
         WeatherResponse response = restTemplate.getForObject(url, WeatherResponse.class);
 

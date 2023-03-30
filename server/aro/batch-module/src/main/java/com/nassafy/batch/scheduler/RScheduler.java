@@ -1,7 +1,9 @@
 package com.nassafy.batch.scheduler;
 
+import com.nassafy.batch.config.WeatherSchedulerConfig;
 import com.nassafy.batch.job.DailyPredictJobConfig;
 import com.nassafy.batch.job.ThreeDaysPredictJopConfig;
+import com.nassafy.batch.service.WeatherService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobParameter;
@@ -29,6 +31,8 @@ public class RScheduler {
 
     private final DailyPredictJobConfig dailyPredictJobConfig;
 
+    private final WeatherService weatherService;
+
     // batch 서버가 처음 올라갈 때 데이터 초기화 시키기 위해서
     @PostConstruct
     public void initialization() {
@@ -53,6 +57,12 @@ public class RScheduler {
         } catch (JobExecutionAlreadyRunningException | JobInstanceAlreadyCompleteException
                  | JobParametersInvalidException |
                  org.springframework.batch.core.repository.JobRestartException e) {
+            log.error(e.getMessage());
+        }
+        // 날씨 데이터 실행
+        try {
+            weatherService.runWeatherJob(jobLauncher);
+        } catch(Exception e) {
             log.error(e.getMessage());
         }
     }
