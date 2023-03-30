@@ -87,6 +87,7 @@ public class ThreeDaysPredictJopConfig {
                     RList rList = conn.eval("kp_data").asList();
                     double[] predictKp = conn.eval("predictThreeDayKP(kp_data)").asDoubles();
 
+                    log.info("R script 실행 완료");
 
                     // 마지막 시간 받아오기
                     int[] years = rList.at("YEAR").asIntegers();
@@ -108,12 +109,10 @@ public class ThreeDaysPredictJopConfig {
 
                     now = LocalDateTime.now();
                     now = LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), nowHour - 9, 0);
-                    System.out.println(now.toString());
 
-                    boolean append = true;
-                            //!now.isEqual(datetime);
+                    boolean append = !now.isEqual(datetime);
 
-                    System.out.println(append);
+                    log.info("append : " + append);
 
                     // 데이터 생성
                     List<Forecast> forecasts = new ArrayList<>();
@@ -131,7 +130,6 @@ public class ThreeDaysPredictJopConfig {
                         for (int i = 0; i < 3; i ++) {
                             datetime = datetime.plusHours(1);
                             Forecast forecast = Forecast.builder().kp((float) predictKp[predictKp.length -1]).dateTime(datetime).build();
-                            System.out.println(forecast.toString());
                             forecasts.add(forecast);
                         }
                     }
