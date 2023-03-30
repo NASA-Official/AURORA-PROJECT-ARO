@@ -31,7 +31,7 @@ public class MemberService {
         }
 
         if(!signupReqDto.getProviderType().equals(ProviderType.LOCAL)){
-            signupReqDto.setPassword("");
+            signupReqDto.setPassword(signupReqDto.getEmail());
             signupReqDto.setNickname(signupReqDto.getEmail());
         }
 

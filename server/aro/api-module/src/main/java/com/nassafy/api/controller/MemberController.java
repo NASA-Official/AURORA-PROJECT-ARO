@@ -1,15 +1,10 @@
 package com.nassafy.api.controller;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
 import com.nassafy.api.dto.jwt.TokenDto;
 import com.nassafy.api.dto.req.*;
 import com.nassafy.api.dto.res.MemberLoginResDto;
 import com.nassafy.api.dto.res.MemberResDto;
-import com.nassafy.api.dto.res.NaverLoginResDto;
+import com.nassafy.api.dto.res.SnsLoginResDto;
 import com.nassafy.api.jwt.JwtAuthenticationFilter;
 import com.nassafy.api.service.*;
 import com.nassafy.core.DTO.ProviderType;
@@ -17,7 +12,6 @@ import com.nassafy.core.entity.Member;
 import com.nassafy.core.respository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.formula.functions.Na;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -62,10 +56,7 @@ public class MemberController {
         String email = memberLoginRequestDto.getEmail();
         ProviderType providerType = memberLoginRequestDto.getProviderType();
 
-        String password = "";
-        if(providerType.equals(ProviderType.LOCAL))
-            password = memberLoginRequestDto.getPassword();
-        TokenDto tokenDto = jwtService.login(email, password, providerType);
+        TokenDto tokenDto = jwtService.login(email, providerType);
 
         return ResponseEntity.ok(tokenDto);
     }
@@ -109,7 +100,7 @@ public class MemberController {
         logger.debug("\t attractionIds " + signupReqDto.getAuroraPlaces());
         interestService.registerInterest(memberId, signupReqDto.getAuroraPlaces());
 
-        TokenDto tokenDto = jwtService.login(signupReqDto.getEmail(), signupReqDto.getPassword(), signupReqDto.getProviderType());
+        TokenDto tokenDto = jwtService.login(signupReqDto.getEmail(), signupReqDto.getProviderType());
         return ResponseEntity.ok(tokenDto);
     }
 
@@ -240,13 +231,14 @@ public class MemberController {
                 isSignup = true;
             }
 
-            NaverLoginResDto naverLoginResDto = new NaverLoginResDto();
-            naverLoginResDto.setProviderType(ProviderType.NAVER);
-            naverLoginResDto.setEmail(email);
-            naverLoginResDto.setSignup(isSignup);
+            SnsLoginResDto snsLoginResDto = new SnsLoginResDto();
+            snsLoginResDto.setProviderType(ProviderType.NAVER);
+            snsLoginResDto.setEmail(email);
+            snsLoginResDto.setSignup(isSignup);
 
-            return ResponseEntity.ok(naverLoginResDto);
+            return ResponseEntity.ok(snsLoginResDto);
         }else if(providerType.equals("GITHUB")) {
+
             return ResponseEntity.ok("GitHub Login Success");
         }
 
