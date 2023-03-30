@@ -62,6 +62,24 @@ public class MemberController {
     }
 
     /***
+     * API 19
+     * @param
+     * @return
+     */
+    @GetMapping("/autologin")
+    public ResponseEntity<?> autologin() {
+        logger.debug("\t Start autologin");
+
+        String email = jwtService.getUserEmailFromJwt();
+        Optional<Member> member = memberRepository.findByEmail(email);
+        if(member.isEmpty()){
+            return ResponseEntity.badRequest().body("Error: Member is not exist!!");
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+    /***
      * API 2
      * @param
      * @return memberLoginResDto
