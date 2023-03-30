@@ -24,13 +24,12 @@ public class WeatherSchedulerConfig {
 
     @Autowired
     private WeatherService weatherService;
-//    // 최초 실행 시 실행
+    // 최초 실행 시 실행
     @PostConstruct
     public void init() throws Exception {
         runWeatherJob();
     }
     @Scheduled(cron = "0 0 */3 * * *")
-//    @Scheduled(fixedRate = 100000)
     public void runWeatherJob() throws Exception {
         LOGGER.debug("runWeatherJob() is executed");
         weatherService.runWeatherJob();
