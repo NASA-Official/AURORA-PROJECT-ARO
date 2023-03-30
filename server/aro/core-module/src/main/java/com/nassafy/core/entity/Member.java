@@ -34,12 +34,13 @@ public class Member implements UserDetails {
     @Column(name = "member_id")
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    @NonNull
     private ProviderType providerType;
 
     @Column(updatable = false, unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)

@@ -2,6 +2,7 @@ package com.nassafy.api.service;
 
 import com.nassafy.api.dto.req.SignupReqDto;
 import com.nassafy.api.exception.DuplicateMemberException;
+import com.nassafy.core.DTO.ProviderType;
 import com.nassafy.core.entity.Member;
 import com.nassafy.core.respository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,11 @@ public class MemberService {
 
         if (memberRepository.findByEmail(signupReqDto.getEmail()).orElse(null) != null) {
             throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
+        }
+
+        if(!signupReqDto.getProviderType().equals(ProviderType.LOCAL)){
+            signupReqDto.setPassword(signupReqDto.getEmail());
+            signupReqDto.setNickname(signupReqDto.getEmail());
         }
 
         Member member = Member.builder()

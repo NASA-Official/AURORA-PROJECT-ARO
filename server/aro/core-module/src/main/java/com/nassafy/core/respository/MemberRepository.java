@@ -1,5 +1,6 @@
 package com.nassafy.core.respository;
 
+import com.nassafy.core.DTO.ProviderType;
 import com.nassafy.core.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,6 +15,7 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, String> {
 
     Optional<Member> findByEmail(String email);
+    Optional<Member> findByEmailAndAndProviderType(String email, ProviderType providerType);
 
     Optional<Member> findById(Long id);
 
