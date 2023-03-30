@@ -1,20 +1,37 @@
 package com.nassafy.api.controller;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 import com.nassafy.api.dto.jwt.TokenDto;
 import com.nassafy.api.dto.req.*;
 import com.nassafy.api.dto.res.MemberLoginResDto;
 import com.nassafy.api.dto.res.MemberResDto;
+import com.nassafy.api.dto.res.NaverLoginResDto;
 import com.nassafy.api.jwt.JwtAuthenticationFilter;
 import com.nassafy.api.service.*;
+import com.nassafy.core.DTO.ProviderType;
 import com.nassafy.core.entity.Member;
 import com.nassafy.core.respository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.formula.functions.Na;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 
+import org.springframework.http.*;
+
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -43,8 +60,12 @@ public class MemberController {
     public ResponseEntity<?> login(@RequestBody MemberLoginReqDto memberLoginRequestDto) {
         logger.debug("\t Start login");
         String email = memberLoginRequestDto.getEmail();
-        String password = memberLoginRequestDto.getPassword();
-        TokenDto tokenDto = jwtService.login(email, password);
+        ProviderType providerType = memberLoginRequestDto.getProviderType();
+
+        String password = "";
+        if(providerType.equals(ProviderType.LOCAL))
+            password = memberLoginRequestDto.getPassword();
+        TokenDto tokenDto = jwtService.login(email, password, providerType);
 
         return ResponseEntity.ok(tokenDto);
     }
@@ -80,6 +101,7 @@ public class MemberController {
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody SignupReqDto signupReqDto) {
         logger.debug("\t Start singup");
+
         memberService.create(signupReqDto);
         stampService.makeStamp(signupReqDto.getEmail());
 
@@ -87,8 +109,7 @@ public class MemberController {
         logger.debug("\t attractionIds " + signupReqDto.getAuroraPlaces());
         interestService.registerInterest(memberId, signupReqDto.getAuroraPlaces());
 
-        TokenDto tokenDto = jwtService.login(signupReqDto.getEmail(), signupReqDto.getPassword());
-
+        TokenDto tokenDto = jwtService.login(signupReqDto.getEmail(), signupReqDto.getPassword(), signupReqDto.getProviderType());
         return ResponseEntity.ok(tokenDto);
     }
 
@@ -182,6 +203,59 @@ public class MemberController {
         String accessToken = jwtService.logout(tokenReqDto);
         return ResponseEntity.ok(accessToken);
     }
+
+
+    /***
+     * API 10
+     * @return
+     */
+    @PostMapping("/naverlogin")
+    public ResponseEntity<?> naverlogin(@RequestBody AccessTokenDto accessTokenDto) throws JSONException, ParseException {
+        logger.debug("\t Start naverlogin : " + accessTokenDto.getAccessToken());
+
+        String url = "https://openapi.naver.com/v1/nid/me";
+        String accessToken = accessTokenDto.getAccessToken();
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        // Header set
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(accessToken);
+
+        String result = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(headers), String.class).getBody();
+
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObject = (JSONObject) jsonParser.parse(result);
+        String response = jsonObject.get("response").toString();
+
+        jsonObject = (JSONObject) jsonParser.parse(response);
+        String email = (String)jsonObject.get("email");
+
+        boolean isSignup = false;
+        if(memberRepository.findByEmail(email).isPresent()){
+            isSignup = true;
+        }
+
+        NaverLoginResDto naverLoginResDto = new NaverLoginResDto();
+        naverLoginResDto.setProviderType(ProviderType.NAVER);
+        naverLoginResDto.setEmail(email);
+        naverLoginResDto.setSignup(isSignup);
+
+        return ResponseEntity.ok(naverLoginResDto);
+    }
+
+    @GetMapping("/naverlogin")
+    public ResponseEntity<?> getNaverCode(ServletRequest request) {
+        logger.debug("\t Start getNaverCode ");
+
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        String uri = httpServletRequest.getRequestURI();
+        String code = request.getParameter("code");
+
+        return ResponseEntity.ok(code);
+    }
+
 
     @GetMapping("/blacklist")
     public ResponseEntity<?> getBlacklist(){
