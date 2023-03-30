@@ -74,7 +74,7 @@ public class RScheduler {
         }
     }
 
-    @Scheduled(cron = "0 0 * * * *") // 0 0 * * * *(초, 분, 시, 일, 월, 요일) 매시간
+    @Scheduled(cron = "1 0 * * * *") // 0 0 * * * *(초, 분, 시, 일, 월, 요일) 매시간
     public void runDailyPredictJob() {
         Map<String, JobParameter> jobParameterMap = new HashMap<>();
         jobParameterMap.put("time", new JobParameter(System.currentTimeMillis()));
