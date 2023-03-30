@@ -12,14 +12,16 @@ public class StampDTO {
     public Boolean certification;
     private String Auth;
     private String stamp;
+    private String certificationDate;
 
     @Builder
-    public StampDTO(Long attractionId, String attractionName, String description, Boolean certification, String Auth, String stamp) {
+    public StampDTO(Long attractionId, String attractionName, String description, Boolean certification, String Auth, String stamp, String certificationDate) {
         this.attractionId = attractionId;
         this.attractionName = attractionName;
         this.description = description;
         this.certification = certification;
         this.Auth = Auth;
         this.stamp = stamp;
+        this.certificationDate = certificationDate;
     }
 }
