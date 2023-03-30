@@ -5,6 +5,7 @@ import com.nassafy.core.respository.ForecastRepository;
 import com.nassafy.core.respository.RedisDAO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.asm.Advice;
 import org.rosuda.REngine.RList;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.springframework.batch.core.Job;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,10 +61,9 @@ public class ThreeDaysPredictJopConfig {
 
     /*
      * 해당 tasklet은 db에 데이터를 넣기 위한 사전작업을 하는 부분으로
-     * 0. R에서 분석 데이터 가지고 와서 redis에 넣어두기
-     * 1. 밀어버리기 전에 해당 데이터들 redis에 넣어두기(redis에 먼저 확인해서 있으면 레디스 사용하고, 아니면 데이터베이스 접근)
-     * 2. 기존에 존재하던 데이터 싹 밀어버리기(delete)
-     * 0, 1, 2 순서대로 작업을 실행합니다.
+     * 0. R에서 분석 데이터 가지고 오기
+     * 1. 기존에 존재하던 데이터 싹 밀어버리기(delete)
+     * 2. 새로운 데이터 삽입
      */
     @Bean
     @StepScope
@@ -103,6 +104,17 @@ public class ThreeDaysPredictJopConfig {
 
                     LocalDateTime datetime = LocalDateTime.of(year, month, day, time, 0);
 
+                    int nowHour =  (int) Math.floor((double)now.getHour() / 3) * 3;
+
+                    now = LocalDateTime.now();
+                    now = LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), nowHour - 9, 0);
+                    System.out.println(now.toString());
+
+                    boolean append = true;
+                            //!now.isEqual(datetime);
+
+                    System.out.println(append);
+
                     // 데이터 생성
                     List<Forecast> forecasts = new ArrayList<>();
                     forecasts.add(Forecast.builder().kp(kp).dateTime(datetime).build());
@@ -112,6 +124,16 @@ public class ThreeDaysPredictJopConfig {
                         Forecast forecast = Forecast.builder().kp((float) predictKp[i]).dateTime(datetime).build();
                         System.out.println(forecast.toString());
                         forecasts.add(forecast);
+                    }
+
+                    // 만약 데이터가 아직 업데이트가 안되었다면, 더미 데이터를 뒤에 3개 추가해주기
+                    if (append) {
+                        for (int i = 0; i < 3; i ++) {
+                            datetime = datetime.plusHours(1);
+                            Forecast forecast = Forecast.builder().kp((float) predictKp[predictKp.length -1]).dateTime(datetime).build();
+                            System.out.println(forecast.toString());
+                            forecasts.add(forecast);
+                        }
                     }
 
                     // 테이블 비우기 및 데이터 삽입
