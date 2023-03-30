@@ -5,7 +5,7 @@ server:
 logging:
   level:
     root: warn
-    com.nassafy.api: DEBUG
+    com.nassafy.batch: DEBUG
     org.hibernate.type.descriptor.sql: DEBUG
 
 spring:
@@ -30,6 +30,11 @@ spring:
     host: j8d106.p.ssafy.io
     port: 6379
     password: ssafy1234!
+  batch:
+    job:
+      enabled: false   # batch server 실행시켰을 때, 실행되는지 아닌지
+    jdbc:
+      isolation-level-for-create: default  # batch meta data table이 자동으로 생성되는지 아닌지
 jwt:
   header: Authorization
   #HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용해야 한다.
