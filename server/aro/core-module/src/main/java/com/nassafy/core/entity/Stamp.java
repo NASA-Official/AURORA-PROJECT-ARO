@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,8 @@ public class Stamp {
     private Long id;
 
     private Boolean certification = false;
+
+    private LocalDate certificationDate = null;
 
     @Column(columnDefinition = "TEXT")
     private String memo;
@@ -43,5 +46,10 @@ public class Stamp {
 
     public void editMemo(String memo) {
         this.memo = memo;
+    }
+
+    public void updateCertification(LocalDate certificationDate) {
+        this.certificationDate = certificationDate;
+        this.certification = true;
     }
 }
