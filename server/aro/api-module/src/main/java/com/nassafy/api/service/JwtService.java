@@ -4,6 +4,7 @@ import com.nassafy.api.dto.req.TokenReqDto;
 import com.nassafy.api.jwt.JwtAuthenticationFilter;
 import com.nassafy.api.jwt.JwtTokenProvider;
 import com.nassafy.api.dto.jwt.TokenDto;
+import com.nassafy.core.DTO.ProviderType;
 import com.nassafy.core.entity.Member;
 import com.nassafy.core.respository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class JwtService {
     private Set<String> blacklist = new HashSet<>();
 
     @Transactional
-    public TokenDto login(String email, String password) {
+    public TokenDto login(String email, String password, ProviderType providerType) {
         logger.debug("\t Start login");
         // 1. Login ID/PW 를 기반으로 Authentication 객체 생성
         // 이때 authentication 는 인증 여부를 확인하는 authenticated 값이 false
@@ -47,7 +48,10 @@ public class JwtService {
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         TokenDto tokenDto = jwtTokenProvider.generateToken(authentication);
 
-        Member member = memberRepository.findByEmail(email).get();
+        Member member = memberRepository.findByEmailAndAndProviderType(email, providerType).orElseThrow(
+                () -> new EntityNotFoundException("회원이 없습니다.")
+        );
+
         String refreshToken = tokenDto.getRefreshToken();
         member.setRefreshToken(refreshToken);
 

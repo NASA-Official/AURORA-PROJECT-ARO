@@ -1,5 +1,6 @@
 package com.nassafy.core.entity;
 
+import com.nassafy.core.DTO.ProviderType;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicUpdate;
@@ -34,10 +35,13 @@ public class Member implements UserDetails {
     @Column(name = "member_id")
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    @NonNull
+    private ProviderType providerType;
+
     @Column(updatable = false, unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
