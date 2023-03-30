@@ -77,6 +77,8 @@ public class DailyPredictJobConfig {
                     RList rList = conn.eval("regulate").asList();
                     double[] predictKp = conn.eval("predictDailyKP(regulate, 24)").asDoubles();
 
+                    log.info("R script 실행 완료");
+
                     // 마지막 시간 받아오기
                     String[] years = rList.at("YEAR").asStrings();
                     int[] months = rList.at("MONTH").asIntegers();
@@ -96,11 +98,12 @@ public class DailyPredictJobConfig {
 
                     // 만약 저장할 데이터가 없다면 작업을 중지합니다.
                     if (datetime.plusHours(24).isBefore(now)) {
-                        System.out.println("update할 data가 없습니다.");
+                        log.info("update할 data가 없습니다.");
                         return RepeatStatus.FINISHED;
                     }
 
                     // 저장할 데이터가 있는 경우에 저장합니다.
+                    int cnt = 0;
                     for (int i = 0; i < 24; i++) {
                         datetime = datetime.plusHours(1);
                         if (datetime.isAfter(now)) {
@@ -109,11 +112,13 @@ public class DailyPredictJobConfig {
                                         .orElseThrow(IllegalArgumentException::new);
                                 forecast.updateKp((float) predictKp[i]);
                                 forecastRepository.save(forecast);
+                                cnt += 1;
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
                     }
+                    log.info(cnt + "개의 데이터가 업데이트 되었습니다.");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
