@@ -62,6 +62,7 @@ public class MemberController {
         logger.debug("\t Start login");
         String email = memberLoginRequestDto.getEmail();
         ProviderType providerType = memberLoginRequestDto.getProviderType();
+        logger.debug("\t provider Type : " + providerType);
 
         String psssword = email;
         if(memberLoginRequestDto.getProviderType().equals(ProviderType.LOCAL))
