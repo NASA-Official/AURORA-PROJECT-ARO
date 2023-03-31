@@ -45,9 +45,6 @@ public class FCMScheduler {
     @Value("${fcm.key.scope}")
     private String scope;
 
-    @Value("${fcm.fcm_token}")
-    private String FCM_TOKEN;
-
     @Value("${fcm.projectID}")
     private String projectID;
 
@@ -71,8 +68,8 @@ public class FCMScheduler {
         }
     }
 
-    //    @Scheduled(cron = 0 0 0 * * ?")
-    @Scheduled(cron = "0/10 * * * * ?")
+//    @Scheduled(cron = "0 0 0 * * ?")
+//    @Scheduled(cron = "0/10 * * * * ?")
     public void pushMessage() throws IOException {
         log.info("pushMessage - scheduler");
 
