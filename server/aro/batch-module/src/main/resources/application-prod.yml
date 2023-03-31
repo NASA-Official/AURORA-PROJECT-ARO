@@ -5,6 +5,7 @@ server:
 logging:
   level:
     root: warn
+    com: DEBUG
     com.nassafy.batch: DEBUG
     org.hibernate.type.descriptor.sql: DEBUG
     org:
@@ -21,6 +22,8 @@ spring:
     url: jdbc:mariadb://database:3306/nassafy
     username: root
     password: ssafy1234!
+    hikari:
+      maximum-pool-size: 20
   jpa:
     hibernate:
       ddl-auto: update
