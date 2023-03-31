@@ -121,7 +121,6 @@ public class ThreeDaysPredictJopConfig {
                     for (int i = 0; i < 72; i++) {
                         datetime = datetime.plusHours(1);
                         Forecast forecast = Forecast.builder().kp((float) predictKp[i]).dateTime(datetime).build();
-                        System.out.println(forecast.toString());
                         forecasts.add(forecast);
                     }
 
