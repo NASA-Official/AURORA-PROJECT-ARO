@@ -1,4 +1,4 @@
-package com.nassafy.batch.fcm;
+package com.nassafy.batch.scheduler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,17 +6,8 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.common.net.HttpHeaders;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingException;
-import com.google.firebase.messaging.Message;
-import com.google.firebase.messaging.Notification;
 import com.google.gson.JsonParseException;
-import com.nassafy.batch.common.FCMInitializer;
-import com.nassafy.batch.controller.FcmController;
 import com.nassafy.batch.dto.notificcation.FcmMessage;
-import com.nassafy.batch.dto.notificcation.NotificationData;
-import com.nassafy.batch.dto.notificcation.NotificationRequestDTO;
 import com.nassafy.core.entity.Member;
 import com.nassafy.core.respository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,24 +19,21 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * 푸시 알림 발송 Service
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
-public class FirebaseCloudMessageService {
-    private final MemberRepository memberRepository;
-    private static final Logger logger = LoggerFactory.getLogger(FirebaseCloudMessageService.class);
+public class FCMScheduler {
 
-    private FCMInitializer fcmInitializer;
+    private static final Logger logger = LoggerFactory.getLogger(FCMScheduler.class);
+
+    private final MemberRepository memberRepository;
+    private final ObjectMapper objectMapper;
+    private FirebaseApp firebaseApp;
 
     // application yml 설정파일에 설정한 값 사용
     @Value("${fcm.key.path}")
@@ -60,32 +48,46 @@ public class FirebaseCloudMessageService {
     @Value("${fcm.fcm_token}")
     private String FCM_TOKEN;
 
-    private final ObjectMapper objectMapper;
+    @Value("${fcm.projectID}")
+    private String projectID;
 
-//    public String sendPushToDevice(NotificationRequestDTO msgDTO){
-//        String response = null;
-//
-//        try{
-//            if(msgDTO != null && msgDTO.getRegistration_ids() != null && !msgDTO.getRegistration_ids().equals("")){
-//                NotificationData notificationData = msgDTO.getNotification();
-//                Notification notification = Notification.builder().setTitle(notificationData.getTitle()).setBody(notificationData.getBody()).build();
-//
-//                Message message = Message.builder()
-//                        .setToken(msgDTO.getRegistration_ids())
-//                        .setNotification(notification)
-//                        .putData("content", notificationData.getTitle())
-//                        .putData("body", notificationData.getBody())
-//                        .build();
-//
-//                response = FirebaseMessaging.getInstance(fcmInitializer.getFirebaseApp()).send(message);
-////                response = FirebaseMessaging.getFirebaseApp().send(message);
-//            }
-//        } catch (Exception e){
-//            e.printStackTrace();
-//        }
-//
-//        return response;
-//    }
+
+    @PostConstruct
+    private void initialize() {
+        try {
+            FirebaseOptions options = new FirebaseOptions.Builder()
+                    .setCredentials(GoogleCredentials.fromStream(new ClassPathResource("firebase/" + firebaseConfig).getInputStream()))
+                    .setProjectId(projectID)
+                    .build();
+
+            if (FirebaseApp.getApps().isEmpty()) {
+                this.firebaseApp = FirebaseApp.initializeApp(options);
+                logger.info("Firebase application has been initialized");
+            } else {
+                this.firebaseApp = FirebaseApp.getInstance();
+            }
+        } catch (IOException e) {
+            logger.error("Create FirebaseApp Error", e);
+        }
+    }
+
+    //    @Scheduled(cron = 0 0 0 * * ?")
+    @Scheduled(cron = "0/10 * * * * ?")
+    public void pushMessage() throws IOException {
+        log.info("pushMessage - scheduler");
+
+        List<Member> members = memberRepository.findAll();
+        for(Member member : members){
+            if(!member.getAlarm() || member.getFcmToken() == null || member.getFcmToken().equals("")) continue;
+            logger.info("member : " + member.getEmail() + ", " + member.getNickname());
+            sendMessageTo(
+                    member.getFcmToken(),
+                    "Nassafy!",
+                    "Email : " + member.getEmail() +
+                            ", Nickname : " + member.getNickname());
+        }
+
+    }
 
     public void sendMessageTo(String targetToken, String title, String body) throws IOException {
         String message = makeMessage(targetToken, title, body);
@@ -131,20 +133,4 @@ public class FirebaseCloudMessageService {
         return googleCredentials.getAccessToken().getTokenValue();
     }
 
-//    @Scheduled(cron = 0 0 0 * * ?")
-    @Scheduled(cron = "0/10 * * * * ?")
-    public void pushMessage() throws IOException {
-        log.info("pushMessage - scheduler");
-
-        List<Member> members = memberRepository.findAll();
-        for(Member member : members){
-            if(!member.getAlarm() || member.getFcmToken() == null) continue;
-            sendMessageTo(
-                    member.getFcmToken(),
-                    "Nassafy!",
-                    "Email : " + member.getEmail() +
-                    ", Nickname : " + member.getNickname());
-        }
-
-    }
 }
