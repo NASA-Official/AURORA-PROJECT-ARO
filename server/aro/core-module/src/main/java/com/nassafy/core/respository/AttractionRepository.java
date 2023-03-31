@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,5 +49,18 @@ public class AttractionRepository {
     public Optional<Attraction> findById(Long attractionId) {
         return Optional.ofNullable(em.find(Attraction.class, attractionId));
     }
+
+    public Optional<Attraction> findByLatLong(Float lat, Float lng) {
+        try {
+            Attraction attraction = em.createQuery("select a from Attraction a where a.latitude = :lat and a.longitude = :lng", Attraction.class)
+                    .setParameter("lat", lat)
+                    .setParameter("lng", lng)
+                    .getSingleResult();
+            return Optional.ofNullable(attraction);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+    }
+
 
 }
