@@ -17,6 +17,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 
 import org.springframework.http.*;
@@ -44,6 +45,12 @@ public class MemberController {
     private final String mailCode = "123456";
 
     private Map<String, String> emailCode = new HashMap<>();
+
+    @Value("${sns.github.url}")
+    private String githubUrl;
+
+    @Value("${sns.github.url}")
+    private String naverUrl;
 
     /***
      * API 1
@@ -233,50 +240,61 @@ public class MemberController {
      */
     @PostMapping("/snslogin")
     public ResponseEntity<?> snslogin(@RequestBody AccessTokenDto accessTokenDto) throws JSONException, ParseException {
-        logger.debug("\t Start naverlogin : " + accessTokenDto.getAccessToken() + ", type : " + accessTokenDto.getProviderType());
+        logger.debug("\t Start snslogin : " + accessTokenDto.getAccessToken() + ", type : " + accessTokenDto.getProviderType());
 
         ProviderType providerType = accessTokenDto.getProviderType();
+        String url, result, email;
+
+        String accessToken = accessTokenDto.getAccessToken();
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        // Header set
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(accessToken);
 
         if(providerType.equals(ProviderType.NAVER)) {
-            String url = "https://openapi.naver.com/v1/nid/me";
-            String accessToken = accessTokenDto.getAccessToken();
+            url = naverUrl;
 
-            RestTemplate restTemplate = new RestTemplate();
-
-            // Header set
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setBearerAuth(accessToken);
-
-            String result = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(headers), String.class).getBody();
+            result = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(headers), String.class).getBody();
 
             JSONParser jsonParser = new JSONParser();
             JSONObject jsonObject = (JSONObject) jsonParser.parse(result);
             String response = jsonObject.get("response").toString();
 
             jsonObject = (JSONObject) jsonParser.parse(response);
-            String email = (String) jsonObject.get("email");
+            email = (String) jsonObject.get("email");
 
-            boolean isSignup = false;
-            if (memberRepository.findByEmail(email).isPresent()) {
-                isSignup = true;
-            }
-
-            SnsLoginResDto snsLoginResDto = new SnsLoginResDto();
-            snsLoginResDto.setProviderType(ProviderType.NAVER);
-            snsLoginResDto.setEmail(email);
-            snsLoginResDto.setSignup(isSignup);
-
-            return ResponseEntity.ok(snsLoginResDto);
         }else if(providerType.equals(ProviderType.GITHUB)) {
+            url = githubUrl;
 
-            return ResponseEntity.ok("GitHub Login Success");
+            result = restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(headers), String.class).getBody();
+
+            JSONParser jsonParser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(result);
+            email = jsonObject.get("email").toString();
+        }else{
+            return ResponseEntity.ok("Not SNS Login");
         }
 
+        boolean isSignup = false;
 
-        return ResponseEntity.ok("Not SNS Login");
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+        if (optionalMember.isPresent()) {
+            isSignup = true;
+            providerType = optionalMember.get().getProviderType();
+        }
+
+        SnsLoginResDto snsLoginResDto = new SnsLoginResDto();
+        snsLoginResDto.setProviderType(providerType);
+        snsLoginResDto.setEmail(email);
+        snsLoginResDto.setSignup(isSignup);
+
+        return ResponseEntity.ok(snsLoginResDto);
     }
 
+    /// Test
     @GetMapping("/naverlogin")
     public ResponseEntity<?> getNaverCode(ServletRequest request) {
         logger.debug("\t Start getNaverCode ");
@@ -286,6 +304,14 @@ public class MemberController {
         String code = request.getParameter("code");
 
         return ResponseEntity.ok(code);
+    }
+
+    @GetMapping("/githublogin")
+    public ResponseEntity<?> getGithubCode(@RequestParam String code) {
+        logger.debug("\t Start getGithubCode ");
+
+        return ResponseEntity.ok(code);
+
     }
 
 

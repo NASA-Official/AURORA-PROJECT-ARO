@@ -32,9 +32,6 @@ public class MemberService {
 
         if(!signupReqDto.getProviderType().equals(ProviderType.LOCAL)){
             signupReqDto.setPassword(signupReqDto.getEmail());
-            signupReqDto.setNickname(signupReqDto.getEmail());
-
-            logger.debug("\t ProviderType : LOCAL");
         }
 
         Member member = Member.builder()
@@ -48,7 +45,6 @@ public class MemberService {
                 .auroraDisplay(true)
                 .refreshToken(null)
                 .build();
-
 
         member.getRoles().add("USER");
         logger.debug("\t member " + member);
