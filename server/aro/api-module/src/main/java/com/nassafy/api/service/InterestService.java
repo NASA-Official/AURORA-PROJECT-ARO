@@ -51,14 +51,16 @@ public class InterestService {
         member.clearInterest();
 
         // 새로운 관심 지역 등록
-        for (Long attractionId : attractionIds) {
-            Attraction attraction = attractionRepository.findById(attractionId)
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid attraction id"));
-            Interest interest = new Interest();
-            interest.setMember(member);
-            interest.setAttraction(attraction);
-            interestRepository.save(interest);
-            member.getInterests().add(interest);
+        if(attractionIds != null) {
+            for (Long attractionId : attractionIds) {
+                Attraction attraction = attractionRepository.findById(attractionId)
+                        .orElseThrow(() -> new IllegalArgumentException("Invalid attraction id"));
+                Interest interest = new Interest();
+                interest.setMember(member);
+                interest.setAttraction(attraction);
+                interestRepository.save(interest);
+                member.getInterests().add(interest);
+            }
         }
     }
 
