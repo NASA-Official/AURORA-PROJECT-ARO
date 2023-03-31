@@ -107,8 +107,8 @@ public class ThreeDaysPredictJopConfig {
 
                     int nowHour =  (int) Math.floor((double)now.getHour() / 3) * 3;
 
-                    now = LocalDateTime.now();
-                    now = LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), nowHour - 9, 0);
+                    now = LocalDateTime.now().minusHours(9);
+                    now = LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), now.getHour(), 0);
 
                     boolean append = !now.isEqual(datetime);
 
@@ -121,7 +121,6 @@ public class ThreeDaysPredictJopConfig {
                     for (int i = 0; i < 72; i++) {
                         datetime = datetime.plusHours(1);
                         Forecast forecast = Forecast.builder().kp((float) predictKp[i]).dateTime(datetime).build();
-                        System.out.println(forecast.toString());
                         forecasts.add(forecast);
                     }
 
