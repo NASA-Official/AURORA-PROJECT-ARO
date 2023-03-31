@@ -4,17 +4,29 @@ import com.nassafy.api.dto.jwt.TokenDto;
 import com.nassafy.api.dto.req.*;
 import com.nassafy.api.dto.res.MemberLoginResDto;
 import com.nassafy.api.dto.res.MemberResDto;
+import com.nassafy.api.dto.res.SnsLoginResDto;
 import com.nassafy.api.jwt.JwtAuthenticationFilter;
 import com.nassafy.api.service.*;
+import com.nassafy.core.DTO.ProviderType;
 import com.nassafy.core.entity.Member;
 import com.nassafy.core.respository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 
+import org.springframework.http.*;
+
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -34,6 +46,12 @@ public class MemberController {
 
     private Map<String, String> emailCode = new HashMap<>();
 
+    @Value("${sns.github.url}")
+    private String githubUrl;
+
+    @Value("${sns.github.url}")
+    private String naverUrl;
+
     /***
      * API 1
      * @param memberLoginRequestDto
@@ -43,8 +61,13 @@ public class MemberController {
     public ResponseEntity<?> login(@RequestBody MemberLoginReqDto memberLoginRequestDto) {
         logger.debug("\t Start login");
         String email = memberLoginRequestDto.getEmail();
-        String password = memberLoginRequestDto.getPassword();
-        TokenDto tokenDto = jwtService.login(email, password);
+        ProviderType providerType = memberLoginRequestDto.getProviderType();
+
+        String psssword = email;
+        if(memberLoginRequestDto.getProviderType().equals(ProviderType.LOCAL))
+            psssword = memberLoginRequestDto.getPassword();
+
+        TokenDto tokenDto = jwtService.login(email, psssword, providerType);
 
         return ResponseEntity.ok(tokenDto);
     }
@@ -73,7 +96,7 @@ public class MemberController {
      * @return memberLoginResDto
      */
     @PostMapping("/memberInfo")
-    public ResponseEntity<?> memberInfo() {
+    public ResponseEntity<?> memberInfo(@RequestBody FcmTokenReqDTO fcmTokenReqDTO) {
         logger.debug("\t Start memberInfo");
 
         String email = jwtService.getUserEmailFromJwt();
@@ -81,6 +104,11 @@ public class MemberController {
         if(member.isEmpty()){
             return ResponseEntity.badRequest().body("Error: Member is not exist!!");
         }
+
+        Member member1 = member.get();
+        String fcmToken = fcmTokenReqDTO.getFcmToken();
+        member1.setFcmToken(fcmToken);
+        memberRepository.save(member1);
 
         MemberLoginResDto memberLoginResDto = MemberLoginResDto.builder()
                 .email(member.get().getEmail())
@@ -98,6 +126,7 @@ public class MemberController {
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody SignupReqDto signupReqDto) {
         logger.debug("\t Start singup");
+
         memberService.create(signupReqDto);
         stampService.makeStamp(signupReqDto.getEmail());
 
@@ -105,8 +134,11 @@ public class MemberController {
         logger.debug("\t attractionIds " + signupReqDto.getAuroraPlaces());
         interestService.registerInterest(memberId, signupReqDto.getAuroraPlaces());
 
-        TokenDto tokenDto = jwtService.login(signupReqDto.getEmail(), signupReqDto.getPassword());
+        String psssword = signupReqDto.getEmail();
+        if(signupReqDto.getProviderType().equals(ProviderType.LOCAL))
+            psssword = signupReqDto.getPassword();
 
+        TokenDto tokenDto = jwtService.login(signupReqDto.getEmail(), psssword, signupReqDto.getProviderType());
         return ResponseEntity.ok(tokenDto);
     }
 
@@ -200,6 +232,88 @@ public class MemberController {
         String accessToken = jwtService.logout(tokenReqDto);
         return ResponseEntity.ok(accessToken);
     }
+
+
+    /***
+     * API 10
+     * @return
+     */
+    @PostMapping("/snslogin")
+    public ResponseEntity<?> snslogin(@RequestBody AccessTokenDto accessTokenDto) throws JSONException, ParseException {
+        logger.debug("\t Start snslogin : " + accessTokenDto.getAccessToken() + ", type : " + accessTokenDto.getProviderType());
+
+        ProviderType providerType = accessTokenDto.getProviderType();
+        String url, result, email;
+
+        String accessToken = accessTokenDto.getAccessToken();
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        // Header set
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(accessToken);
+
+        if(providerType.equals(ProviderType.NAVER)) {
+            url = naverUrl;
+
+            result = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(headers), String.class).getBody();
+
+            JSONParser jsonParser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(result);
+            String response = jsonObject.get("response").toString();
+
+            jsonObject = (JSONObject) jsonParser.parse(response);
+            email = (String) jsonObject.get("email");
+
+        }else if(providerType.equals(ProviderType.GITHUB)) {
+            url = githubUrl;
+
+            result = restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(headers), String.class).getBody();
+
+            JSONParser jsonParser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(result);
+            email = jsonObject.get("email").toString();
+        }else{
+            return ResponseEntity.ok("Not SNS Login");
+        }
+
+        boolean isSignup = false;
+
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+        if (optionalMember.isPresent()) {
+            isSignup = true;
+            providerType = optionalMember.get().getProviderType();
+        }
+
+        SnsLoginResDto snsLoginResDto = new SnsLoginResDto();
+        snsLoginResDto.setProviderType(providerType);
+        snsLoginResDto.setEmail(email);
+        snsLoginResDto.setSignup(isSignup);
+
+        return ResponseEntity.ok(snsLoginResDto);
+    }
+
+    /// Test
+    @GetMapping("/naverlogin")
+    public ResponseEntity<?> getNaverCode(ServletRequest request) {
+        logger.debug("\t Start getNaverCode ");
+
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        String uri = httpServletRequest.getRequestURI();
+        String code = request.getParameter("code");
+
+        return ResponseEntity.ok(code);
+    }
+
+    @GetMapping("/githublogin")
+    public ResponseEntity<?> getGithubCode(@RequestParam String code) {
+        logger.debug("\t Start getGithubCode ");
+
+        return ResponseEntity.ok(code);
+
+    }
+
 
     @GetMapping("/blacklist")
     public ResponseEntity<?> getBlacklist(){
