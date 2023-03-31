@@ -98,7 +98,7 @@ public class MemberController {
     @PostMapping("/memberInfo")
     public ResponseEntity<?> memberInfo(@RequestBody FcmTokenReqDTO fcmTokenReqDTO) {
         logger.debug("\t Start memberInfo");
-
+        logger.debug("\t fcmToken : " + fcmTokenReqDTO.getFcmToken());
         String email = jwtService.getUserEmailFromJwt();
         Optional<Member> member = memberRepository.findByEmail(email);
         if(member.isEmpty()){
