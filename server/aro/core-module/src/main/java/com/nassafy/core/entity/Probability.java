@@ -1,9 +1,12 @@
 package com.nassafy.core.entity;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
 public class Probability {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
