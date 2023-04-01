@@ -105,7 +105,7 @@ public class ProbabilityJobConfig {
                                     // 확률 계산
                                     Integer visibility = weather.getVisibility();
                                     Integer cloud = weather.getClouds();
-                                    Integer prob = Math.round(kp * 10 + visibility / 2000 - (cloud - 50) * (1 / 25000));
+                                    Integer prob = (int) Math.round(kp * 10 + visibility / 2000 - Math.pow((cloud - 50), 3) * (1.0 / 25000));
                                     Probability probability = new Probability(forecastDateTime, attraction, prob);
                                     probabilityRepository.save(probability);
                                     break;
