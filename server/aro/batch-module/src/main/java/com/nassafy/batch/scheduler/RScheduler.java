@@ -20,7 +20,7 @@ import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
-//@Component
+@Component
 @RequiredArgsConstructor
 @Slf4j
 public class RScheduler {
@@ -38,6 +38,7 @@ public class RScheduler {
     // batch 서버가 처음 올라갈 때 데이터 초기화 시키기 위해서
     @PostConstruct
     public void initialization() {
+        log.info("*******************************This is initialization");
         // 3일치 데이터 넣기
         Map<String, JobParameter> jobParameterMap = new HashMap<>();
         jobParameterMap.put("time", new JobParameter(System.currentTimeMillis()));

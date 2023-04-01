@@ -26,12 +26,12 @@ public class ProbabilityScheduler {
 
     @Scheduled(cron = "30 0 */3 * * *")
     public void runProbabilityJob() {
+        log.info("*****************This is runProbabilityJob");
         Map<String, JobParameter> jobParameterMap = new HashMap<>();
         jobParameterMap.put("time", new JobParameter(System.currentTimeMillis()));
         JobParameters jobParameters = new JobParameters(jobParameterMap);
 
         try {
-            log.info("*****************runProbabilityJob");
             jobLauncher.run(probabilityJobConfig.probabilityJob(), jobParameters);
         } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException |
                  JobParametersInvalidException e) {
