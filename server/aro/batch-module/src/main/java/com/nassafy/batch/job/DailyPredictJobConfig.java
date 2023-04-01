@@ -64,7 +64,7 @@ public class DailyPredictJobConfig {
             public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
                 RConnection conn = null;
                 try {
-                    conn = new RConnection("rstudio", 6311);  // // 로컬에서는 host를 j8d106.p.ssafy.io로, 코드 올릴 때는 rstudio로 변경하기
+                    conn = new RConnection("j8d106.p.ssafy.io", 6311);  // // 로컬에서는 host를 j8d106.p.ssafy.io로, 코드 올릴 때는 rstudio로 변경하기
 
                     // input date 계산하기(1달 전)
                     LocalDateTime now = LocalDateTime.now();
