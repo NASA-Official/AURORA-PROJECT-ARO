@@ -18,11 +18,7 @@ public class WeatherSchedulerConfig {
     private final JobLauncher jobLauncher;
     @Autowired
     private WeatherService weatherService;
-    // 최초 실행 시 실행
-//    @PostConstruct
-//    public void init() throws Exception {
-//        runWeatherJob();
-//    }
+
     @Scheduled(cron = "2 0 */3 * * *")
     public void runWeatherJob() throws Exception {
         LOGGER.debug("runWeatherJob() is executed");
