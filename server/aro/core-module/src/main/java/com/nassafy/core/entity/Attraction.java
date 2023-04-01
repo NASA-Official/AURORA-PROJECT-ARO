@@ -48,6 +48,9 @@ public class Attraction {
     @OneToMany(mappedBy = "attraction")
     private List<Stamp> stamps = new ArrayList<>();
 
+    @OneToMany(mappedBy = "attraction")
+    private List<Probability> probabilities = new ArrayList<>();
+
     @Builder
     public Attraction(String nation, String attractionName, String description, Float latitude, Float longitude, String colorStamp, String image, String colorAuth, String grayAuth, String mapImage) {
         this.nation = nation;

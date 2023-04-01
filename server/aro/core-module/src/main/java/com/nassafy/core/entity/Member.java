@@ -76,6 +76,7 @@ public class Member implements UserDetails {
     @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
     private List<Stamp> stamps = new ArrayList<>();
 
+
     // 영속성 컨텍스트 비워주는 비지니스 메서드
     public void clearInterest(){
         this.interests = new ArrayList<>();
