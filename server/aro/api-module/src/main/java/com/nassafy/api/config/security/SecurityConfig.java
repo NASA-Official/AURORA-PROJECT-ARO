@@ -89,7 +89,7 @@ public class SecurityConfig {
 //                .antMatchers("/article").permitAll()
 //                .antMatchers("/test").permitAll()
                 .antMatchers("/api/members/login").permitAll()
-                .antMatchers("/api/members/signup", "/api/members/emailcheck", "/api/members/codecheck").permitAll()
+                .antMatchers("/api/members/signup", "/api/members/emailcheck", "/api/members/codecheck", "/api/members/snslogin", "/api/members/naverlogin", "/api/members/githublogin").permitAll()
                 .antMatchers("/api/test/**").permitAll()
                 .antMatchers("/api/stamps/signup/**").permitAll()
                 .antMatchers("/api/attractions/all/nations").permitAll()

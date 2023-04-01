@@ -14,10 +14,8 @@ import org.springframework.stereotype.Service;
 public class WeatherService {
     private static final Logger LOGGER = LoggerFactory.getLogger(WeatherService.class);
 
-
     @Autowired
     private Job weatherJob;
-
 
     public void runWeatherJob(JobLauncher jobLauncher) throws Exception {
         LOGGER.debug("runWeatherJob() is executed");
