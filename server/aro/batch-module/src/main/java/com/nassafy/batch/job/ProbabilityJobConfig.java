@@ -27,6 +27,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Sort;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -81,9 +82,9 @@ public class ProbabilityJobConfig {
 
                 // 현재 시간을 원하는 시간으로 포맷팅 하루를 0,3,6,9,12,15,18,21 로 나누고 내림한다.
                 LocalDateTime currentTime = LocalDateTime.now().minusHours(9);
-                int hour = currentTime.getHour();
-                int newHour = (hour % 3 == 0) ? hour : hour - (hour % 3);
-                LocalDateTime startTime = currentTime.withHour(newHour).withMinute(0).withSecond(0).withNano(0);
+//                int hour = currentTime.getHour();
+//                int newHour = (hour % 3 == 0) ? hour : hour - (hour % 3);
+//                LocalDateTime startTime = currentTime.withHour(newHour).withMinute(0).withSecond(0).withNano(0);
 
                 // 포문 돌리면서 데이터 저장 하면 될듯? 객체 부르고
                 for (Forecast forcast : forecasts) {
@@ -96,7 +97,7 @@ public class ProbabilityJobConfig {
                         if (forcast.getDateTime().isBefore(weather.getDateTime())){
                             break;
                         }
-                        if (!forcast.getDateTime().isEqual(weather.getDateTime())){
+                        if (Duration.between(forcast.getDateTime(), weather.getDateTime()).abs().toHours() > 2){
                             continue;
                         }
                         for (Attraction attraction : attractionList) {
