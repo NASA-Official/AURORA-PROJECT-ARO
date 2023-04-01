@@ -57,6 +57,7 @@ public class ProbabilityJobConfig {
     }
 
     public Step probabilityStep(){
+        log.info("************ This is probabilityStep");
         return stepBuilderFactory.get("probabilityStep")
                 .tasklet(ProbabilityTasklet(null))
                 .build();
@@ -68,7 +69,7 @@ public class ProbabilityJobConfig {
         return new Tasklet() {
             @Override
             public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-
+                log.info("*****************This is ProbabilityTasklet");
                 probabilityRepository.deleteAllInBatch();
 
                 // 지역을 불러온다
