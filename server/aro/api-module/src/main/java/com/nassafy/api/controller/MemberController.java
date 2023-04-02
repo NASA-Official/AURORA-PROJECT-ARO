@@ -259,10 +259,7 @@ public class MemberController {
         if(providerType.equals(ProviderType.NAVER)) {
             url = naverUrl;
 
-            logger.debug("\t Start snslogin url: " + url);
             result = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(headers), String.class).getBody();
-
-            logger.debug("\t Start snslogin result: " + result);
 
             JSONParser jsonParser = new JSONParser();
             JSONObject jsonObject = (JSONObject) jsonParser.parse(result);
