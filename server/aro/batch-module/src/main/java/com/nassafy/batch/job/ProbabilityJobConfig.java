@@ -80,41 +80,41 @@ public class ProbabilityJobConfig {
                 // 날씨를 불러온다. 시간을 기준으로 정렬한다.
                 List<Weather> weatherList = weatherRepository.findAll(Sort.by(Sort.Direction.ASC, "dateTime"));
 
-                // 현재 시간을 원하는 시간으로 포맷팅 하루를 0,3,6,9,12,15,18,21 로 나누고 내림한다.
-                LocalDateTime currentTime = LocalDateTime.now().minusHours(9);
-//                int hour = currentTime.getHour();
-//                int newHour = (hour % 3 == 0) ? hour : hour - (hour % 3);
-//                LocalDateTime startTime = currentTime.withHour(newHour).withMinute(0).withSecond(0).withNano(0);
 
-                // 포문 돌리면서 데이터 저장 하면 될듯? 객체 부르고
-                for (Forecast forcast : forecasts) {
-                    LocalDateTime localDateTime = forcast.getDateTime();
+                // 포문 돌리면서 데이터 forecast 는 1시간 단위로 데이터가 저장 되어있고 weather은 3시간 단위로 데이터가 저장되어있다.
+                // weather의 시간 데이터 범위가 forecast의 시간 데이터 범위 보다 크다
+                for (Forecast forecast : forecasts) {
+                    LocalDateTime forecastDateTime = forecast.getDateTime();
 
-                    Float kp = forcast.getKp();
+                    Float kp = forecast.getKp();
 
                     for (Weather weather : weatherList) {
-                        // weather 가 더 커지면 비교 할 필요가 없음으로 break
-                        if (forcast.getDateTime().isBefore(weather.getDateTime())){
+                        LocalDateTime weatherDateTime = weather.getDateTime();
+
+                        // weather의 시간이 forecast의 시간보다 3시간 이상 크면 break
+                        if (weatherDateTime.isAfter(forecastDateTime.plusHours(3))) {
                             break;
                         }
-                        if (Duration.between(forcast.getDateTime(), weather.getDateTime()).abs().toHours() > 2){
-                            continue;
-                        }
-                        for (Attraction attraction : attractionList) {
-                            Float lat = attraction.getLatitude();
-                            Float lng = attraction.getLongitude();
-                            if (lat.equals(weather.getLatitude()) && lng.equals(weather.getLongitude())){
-                                // 확률 계산
-                                Integer visibility = weather.getVisibility();
-                                Integer cloud = weather.getClouds();
-                                Integer prob = Math.round(kp * 10 + visibility / 2000 - (cloud - 50) * (1 / 25000));
-                                Probability probability = new Probability(localDateTime, attraction, prob);
-                                probabilityRepository.save(probability);
-                                break;
+
+                        // weather의 시간이 forecast의 시간보다 같거나 2시간 이하로 작을 때만 계산 및 저장
+                        if (!weatherDateTime.isBefore(forecastDateTime) && weatherDateTime.isBefore(forecastDateTime.plusHours(3))) {
+                            for (Attraction attraction : attractionList) {
+                                Float lat = attraction.getLatitude();
+                                Float lng = attraction.getLongitude();
+                                if (lat.equals(weather.getLatitude()) && lng.equals(weather.getLongitude())) {
+                                    // 확률 계산
+                                    Integer visibility = weather.getVisibility();
+                                    Integer cloud = weather.getClouds();
+                                    Integer prob = (int) Math.round(kp * 10 + visibility / 2000 - Math.pow((cloud - 50), 3) * (1.0 / 25000));
+                                    Probability probability = new Probability(forecastDateTime, attraction, prob);
+                                    probabilityRepository.save(probability);
+                                    break;
+                                }
                             }
                         }
                     }
                 }
+
                 return RepeatStatus.FINISHED;
             }
         };
