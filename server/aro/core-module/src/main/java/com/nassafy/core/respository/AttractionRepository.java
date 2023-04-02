@@ -1,5 +1,6 @@
 package com.nassafy.core.respository;
 
+import com.nassafy.core.DTO.InterestProbabilityDTO;
 import com.nassafy.core.DTO.WeatherAndProbDTO;
 import com.nassafy.core.entity.Attraction;
 import lombok.RequiredArgsConstructor;
@@ -84,6 +85,16 @@ public class AttractionRepository {
         JpaResultMapper jpaResultMapper = new JpaResultMapper();
 
         return jpaResultMapper.list(query, WeatherAndProbDTO.class);
+    }
+
+    public List<InterestProbabilityDTO> findInterestProbability(LocalDateTime dateTime) {
+        Query query = em.createNativeQuery("SELECT attraction_name, prob, latitude, longitude, image FROM attraction " +
+                        "JOIN probability ON probability.date_time = :dateTime AND probability.attraction_id = attraction.attraction_id")
+                .setParameter("dateTime", dateTime);
+
+        JpaResultMapper jpaResultMapper = new JpaResultMapper();
+
+        return jpaResultMapper.list(query, InterestProbabilityDTO.class);
     }
 
 
