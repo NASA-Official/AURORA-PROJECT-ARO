@@ -49,7 +49,7 @@ public class MemberController {
     @Value("${sns.github.url}")
     private String githubUrl;
 
-    @Value("${sns.github.url}")
+    @Value("${sns.naver.url}")
     private String naverUrl;
 
     /***
@@ -244,7 +244,8 @@ public class MemberController {
         logger.debug("\t Start snslogin : " + accessTokenDto.getAccessToken() + ", type : " + accessTokenDto.getProviderType());
 
         ProviderType providerType = accessTokenDto.getProviderType();
-        String url, result, email;
+        String url;
+        String result, email;
 
         String accessToken = accessTokenDto.getAccessToken();
 
@@ -258,7 +259,10 @@ public class MemberController {
         if(providerType.equals(ProviderType.NAVER)) {
             url = naverUrl;
 
+            logger.debug("\t Start snslogin url: " + url);
             result = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(headers), String.class).getBody();
+
+            logger.debug("\t Start snslogin result: " + result);
 
             JSONParser jsonParser = new JSONParser();
             JSONObject jsonObject = (JSONObject) jsonParser.parse(result);
