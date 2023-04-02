@@ -272,6 +272,7 @@ public class MemberController {
             url = githubUrl;
 
             result = restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(headers), String.class).getBody();
+            logger.debug("\t snslogin result : " + result);
 
             JSONParser jsonParser = new JSONParser();
             JSONObject jsonObject = (JSONObject) jsonParser.parse(result);
