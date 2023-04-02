@@ -2,6 +2,7 @@ package com.nassafy.api.service;
 
 import com.nassafy.api.dto.req.CollectionsDTO;
 import com.nassafy.api.dto.req.MapAttractionDTO;
+import com.nassafy.core.DTO.InterestProbabilityDTO;
 import com.nassafy.core.DTO.MapStampDTO;
 import com.nassafy.core.entity.Attraction;
 import com.nassafy.core.entity.Member;
@@ -10,10 +11,12 @@ import com.nassafy.core.respository.AttractionRepository;
 import com.nassafy.core.respository.MemberRepository;
 import com.nassafy.core.respository.StampRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +24,7 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class AttrationService {
     private final AttractionRepository attractionRepository;
     private final MemberRepository memberRepository;
@@ -137,5 +141,12 @@ public class AttrationService {
         String mapImage = getMapImage(nation);
         CollectionsDTO collectionsDTO = new CollectionsDTO(mapImage, mapStampDTO);
         return collectionsDTO;
+    }
+
+
+    public List<InterestProbabilityDTO> getProbability(LocalDateTime dateTime) {
+        List<InterestProbabilityDTO> result = attractionRepository.findInterestProbability(dateTime);
+        log.info(String.valueOf(result.size()));
+        return result;
     }
 }
