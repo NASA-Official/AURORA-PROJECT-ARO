@@ -20,6 +20,7 @@ import java.util.List;
 public class CountryController {
     private final CountryService countryService;
     private final CountryRepository countryRepository;
+
     // 80번 Api
     @GetMapping("signup")
     public ResponseEntity<List<Country>> getNationsSignup(){
