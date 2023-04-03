@@ -118,6 +118,8 @@ public class MemberController {
         MemberLoginResDto memberLoginResDto = MemberLoginResDto.builder()
                 .email(member.getEmail())
                 .nickname(member.getNickname())
+                .auroraService(member.getAuroraService())
+                .meteorService(member.getMeteorService())
                 .build();
 
         return ResponseEntity.ok(memberLoginResDto);
