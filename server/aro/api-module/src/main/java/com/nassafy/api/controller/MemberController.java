@@ -131,7 +131,9 @@ public class MemberController {
 
         memberService.create(signupReqDto);
         stampService.makeStamp(signupReqDto.getEmail());
-        meteorInterestService.makeMeteorInterestNation(signupReqDto.getEmail(), signupReqDto.getCountryId());
+        if (signupReqDto.getCountryId() != null) {
+            meteorInterestService.makeMeteorInterestNation(signupReqDto.getEmail(), signupReqDto.getCountryId());
+        }
 
         Long memberId = memberRepository.findByEmail(signupReqDto.getEmail()).get().getId();
         logger.debug("\t attractionIds " + signupReqDto.getAuroraPlaces());
@@ -144,6 +146,7 @@ public class MemberController {
         TokenDto tokenDto = jwtService.login(signupReqDto.getEmail(), psssword, signupReqDto.getProviderType());
         return ResponseEntity.ok(tokenDto);
     }
+
 
     /***
      * API 4

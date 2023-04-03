@@ -30,15 +30,21 @@ public class MeteorInterestService {
     public Long makeMeteorInterestNation(String memberEmail, Long countryId) {
         Member member = memberRepository.findByEmail(memberEmail)
                 .orElseThrow(() -> new EntityNotFoundException("회원이 없습니다."));
-        Country country = countryRepository.findById(countryId)
-                .orElseThrow(() -> new EntityNotFoundException("국가를 찾을 수 없습니다."));
 
-        MeteorInterest meteorInterest = new MeteorInterest();
-        meteorInterest.setMember(member);
-        meteorInterest.setCountry(country);
+        if (countryId != null) {
+            Country country = countryRepository.findById(countryId)
+                    .orElseThrow(() -> new EntityNotFoundException("국가를 찾을 수 없습니다."));
 
-        MeteorInterest savedMeteorInterest = meteorInterestRepository.save(meteorInterest);
-        return savedMeteorInterest.getId();
+            MeteorInterest meteorInterest = new MeteorInterest();
+            meteorInterest.setMember(member);
+            meteorInterest.setCountry(country);
+
+            MeteorInterest savedMeteorInterest = meteorInterestRepository.save(meteorInterest);
+            return savedMeteorInterest.getId();
+        }
+
+        return null;
     }
+
 
 }
