@@ -25,15 +25,5 @@ public class SignupReqDto {
     // 서비스별 선택한 명소 리스트
     private List<Long> auroraPlaces;
     private Long countryId;
-//
-//    public SignupReqDto(){
-//        auroraPlaces = new LinkedList<>();
-//        meteorPlaces = new LinkedList<>();
-//    }
 
-//    @Override
-//    public String toString() {
-//        return "UserVo [email=" + email + ", password=" + password + ", nickname=" + nickname +
-//                ", auroraService=" + auroraService + ", meteorService=" + meteorService +"]";
-//    }
 }

@@ -143,4 +143,31 @@ public class RegisterController {
         return ResponseEntity.ok(serviceDTO);
     }
 
+    /**
+     * 100번 Api
+     * @return boolen 구름 표시 유무
+     */
+    // 구름 표시 여부 조회
+    @GetMapping("/cloudDisplay")
+    public ResponseEntity<Boolean> getCloudDisplay(){
+        Long memberId = jwtService.getUserIdFromJWT();
+        Member member = memberRepository.findById(memberId).get();
+        return ResponseEntity.ok(member.isCroudDisplay());
+    }
+
+    /**
+     * 101번 Api
+     * @return no
+     */
+
+    // 구를 표시 여부 변경
+    @PostMapping("/cloudDisplay")
+    public ResponseEntity<Void> toggleCloudDisplay(){
+        Long memberId = jwtService.getUserIdFromJWT();
+        Member member = memberRepository.findById(memberId).get();
+        member.toggleCloudDisplay();
+        memberRepository.save(member);
+        return ResponseEntity.noContent().build();
+    }
+
 }
