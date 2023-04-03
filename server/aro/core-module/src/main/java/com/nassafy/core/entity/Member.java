@@ -82,6 +82,9 @@ public class Member implements UserDetails {
     public void clearInterest(){
         this.interests = new ArrayList<>();
     }
+    public void clearCountry() {
+        this.meteorInterest = null;
+    }
 
 
     public boolean getAlarm(){
@@ -152,4 +155,6 @@ public class Member implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 }
