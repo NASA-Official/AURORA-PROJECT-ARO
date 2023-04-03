@@ -29,7 +29,7 @@ public class MeteorService {
     public MeteorDTO getInterestMeteor() {
         Long memberId = jwtService.getUserIdFromJWT();
         MeteorInterest meteorInterest = meteorInterestRepository.findByMemberId(memberId).get();
-        String countryName = meteorInterest.getCountry().getNation();
+        String countryName = meteorInterest.getCountry().getCountry();
         List<Meteor> meteorList = meteorRepository.findByNation(countryName);
         List<MeteorInformationDTO> meteorInformationDTOS = new ArrayList<>();
         for (Meteor meteor : meteorList) {
