@@ -23,8 +23,4 @@ public class MeteorInterest {
     @OneToOne
     @JoinColumn(name = "country_id")
     private Country country;
-
-
-
-
 }

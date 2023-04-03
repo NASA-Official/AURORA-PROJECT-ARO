@@ -42,6 +42,7 @@ public class MemberController {
     private final EmailService emailService;
     private final StampService stampService;
     private final InterestService interestService;
+    private final MeteorInterestService meteorInterestService;
     private final String mailCode = "123456";
 
     private Map<String, String> emailCode = new HashMap<>();
@@ -130,6 +131,7 @@ public class MemberController {
 
         memberService.create(signupReqDto);
         stampService.makeStamp(signupReqDto.getEmail());
+        meteorInterestService.makeMeteorInterestNation(signupReqDto.getEmail(), signupReqDto.getCountryId());
 
         Long memberId = memberRepository.findByEmail(signupReqDto.getEmail()).get().getId();
         logger.debug("\t attractionIds " + signupReqDto.getAuroraPlaces());

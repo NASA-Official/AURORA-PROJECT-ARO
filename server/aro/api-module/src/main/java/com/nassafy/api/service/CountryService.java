@@ -18,6 +18,11 @@ public class CountryService {
     public final MeteorInterestRepository meteorInterestRepository;
 
     private final JwtService jwtService;
+
+    /**
+     * 81번 Api
+     * @return List<CountryInterestDTO>
+     */
     public List<CountryInterestDTO> getNations() {
         Long memberId = jwtService.getUserIdFromJWT();
         List<CountryInterestDTO> countryInterestDTOList = new ArrayList<>();
