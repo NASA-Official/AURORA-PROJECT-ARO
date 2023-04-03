@@ -55,6 +55,9 @@ public class FCMScheduler {
     @Value("${fcm.projectID}")
     private String projectID;
 
+    @Value("${prob.pivot}")
+    private Integer pivot;
+
 
     @PostConstruct
     private void initialize() {
@@ -75,8 +78,8 @@ public class FCMScheduler {
         }
     }
 
-//    @Scheduled(cron = "0 0 0 * * ?")
-    @Scheduled(cron = "0/10 * * * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
+//    @Scheduled(cron = "0/10 * * * * ?")
     @Transactional
     public void pushMessage() throws IOException {
         log.info("pushMessage - scheduler");
@@ -88,9 +91,8 @@ public class FCMScheduler {
         for(Member member : members){
             // 2. 알람 여부 확인 및 FCM 토큰 확인
             if(!member.getAlarm() || member.getFcmToken() == null || member.getFcmToken().equals("")) continue;
-            logger.info("member : " + member.toString());
             logger.info("member : " + member.getEmail() + ", " + member.getNickname());
-//            logger.info("Interest : " + member.getInterests().toArray());
+
             // 3. 유저의 관심지역에 대해서
             for(Interest interest : member.getInterests()){
                 Long attrectionId = interest.getAttraction().getId();
@@ -105,7 +107,7 @@ public class FCMScheduler {
                 }
             }
 
-            if(maxProbability != null && maxProbability.getProb() >= 0){
+            if(maxProbability != null && maxProbability.getProb() >= pivot){
                 sb  = new StringBuilder();
                 sb.append(maxProbability.getDateTime()).append(" ")
                         .append(maxProbability.getAttraction().getAttractionName()).append("의 관측 확률은")
