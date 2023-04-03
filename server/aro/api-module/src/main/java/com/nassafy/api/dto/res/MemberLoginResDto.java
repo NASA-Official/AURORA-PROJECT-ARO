@@ -8,4 +8,8 @@ import lombok.Data;
 public class MemberLoginResDto {
     private String email;
     private String nickname;
+
+    private boolean auroraService;
+
+    private boolean meteorService;
 }
