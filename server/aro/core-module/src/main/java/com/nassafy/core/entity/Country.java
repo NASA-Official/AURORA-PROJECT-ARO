@@ -13,6 +13,7 @@ public class Country {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "country_id")
     private Long id;
+    private String nation;
     private String nationImage;
 
     @OneToOne(mappedBy = "country")
