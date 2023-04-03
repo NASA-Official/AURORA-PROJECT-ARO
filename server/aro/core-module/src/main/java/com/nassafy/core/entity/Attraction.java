@@ -23,6 +23,8 @@ public class Attraction {
 
     private String attractionName;
 
+    private String attractionOriginalName;
+
     private String description;
 
     private Float latitude;
@@ -38,6 +40,7 @@ public class Attraction {
     private String colorAuth;
 
     private String grayAuth;
+
 
     // 지도 사진
     private String mapImage;
