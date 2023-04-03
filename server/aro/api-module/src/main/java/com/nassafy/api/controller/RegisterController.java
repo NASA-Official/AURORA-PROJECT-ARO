@@ -4,8 +4,10 @@ package com.nassafy.api.controller;
 import com.nassafy.api.dto.req.ServiceDTO;
 import com.nassafy.api.service.InterestService;
 import com.nassafy.api.service.JwtService;
+import com.nassafy.api.service.MeteorInterestService;
 import com.nassafy.core.entity.Member;
 import com.nassafy.core.respository.MemberRepository;
+import com.nassafy.core.respository.MeteorInterestRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ public class RegisterController {
 
     @Autowired
     private InterestService interestService;
+    @Autowired
+    MeteorInterestRepository meteorInterestRepository;
 
     @Autowired
     private JwtService jwtService;
@@ -48,6 +52,9 @@ public class RegisterController {
         if (member.getMeteorService() != serviceDTO.getMeteorService()) {
             member.toggleMeteorService();
             // 메테오 서비스가 추가 되면 메테오 명소 지우는 로직도 추가 되어야 합니다.
+            if (!member.getMeteorService()) {
+                meteorInterestRepository.deleteByMemberId(memberId);
+            }
         }
         memberRepository.save(member);
         return ResponseEntity.noContent().build();
