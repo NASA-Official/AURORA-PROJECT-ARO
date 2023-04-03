@@ -82,7 +82,7 @@ public class FCMScheduler {
 //    @Scheduled(cron = "0/10 * * * * ?")
     @Transactional
     public void pushMessage() throws IOException {
-        log.info("pushMessage - scheduler");
+        log.info("pushMessage - scheduler ");
 
         StringBuilder sb;
         Probability maxProbability = null;
