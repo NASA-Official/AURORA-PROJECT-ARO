@@ -71,7 +71,7 @@ public class FCMScheduler {
 //    @Scheduled(cron = "0 0 0 * * ?")
 //    @Scheduled(cron = "0/10 * * * * ?")
     public void pushMessage() throws IOException {
-        log.info("pushMessage - scheduler");
+        log.info("pushMessage - scheduler ");
 
         List<Member> members = memberRepository.findAll();
         for(Member member : members){
