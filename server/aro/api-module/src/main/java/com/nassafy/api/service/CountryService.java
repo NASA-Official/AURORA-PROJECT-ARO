@@ -30,14 +30,14 @@ public class CountryService {
         MeteorInterest meteorInterest = meteorInterestRepository.findByMemberId(memberId).orElse(null);
         Boolean interest = false;
         for (Country country : countryList) {
-            if (meteorInterest != null && meteorInterest.getCountry().equals(country.getNation())) {
+            if (meteorInterest != null && meteorInterest.getCountry().equals(country.getCountry())) {
                 interest = true;
             }
             countryInterestDTOList.add(
                     CountryInterestDTO.builder()
-                            .countryId(country.getId())
-                            .countryName(country.getNation())
-                            .countryImage(country.getNationImage())
+                            .countryId(country.getCountryId())
+                            .countryName(country.getCountry())
+                            .countryImage(country.getCountryEmoji())
                             .interest(interest)
                             .build()
             );
