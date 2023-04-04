@@ -37,8 +37,8 @@ public class CountryService {
             countryInterestDTOList.add(
                     CountryInterestDTO.builder()
                             .countryId(country.getCountryId())
-                            .countryName(country.getCountry())
-                            .countryImage(country.getCountryEmoji())
+                            .country(country.getCountry())
+                            .countryEmoji(country.getCountryEmoji())
                             .interest(interest)
                             .build()
             );
