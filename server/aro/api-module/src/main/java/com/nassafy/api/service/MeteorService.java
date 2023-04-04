@@ -12,6 +12,7 @@ import com.nassafy.core.respository.MeteorInterestRepository;
 import com.nassafy.core.respository.MeteorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,34 +25,46 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class MeteorService {
+    @Autowired
     private final MeteorRepository meteorRepository;
+    @Autowired
     private final MeteorInterestRepository meteorInterestRepository;
-
+    @Autowired
     private final CountryRepository countryRepository;
-
+    @Autowired
     private final MemberRepository memberRepository;
 
-
+    @Autowired
     private final JwtService jwtService;
 
     /**
      * 82번 Api
      * @return meteorDTO 국가명, List<유성우 명소 관련 정보>
      */
-    public MeteorDTO getInterestMeteor() {
-        Long memberId = jwtService.getUserIdFromJWT();
+    public MeteorDTO getInterestMeteor(Long memberId) {
+        System.out.println("---------");
+        log.debug("test: " + jwtService.getUserIdFromJWT());
+//        Long memberId = jwtService.getUserIdFromJWT();
         MeteorInterest meteorInterest = meteorInterestRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new EntityNotFoundException("Meteor interest not found for member ID: " + memberId));
         log.info("***********************************************" + meteorInterest);
-        String countryName = meteorInterest.getCountry().getCountry();
+        Country country = meteorInterest.getCountry();
+        if (country == null) {
+            throw new EntityNotFoundException("Country not found for meteor interest ID: " + meteorInterest.getId());
+        }
+        String countryName = country.getCountry();
         log.info("***********************************************" + countryName);
         List<Meteor> meteorList = meteorRepository.findByNation(countryName);
         log.info("***********************************************" + meteorList);
         List<MeteorInformationDTO> meteorInformationDTOS = new ArrayList<>();
         for (Meteor meteor : meteorList) {
-            String constellationImage = "https://nassafy.s3.ap-northeast-2.amazonaws.com/%EB%B3%84%EC%9E%90%EB%A6%AC/" + meteor.getConstellation() + "/icon.png";
-            // 이미지 url 들어오면 바꿔야함
-            String detailImage = "https://nassafy.s3.ap-northeast-2.amazonaws.com/%EB%B3%84%EC%9E%90%EB%A6%AC/" + meteor.getConstellation() + "/image.jpg";
+            String constellation = meteor.getConstellation();
+            if (constellation == null) {
+                log.warn("Constellation not found for meteor ID: " + meteor.getId());
+                continue;
+            }
+            String constellationImage = "https://nassafy.s3.ap-northeast-2.amazonaws.com/%EB%B3%84%EC%9E%90%EB%A6%AC/" + constellation + "/icon.png";
+            String detailImage = "https://nassafy.s3.ap-northeast-2.amazonaws.com/%EB%B3%84%EC%9E%90%EB%A6%AC/" + constellation + "/image.jpg";
             meteorInformationDTOS.add(
                     MeteorInformationDTO.builder()
                             .meteorName(meteor.getMeteorName())
@@ -79,7 +92,7 @@ public class MeteorService {
 
         // 기존 관심있는 유성우를 삭제합니다.
         meteorInterestRepository.findByMemberId(memberId).ifPresent(meteorInterestRepository::delete);
-
+        meteorInterestRepository.flush();
         // 새로운 관심있는 유성우를 등록합니다.
         if (countryId != null) {
             Country newCountry = countryRepository.findById(countryId)
@@ -91,9 +104,4 @@ public class MeteorService {
             meteorInterestRepository.save(meteorInterest);
         }
     }
-
-
-
-
-
 }
