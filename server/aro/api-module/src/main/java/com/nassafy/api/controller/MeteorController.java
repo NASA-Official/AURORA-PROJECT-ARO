@@ -12,7 +12,7 @@ import javax.swing.text.html.parser.Entity;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/meteor/")
+@RequestMapping("/api/meteor")
 @RequiredArgsConstructor
 @Slf4j
 public class MeteorController {

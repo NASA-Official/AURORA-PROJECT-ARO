@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/country/")
+@RequestMapping("/api/country")
 @RequiredArgsConstructor
 @Slf4j
 public class CountryController {
@@ -22,7 +22,7 @@ public class CountryController {
     private final CountryRepository countryRepository;
 
     // 80번 Api
-    @GetMapping("signup")
+    @GetMapping("/signup")
     public ResponseEntity<List<Country>> getNationsSignup(){
         List<Country> countryList = countryRepository.findAll();
         return ResponseEntity.ok(countryList);
