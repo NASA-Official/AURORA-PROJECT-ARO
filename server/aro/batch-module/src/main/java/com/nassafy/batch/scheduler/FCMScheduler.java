@@ -109,18 +109,28 @@ public class FCMScheduler {
 
             if(maxProbability != null && maxProbability.getProb() >= pivot){
                 sb  = new StringBuilder();
-                sb.append(maxProbability.getDateTime()).append(" ")
-                        .append(maxProbability.getAttraction().getAttractionName()).append("의 관측 확률은")
-                        .append(maxProbability.getProb()).append("% 입니다!");
+//                sb.append(maxProbability.getDateTime()).append(" ")
+//                        .append(maxProbability.getAttraction().getAttractionName()).append("의 관측 확률은")
+//                        .append(maxProbability.getProb()).append("% 입니다!");
+
+                String[] date = maxProbability.getDateTime().toString().split("-");
+                int month = Integer.parseInt(date[1]);
+                int day = Integer.parseInt(date[2].substring(0, 2));
+                sb.append(member.getNickname()).append("님! ")
+                        .append(month).append("월 ")
+                        .append(day).append("일에 오로라를 볼 수 있을것 같아요!");
 
                 log.info("pushMessage - maxProbability");
                 log.info(maxProbability.toString());
                 log.info("pushMessage - getFcmToken : " + member.getFcmToken());
+                log.info("pushMessage : " + sb.toString());
                 sendMessageTo(
                         member.getFcmToken(),
-                        member.getNickname() + "님!",
+                        "Aro",
                         sb.toString()
                 );
+
+
             }
 
         }
