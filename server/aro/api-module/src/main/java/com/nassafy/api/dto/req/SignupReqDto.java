@@ -22,18 +22,8 @@ public class SignupReqDto {
     private boolean auroraService;
     private boolean meteorService;
 
-    // 서비스별 선택한 명로 리스트
+    // 서비스별 선택한 명소 리스트
     private List<Long> auroraPlaces;
-    private List<Long> meteorPlaces;
-//
-//    public SignupReqDto(){
-//        auroraPlaces = new LinkedList<>();
-//        meteorPlaces = new LinkedList<>();
-//    }
+    private Long countryId;
 
-//    @Override
-//    public String toString() {
-//        return "UserVo [email=" + email + ", password=" + password + ", nickname=" + nickname +
-//                ", auroraService=" + auroraService + ", meteorService=" + meteorService +"]";
-//    }
 }
