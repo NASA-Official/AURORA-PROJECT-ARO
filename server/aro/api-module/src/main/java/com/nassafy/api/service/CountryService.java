@@ -28,9 +28,10 @@ public class CountryService {
         List<CountryInterestDTO> countryInterestDTOList = new ArrayList<>();
         List<Country> countryList = countryRepository.findAll();
         MeteorInterest meteorInterest = meteorInterestRepository.findByMemberId(memberId).orElse(null);
-        Boolean interest = false;
+
         for (Country country : countryList) {
-            if (meteorInterest != null && meteorInterest.getCountry().equals(country.getCountry())) {
+            Boolean interest = false;
+            if (meteorInterest != null && meteorInterest.getCountry().getCountry().equals(country.getCountry())) {
                 interest = true;
             }
             countryInterestDTOList.add(
