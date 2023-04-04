@@ -85,10 +85,11 @@ public class FCMScheduler {
         log.info("pushMessage - scheduler ");
 
         StringBuilder sb;
-        Probability maxProbability = null;
+        Probability maxProbability;
         // 1. 모든 유저에 대해서
         List<Member> members = memberRepository.findAll();
         for(Member member : members){
+            maxProbability = null;
             // 2. 알람 여부 확인 및 FCM 토큰 확인
             if(!member.getAlarm() || member.getFcmToken() == null || member.getFcmToken().equals("")) continue;
             logger.info("member : " + member.getEmail() + ", " + member.getNickname());
@@ -125,6 +126,7 @@ public class FCMScheduler {
                 sendMessageTo(
                         member.getFcmToken(),
                         "Aro",
+                        "" +
                         sb.toString()
                 );
 
