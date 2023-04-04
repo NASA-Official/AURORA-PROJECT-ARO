@@ -74,7 +74,7 @@ public class ThreeDaysPredictJopConfig {
             public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
                 RConnection conn = null;
                 try {
-                    conn = new RConnection("j8d106.p.ssafy.io", 6311);  // // 로컬에서는 host를 j8d106.p.ssafy.io로, 코드 올릴 때는 rstudio로 변경하기
+                    conn = new RConnection(rhost, 6311);  // // 로컬에서는 host를 j8d106.p.ssafy.io로, 코드 올릴 때는 rstudio로 변경하기
 
                     // 현재 시간으로부터 1달 전 날짜 계산
                     LocalDateTime now = LocalDateTime.now();
