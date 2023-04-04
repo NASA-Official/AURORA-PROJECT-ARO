@@ -51,6 +51,8 @@ public class Member implements UserDetails {
 
     private boolean auroraDisplay = true;
 
+    private boolean croudDisplay = true;
+
     private boolean auroraService = false;
 
     private boolean meteorService = false;
@@ -76,10 +78,14 @@ public class Member implements UserDetails {
     @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE})
     private List<Stamp> stamps = new ArrayList<>();
 
-
+    @OneToOne(mappedBy = "member")
+    private MeteorInterest meteorInterest;
     // 영속성 컨텍스트 비워주는 비지니스 메서드
     public void clearInterest(){
         this.interests = new ArrayList<>();
+    }
+    public void clearCountry() {
+        this.meteorInterest = null;
     }
 
 
@@ -98,6 +104,9 @@ public class Member implements UserDetails {
     public void toggleAuroraDisplay(){
         this.auroraDisplay = !this.auroraDisplay;
     }
+
+    public void toggleCloudDisplay() {
+        this.croudDisplay = !this.croudDisplay;}
 
     public boolean getAuroraService(){
         return this.auroraService;
@@ -151,4 +160,6 @@ public class Member implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 }
