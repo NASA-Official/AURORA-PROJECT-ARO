@@ -42,6 +42,7 @@ public class MemberController {
     private final EmailService emailService;
     private final StampService stampService;
     private final InterestService interestService;
+    private final MeteorInterestService meteorInterestService;
     private final String mailCode = "123456";
 
     private Map<String, String> emailCode = new HashMap<>();
@@ -136,6 +137,9 @@ public class MemberController {
 
         memberService.create(signupReqDto);
         stampService.makeStamp(signupReqDto.getEmail());
+        if (signupReqDto.getCountryId() != null) {
+            meteorInterestService.makeMeteorInterestNation(signupReqDto.getEmail(), signupReqDto.getCountryId());
+        }
 
         Long memberId = memberRepository.findByEmail(signupReqDto.getEmail()).get().getId();
         logger.debug("\t attractionIds " + signupReqDto.getAuroraPlaces());
@@ -148,6 +152,7 @@ public class MemberController {
         TokenDto tokenDto = jwtService.login(signupReqDto.getEmail(), psssword, signupReqDto.getProviderType());
         return ResponseEntity.ok(tokenDto);
     }
+
 
     /***
      * API 4
