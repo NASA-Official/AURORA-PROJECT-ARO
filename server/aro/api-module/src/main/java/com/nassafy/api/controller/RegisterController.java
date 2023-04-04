@@ -4,8 +4,10 @@ package com.nassafy.api.controller;
 import com.nassafy.api.dto.req.ServiceDTO;
 import com.nassafy.api.service.InterestService;
 import com.nassafy.api.service.JwtService;
+import com.nassafy.api.service.MeteorInterestService;
 import com.nassafy.core.entity.Member;
 import com.nassafy.core.respository.MemberRepository;
+import com.nassafy.core.respository.MeteorInterestRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ public class RegisterController {
 
     @Autowired
     private InterestService interestService;
+    @Autowired
+    MeteorInterestRepository meteorInterestRepository;
 
     @Autowired
     private JwtService jwtService;
@@ -48,6 +52,9 @@ public class RegisterController {
         if (member.getMeteorService() != serviceDTO.getMeteorService()) {
             member.toggleMeteorService();
             // 메테오 서비스가 추가 되면 메테오 명소 지우는 로직도 추가 되어야 합니다.
+            if (!member.getMeteorService()) {
+                meteorInterestRepository.deleteByMemberId(memberId);
+            }
         }
         memberRepository.save(member);
         return ResponseEntity.noContent().build();
@@ -134,6 +141,33 @@ public class RegisterController {
         Member member = memberRepository.findById(memberId).get();
         ServiceDTO serviceDTO = new ServiceDTO(member.getAuroraService(), member.getMeteorService());
         return ResponseEntity.ok(serviceDTO);
+    }
+
+    /**
+     * 100번 Api
+     * @return boolen 구름 표시 유무
+     */
+    // 구름 표시 여부 조회
+    @GetMapping("/cloudDisplay")
+    public ResponseEntity<Boolean> getCloudDisplay(){
+        Long memberId = jwtService.getUserIdFromJWT();
+        Member member = memberRepository.findById(memberId).get();
+        return ResponseEntity.ok(member.isCroudDisplay());
+    }
+
+    /**
+     * 101번 Api
+     * @return no
+     */
+
+    // 구를 표시 여부 변경
+    @PostMapping("/cloudDisplay")
+    public ResponseEntity<Void> toggleCloudDisplay(){
+        Long memberId = jwtService.getUserIdFromJWT();
+        Member member = memberRepository.findById(memberId).get();
+        member.toggleCloudDisplay();
+        memberRepository.save(member);
+        return ResponseEntity.noContent().build();
     }
 
 }
