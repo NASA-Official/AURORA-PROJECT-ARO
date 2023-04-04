@@ -40,6 +40,7 @@ public class MeteorController {
     @PostMapping("")
     public ResponseEntity<String> postInterestMeteor(@RequestBody CountryIdRequest countryIdRequest) {
         Long memberId = jwtService.getUserIdFromJWT();
+        log.debug("******************************" + memberId);
         meteorService.postInterestMeteor(memberId, countryIdRequest.getCountryId());
         return ResponseEntity.ok("ok");
     }
