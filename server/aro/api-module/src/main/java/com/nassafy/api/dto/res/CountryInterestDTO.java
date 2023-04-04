@@ -7,14 +7,14 @@ import lombok.Getter;
 @Builder
 public class CountryInterestDTO {
     private Long countryId;
-    private String countryName;
-    private String countryImage;
+    private String country;
+    private String countryEmoji;
     private Boolean interest;
 
-    public CountryInterestDTO(Long countryId, String countryName, String countryImage, Boolean interest) {
+    public CountryInterestDTO(Long countryId, String country, String countryEmoji, Boolean interest) {
         this.countryId = countryId;
-        this.countryName = countryName;
-        this.countryImage = countryImage;
+        this.country = country;
+        this.countryEmoji = countryEmoji;
         this.interest = interest;
     }
 }
