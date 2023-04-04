@@ -25,16 +25,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class MeteorService {
-    @Autowired
+
     private final MeteorRepository meteorRepository;
-    @Autowired
+
     private final MeteorInterestRepository meteorInterestRepository;
-    @Autowired
     private final CountryRepository countryRepository;
-    @Autowired
+
     private final MemberRepository memberRepository;
 
-    @Autowired
     private final JwtService jwtService;
 
     /**
@@ -42,7 +40,6 @@ public class MeteorService {
      * @return meteorDTO 국가명, List<유성우 명소 관련 정보>
      */
     public MeteorDTO getInterestMeteor(Long memberId) {
-        System.out.println("---------");
         log.debug("test: " + jwtService.getUserIdFromJWT());
 //        Long memberId = jwtService.getUserIdFromJWT();
         MeteorInterest meteorInterest = meteorInterestRepository.findByMemberId(memberId)
