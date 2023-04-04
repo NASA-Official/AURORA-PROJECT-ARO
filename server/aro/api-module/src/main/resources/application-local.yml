@@ -78,6 +78,6 @@ cloud:
 
 sns:
   naver:
-      url: https://openapi.naver.com/v1/nid/me
+    url: https://openapi.naver.com/v1/nid/me
   github:
-      url: https://api.github.com/user
+    url: https://api.github.com/user

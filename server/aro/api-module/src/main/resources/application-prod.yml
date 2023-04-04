@@ -7,8 +7,8 @@ logging:
     com.amazonaws.util.EC2MetadataUtils: error
     root: warn
     com.nassafy.api: DEBUG
-    org.hibernate.type.descriptor.sql: DEBUG
-    org.hibernate.SQL: DEBUG
+#    org.hibernate.type.descriptor.sql: DEBUG
+#    org.hibernate.SQL: DEBUG
     org:
       springframework:
         web:

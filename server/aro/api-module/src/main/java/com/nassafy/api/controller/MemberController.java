@@ -50,7 +50,7 @@ public class MemberController {
     @Value("${sns.github.url}")
     private String githubUrl;
 
-    @Value("${sns.github.url}")
+    @Value("${sns.naver.url}")
     private String naverUrl;
 
     /***
@@ -100,21 +100,27 @@ public class MemberController {
     @PostMapping("/memberInfo")
     public ResponseEntity<?> memberInfo(@RequestBody FcmTokenReqDTO fcmTokenReqDTO) {
         logger.debug("\t Start memberInfo");
-        logger.debug("\t fcmToken : " + fcmTokenReqDTO.getFcmToken());
+
+        String fcmToken = fcmTokenReqDTO.getFcmToken();
+        logger.debug("\t fcmToken : " + fcmToken);
+
         String email = jwtService.getUserEmailFromJwt();
-        Optional<Member> member = memberRepository.findByEmail(email);
-        if(member.isEmpty()){
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+        if(optionalMember.isEmpty()){
             return ResponseEntity.badRequest().body("Error: Member is not exist!!");
         }
 
-        Member member1 = member.get();
-        String fcmToken = fcmTokenReqDTO.getFcmToken();
-        member1.setFcmToken(fcmToken);
-        memberRepository.save(member1);
+        Member member = optionalMember.get();
+        if(!fcmToken.equals("") && fcmToken != null) {
+            member.setFcmToken(fcmToken);
+            memberRepository.save(member);
+        }
 
         MemberLoginResDto memberLoginResDto = MemberLoginResDto.builder()
-                .email(member.get().getEmail())
-                .nickname(member.get().getNickname())
+                .email(member.getEmail())
+                .nickname(member.getNickname())
+                .auroraService(member.getAuroraService())
+                .meteorService(member.getMeteorService())
                 .build();
 
         return ResponseEntity.ok(memberLoginResDto);
@@ -249,7 +255,8 @@ public class MemberController {
         logger.debug("\t Start snslogin : " + accessTokenDto.getAccessToken() + ", type : " + accessTokenDto.getProviderType());
 
         ProviderType providerType = accessTokenDto.getProviderType();
-        String url, result, email;
+        String url;
+        String result, email;
 
         String accessToken = accessTokenDto.getAccessToken();
 
@@ -276,6 +283,7 @@ public class MemberController {
             url = githubUrl;
 
             result = restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(headers), String.class).getBody();
+            logger.debug("\t snslogin result : " + result);
 
             JSONParser jsonParser = new JSONParser();
             JSONObject jsonObject = (JSONObject) jsonParser.parse(result);

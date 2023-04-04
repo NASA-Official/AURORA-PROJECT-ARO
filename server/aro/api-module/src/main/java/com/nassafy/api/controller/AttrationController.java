@@ -3,18 +3,23 @@ package com.nassafy.api.controller;
 import com.nassafy.api.dto.req.CollectionsDTO;
 import com.nassafy.api.dto.req.MapAttractionDTO;
 import com.nassafy.api.service.AttrationService;
+import com.nassafy.core.DTO.InterestProbabilityDTO;
 import com.nassafy.core.DTO.MapStampDTO;
 import com.nassafy.core.entity.Attraction;
 import com.nassafy.core.respository.AttractionRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/attractions")
+@Slf4j
 public class AttrationController {
     @Autowired
     private AttrationService attrationService;
@@ -89,5 +94,19 @@ public class AttrationController {
     public ResponseEntity<List<Attraction>> getAttrationsByNation(@PathVariable String nation){
         List<Attraction> attractionList = attrationService.getAttractionByNation(nation);
         return ResponseEntity.ok(attractionList);
+    }
+
+    @GetMapping("/probability/{date}/{time}")
+    public ResponseEntity<List<InterestProbabilityDTO>> getProbability(@PathVariable String date, @PathVariable int time) {
+        String[] dates = date.split("-");
+        LocalDateTime dateTime = LocalDateTime.of(Integer.parseInt(dates[0]), Integer.parseInt(dates[1]), Integer.parseInt(dates[2]), time, 0);
+
+        try {
+            List<InterestProbabilityDTO> result = attrationService.getProbability(dateTime);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }
