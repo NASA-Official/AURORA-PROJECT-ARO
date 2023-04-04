@@ -51,7 +51,7 @@ public class Member implements UserDetails {
 
     private boolean auroraDisplay = true;
 
-    private boolean croudDisplay = true;
+    private boolean cloudDisplay = true;
 
     private boolean auroraService = false;
 
@@ -106,7 +106,7 @@ public class Member implements UserDetails {
     }
 
     public void toggleCloudDisplay() {
-        this.croudDisplay = !this.croudDisplay;}
+        this.cloudDisplay = !this.cloudDisplay;}
 
     public boolean getAuroraService(){
         return this.auroraService;
