@@ -24,7 +24,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class MeteorService {
+    @Autowired
     private final MeteorRepository meteorRepository;
+    @Autowired
     private final MeteorInterestRepository meteorInterestRepository;
 
     private final CountryRepository countryRepository;
@@ -79,7 +81,7 @@ public class MeteorService {
 
         // 기존 관심있는 유성우를 삭제합니다.
         meteorInterestRepository.findByMemberId(memberId).ifPresent(meteorInterestRepository::delete);
-
+        meteorInterestRepository.flush();
         // 새로운 관심있는 유성우를 등록합니다.
         if (countryId != null) {
             Country newCountry = countryRepository.findById(countryId)
@@ -91,9 +93,4 @@ public class MeteorService {
             meteorInterestRepository.save(meteorInterest);
         }
     }
-
-
-
-
-
 }

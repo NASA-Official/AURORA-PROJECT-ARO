@@ -222,6 +222,7 @@ public class StampService {
 
     public List<StampDTO> findAllStampdetail(String nationName) {
         Long memberId = jwtService.getUserIdFromJWT();
+        log.debug("****************************" + memberId);
         List<Attraction> stampLists = attractionRepository.findByNation(nationName);
         List<StampDTO> stampDTOS = new ArrayList<>();
         String auth = "";

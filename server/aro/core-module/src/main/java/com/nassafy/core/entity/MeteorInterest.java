@@ -1,6 +1,7 @@
 package com.nassafy.core.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,4 +24,11 @@ public class MeteorInterest {
     @OneToOne
     @JoinColumn(name = "country_id")
     private Country country;
+
+    @Builder
+    public MeteorInterest(Long id, Member member, Country country) {
+        this.id = id;
+        this.member = member;
+        this.country = country;
+    }
 }
