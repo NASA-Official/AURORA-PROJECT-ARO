@@ -1,5 +1,6 @@
 package com.nassafy.core.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,6 +26,14 @@ public class Meteor {
     private String predictDate;
 
     private String constellation;
-
+    @Builder
+    public Meteor(Long id, String nation, String meteorName, String meteorOriginalName, String predictDate, String constellation) {
+        this.id = id;
+        this.nation = nation;
+        this.meteorName = meteorName;
+        this.meteorOriginalName = meteorOriginalName;
+        this.predictDate = predictDate;
+        this.constellation = constellation;
+    }
 }
 
