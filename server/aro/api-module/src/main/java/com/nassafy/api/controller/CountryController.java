@@ -1,5 +1,6 @@
 package com.nassafy.api.controller;
 
+import com.nassafy.api.dto.req.CountryDTO;
 import com.nassafy.api.dto.res.CountryInterestDTO;
 import com.nassafy.api.service.CountryService;
 import com.nassafy.core.entity.Country;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,9 +25,14 @@ public class CountryController {
 
     // 80번 Api
     @GetMapping("/signup")
-    public ResponseEntity<List<Country>> getNationsSignup(){
+    public ResponseEntity<List<CountryDTO>> getNationsSignup(){
         List<Country> countryList = countryRepository.findAll();
-        return ResponseEntity.ok(countryList);
+        List<CountryDTO> countryDTOS = new ArrayList<>();
+        for (Country country : countryList) {
+            CountryDTO countryDTO = new CountryDTO(country.getCountryId(), country.getCountry(), country.getCountryEmoji());
+            countryDTOS.add(countryDTO);
+        }
+        return ResponseEntity.ok(countryDTOS);
     }
 
     // 81번 Api

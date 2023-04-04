@@ -152,7 +152,7 @@ public class RegisterController {
     public ResponseEntity<Boolean> getCloudDisplay(){
         Long memberId = jwtService.getUserIdFromJWT();
         Member member = memberRepository.findById(memberId).get();
-        return ResponseEntity.ok(member.isCroudDisplay());
+        return ResponseEntity.ok(member.isCloudDisplay());
     }
 
     /**
