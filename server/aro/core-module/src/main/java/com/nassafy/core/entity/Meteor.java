@@ -26,7 +26,5 @@ public class Meteor {
 
     private String constellation;
 
-    private String detailImage;
-
 }
 

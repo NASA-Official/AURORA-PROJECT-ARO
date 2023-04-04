@@ -1,6 +1,7 @@
 package com.nassafy.core.respository;
 
 import com.nassafy.core.entity.Interest;
+import com.nassafy.core.entity.Member;
 import com.nassafy.core.entity.MeteorInterest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

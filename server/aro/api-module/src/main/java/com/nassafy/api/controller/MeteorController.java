@@ -1,5 +1,6 @@
 package com.nassafy.api.controller;
 
+import com.nassafy.api.dto.req.CountryIdRequest;
 import com.nassafy.api.dto.res.MeteorDTO;
 import com.nassafy.api.service.JwtService;
 import com.nassafy.api.service.MeteorService;
@@ -28,9 +29,10 @@ public class MeteorController {
 
     // 83번 Api
     @PostMapping("")
-    private ResponseEntity<String> postInterestMeteor(@RequestBody Long countryId) {
+    public ResponseEntity<String> postInterestMeteor(@RequestBody CountryIdRequest countryIdRequest) {
         Long memberId = jwtService.getUserIdFromJWT();
-        meteorService.postInterestMeteor(memberId, countryId);
+        meteorService.postInterestMeteor(memberId, countryIdRequest.getCountryId());
         return ResponseEntity.ok("ok");
     }
+
 }
