@@ -126,7 +126,7 @@ public class FCMScheduler {
                 sendMessageTo(
                         member.getFcmToken(),
                         "Aro",
-                        "" +
+                        " " +
                         sb.toString()
                 );
 
