@@ -50,7 +50,7 @@ jwt:
 fcm :
   key :
     scope : https://www.googleapis.com/auth/cloud-platform
-#
+
     path : nassafy-push-test-firebase-adminsdk-tsno6-c5364d0263.json
   api_url : https://fcm.googleapis.com/v1/projects/nassafy-push-test/messages:send
   fcm_token : ejVFij7mTwqxt6Z2tO2q-O:APA91bGhCQtXGmonPI6T3aB0CF2peRsxXJpE28PKgehZ6zw13FcWqSg3YlvtSbFkbv3gb7Zt2p7LKhQStOA10dWbiogMW8M_ZWV2IdiNeyNq7_OV-KrIPOKTRQI3QlcYmsB3lWRgAGwk
