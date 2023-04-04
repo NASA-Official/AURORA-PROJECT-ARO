@@ -1,13 +1,10 @@
 package com.nassafy.api.controller;
 import com.nassafy.api.dto.req.AttractionInterest;
-import com.nassafy.api.dto.req.AttractionInterestOrNotDTO;
 import com.nassafy.api.dto.req.InterestListDTO;
-import com.nassafy.api.dto.res.InterestProbabiliyResDTO;
 import com.nassafy.api.service.InterestService;
 import com.nassafy.api.service.JwtService;
-import com.nassafy.api.service.MemberService;
+import com.nassafy.core.DTO.InterestProbabilityDTO;
 import com.nassafy.core.entity.Interest;
-import com.nassafy.core.entity.Member;
 import com.nassafy.core.respository.InterestRepository;
 import com.nassafy.core.respository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -79,17 +75,4 @@ public class InteresetController {
         }
     }
 
-    @GetMapping("/probability/{attractionId}/{date}/{time}")
-    public ResponseEntity<InterestProbabiliyResDTO> getProbability(@PathVariable Long attractionId, @PathVariable String date, @PathVariable int time) {
-        String[] dates = date.split("-");
-        LocalDateTime dateTime = LocalDateTime.of(Integer.parseInt(dates[0]), Integer.parseInt(dates[1]), Integer.parseInt(dates[2]), time, 0);
-
-        try {
-            InterestProbabiliyResDTO reseult = interestService.getProbability(attractionId, dateTime);
-            return new ResponseEntity<>(reseult, HttpStatus.OK);
-        } catch (Exception e) {
-            log.info(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
 }

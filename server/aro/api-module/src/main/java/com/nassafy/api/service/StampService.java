@@ -91,7 +91,7 @@ public class StampService {
         Stamp stamp = stampRepository.findByAttractionIdAndMemberId(attraction.getId(), member.getId()).orElseThrow(
                 () -> new EntityNotFoundException("스탬프가 없습니다.")
         );
-        StampDTO stampDTO = new StampDTO(attractionId, attraction.getAttractionName(), attraction.getDescription(),
+        StampDTO stampDTO = new StampDTO(attractionId, attraction.getAttractionName(), attraction.getAttractionOriginalName(), attraction.getDescription(),
                 stamp.getCertification(), attraction.getColorAuth(), attraction.getColorStamp(),
                 stamp.getCertificationDate() == null? null : stamp.getCertificationDate().toString());
         return stampDTO;
@@ -112,10 +112,6 @@ public class StampService {
         }
         return singupAttractionDTOS;
     }
-
-
-
-
 
     // 자동으로 데이터를 추가하는 로직 회원 가입 이후 로직에서 호출 됨
     @Transactional
@@ -236,7 +232,7 @@ public class StampService {
                 auth = attraction.getColorAuth();
             } else {
                 auth = attraction.getGrayAuth();
-            } stampDTOS.add(new StampDTO(attractionId, attraction.getAttractionName(), attraction.getDescription(),
+            } stampDTOS.add(new StampDTO(attractionId, attraction.getAttractionName(), attraction.getAttractionOriginalName(), attraction.getDescription(),
                     stamp.getCertification(), auth, attraction.getColorStamp(),
                     stamp.getCertificationDate() == null? null : stamp.getCertificationDate().toString()));
         } return stampDTOS;

@@ -1,39 +1,34 @@
 package com.nassafy.api.service;
 
-import com.amazonaws.services.kms.model.NotFoundException;
-import com.amazonaws.services.kms.model.NotFoundException;
 import com.nassafy.api.dto.req.AttractionInterest;
 import com.nassafy.api.dto.req.AttractionInterestOrNotDTO;
 import com.nassafy.api.dto.req.InterestListDTO;
-import com.nassafy.api.dto.res.InterestProbabiliyResDTO;
+import com.nassafy.core.DTO.InterestProbabilityDTO;
 import com.nassafy.core.entity.Attraction;
 import com.nassafy.core.entity.Interest;
 import com.nassafy.core.entity.Member;
-import com.nassafy.core.entity.Probability;
 import com.nassafy.core.respository.AttractionRepository;
 import com.nassafy.core.respository.InterestRepository;
 import com.nassafy.core.respository.MemberRepository;
 import com.nassafy.core.respository.ProbabilityRepository;
-import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class InterestService {
     private final InterestRepository interestRepository;
     private final MemberRepository memberRepository;
     private final AttractionRepository attractionRepository;
-    private final ProbabilityRepository probabilityRepository;
 
     /**
      * 41번 Api
@@ -142,10 +137,4 @@ public class InterestService {
         member.clearInterest();
     }
 
-    public InterestProbabiliyResDTO getProbability(Long attractionId, LocalDateTime dateTime) {
-        Attraction attraction = attractionRepository.findById(attractionId).orElseThrow(IllegalArgumentException::new);
-        Probability probability = probabilityRepository.findByAttractionIdAndDateTime(attractionId, dateTime).orElseThrow(IllegalArgumentException::new);
-
-        return InterestProbabiliyResDTO.builder().image(attraction.getImage()).prob(probability.getProb()).build();
-    }
 }
