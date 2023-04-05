@@ -77,7 +77,7 @@ public class AttractionRepository {
 
         Query query = em.createNativeQuery("SELECT attraction_name, main, prob FROM attraction JOIN interest ON interest.attraction_id = attraction.attraction_id AND interest.member_id = :memberId" +
                         " JOIN weather ON ABS(attraction.latitude - weather.latitude) <= 1e-2 AND ABS(attraction.longitude - weather.longitude) <= 1e-2 AND weather.date_time = :dateTime2" +
-                        " JOIN probability ON probability.attraction_id = attraction.attraction_id AND probability.date_time = :dateTime")
+                        " JOIN probability ON probability.attraction_id = attraction.attraction_id AND probability.date_time = :dateTime order by DESC prob")
                 .setParameter("dateTime", dateTime)
                 .setParameter("dateTime2", dateTime2)
                 .setParameter("memberId", memberId);
