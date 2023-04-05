@@ -72,12 +72,13 @@ public class AttractionRepository {
 
     public List<WeatherAndProbDTO> findWeatherAndProbList(LocalDateTime dateTime, Long memberId) {
         // weather는 3시간 단위라서 weather를 가지고 올 때는 3시간 단위로 변경
-        int hour = (int) Math.floor((double)dateTime.getHour() / 3) * 3;
+        int hour = (int) Math.ceil((double)dateTime.getHour() / 3) * 3;
         LocalDateTime dateTime2 = LocalDateTime.of(dateTime.getYear(), dateTime.getMonthValue(), dateTime.getDayOfMonth(), hour, 0);
 
         Query query = em.createNativeQuery("SELECT attraction_name, main, prob FROM attraction JOIN interest ON interest.attraction_id = attraction.attraction_id AND interest.member_id = :memberId" +
                         " JOIN weather ON ABS(attraction.latitude - weather.latitude) <= 1e-2 AND ABS(attraction.longitude - weather.longitude) <= 1e-2 AND weather.date_time = :dateTime2" +
-                        " JOIN probability ON probability.attraction_id = attraction.attraction_id AND probability.date_time = :dateTime")
+                        " JOIN probability ON probability.attraction_id = attraction.attraction_id AND probability.date_time = :dateTime" +
+                        " ORDER BY prob DESC")
                 .setParameter("dateTime", dateTime)
                 .setParameter("dateTime2", dateTime2)
                 .setParameter("memberId", memberId);

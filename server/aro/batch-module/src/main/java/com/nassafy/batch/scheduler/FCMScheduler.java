@@ -8,10 +8,9 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.gson.JsonParseException;
 import com.nassafy.batch.dto.notificcation.FcmMessage;
-import com.nassafy.core.entity.Interest;
-import com.nassafy.core.entity.Member;
-import com.nassafy.core.entity.Probability;
+import com.nassafy.core.entity.*;
 import com.nassafy.core.respository.MemberRepository;
+import com.nassafy.core.respository.MeteorRepository;
 import com.nassafy.core.respository.ProbabilityRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +26,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 @Slf4j
@@ -38,6 +43,7 @@ public class FCMScheduler {
     private static final Logger logger = LoggerFactory.getLogger(FCMScheduler.class);
 
     private final MemberRepository memberRepository;
+    private final MeteorRepository meteorRepository;
     private final ProbabilityRepository probabilityRepository;
     private final ObjectMapper objectMapper;
     private FirebaseApp firebaseApp;
@@ -78,7 +84,15 @@ public class FCMScheduler {
         }
     }
 
-    @Scheduled(cron = "0 0 0 * * ?")
+    int[] days = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+    public String pushDate(){
+
+
+        return "";
+    }
+
+    @Scheduled(cron = "0 12 * * * ?")
 //    @Scheduled(cron = "0/10 * * * * ?")
     @Transactional
     public void pushMessage() throws IOException {
@@ -86,14 +100,24 @@ public class FCMScheduler {
 
         StringBuilder sb;
         Probability maxProbability;
+
+        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+        LocalDateTime dateTime = LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(),0,0,0).minusDays(1);
+        String sdateTime
+                = dateTime.format(
+                DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        );
+
         // 1. 모든 유저에 대해서
         List<Member> members = memberRepository.findAll();
         for(Member member : members){
+            sb = new StringBuilder();
             maxProbability = null;
             // 2. 알람 여부 확인 및 FCM 토큰 확인
             if(!member.getAlarm() || member.getFcmToken() == null || member.getFcmToken().equals("")) continue;
             logger.info("member : " + member.getEmail() + ", " + member.getNickname());
 
+            // 오로라
             // 3. 유저의 관심지역에 대해서
             for(Interest interest : member.getInterests()){
                 Long attrectionId = interest.getAttraction().getId();
@@ -107,31 +131,43 @@ public class FCMScheduler {
                     }
                 }
             }
-
+            sb.append(member.getNickname()).append("님! ");
             if(maxProbability != null && maxProbability.getProb() >= pivot){
-                sb  = new StringBuilder();
 
                 String[] date = maxProbability.getDateTime().toString().split("-");
                 int month = Integer.parseInt(date[1]);
                 int day = Integer.parseInt(date[2].substring(0, 2));
-                sb.append(member.getNickname()).append("님! ")
-                        .append(maxProbability.getAttraction().getAttractionName()).append("에서 ")
+                        sb.append(maxProbability.getAttraction().getAttractionName()).append("에서 ")
                         .append(month).append("월 ")
-                        .append(day).append("일에 오로라를 볼 수 있을것 같아요!");
-
-                log.info("pushMessage - maxProbability");
-                log.info(maxProbability.toString());
-                log.info("pushMessage - getFcmToken : " + member.getFcmToken());
-                log.info("pushMessage : " + sb.toString());
-                sendMessageTo(
-                        member.getFcmToken(),
-                        "Aro",
-                        " " +
-                        sb.toString()
-                );
-
+                        .append(day).append("일에 오로라를 볼 수 있을것 같아요!\n");
 
             }
+
+            // 유성우
+            logger.info("Meteor");
+            MeteorInterest meteorInterest = member.getMeteorInterest();
+            // 3. 유저의 관심국가에 대해서
+            if(meteorInterest != null){
+                Country country = meteorInterest.getCountry();
+                String nation = country.getCountry();
+
+                List<Meteor> meteorList = meteorRepository.findByNation(nation);
+                sb.append("내일 관측할 수 있는 별자리에요!\n");
+                for(Meteor meteor : meteorList){
+                    if(meteor.getPredictDate().equals(sdateTime)){
+                        sb.append(meteor.getConstellation() + ", ");
+                    }
+                }
+                sb.deleteCharAt(sb.length()-1);
+            }
+
+            log.info("pushMessage : " + sb.toString());
+            sendMessageTo(
+                    member.getFcmToken(),
+                    "Aro",
+                    " " +
+                            sb.toString()
+            );
 
         }
 
