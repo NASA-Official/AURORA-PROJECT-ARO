@@ -84,12 +84,13 @@ public class MeteorService {
      */
     public void postInterestMeteor(Long memberId, Long countryId) {
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 멤버 ID입니다"));
-
         // 기존 관심있는 유성우를 삭제합니다.
         meteorInterestRepository.findByMemberId(memberId).ifPresent(meteorInterestRepository::delete);
         meteorInterestRepository.flush();
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 멤버 ID입니다"));
+
         // 새로운 관심있는 유성우를 등록합니다.
         if (countryId != null) {
             Country newCountry = countryRepository.findById(countryId)
