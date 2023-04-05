@@ -12,10 +12,10 @@ import com.nassafy.core.respository.MeteorInterestRepository;
 import com.nassafy.core.respository.MeteorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,26 +33,38 @@ public class MeteorService {
 
     private final MemberRepository memberRepository;
 
-    private final JwtService jwtService;
-
     /**
      * 82번 Api
+     * 유성우 서비스를 등록 X: BAD_REQUEST
+     * 유성우 서비스를 등록 O && 관심 국가 등록 X: null -> Ok
+     * 유성우 서비스를 등록 O && 관심 국가 등록 O: MeteorDTO
      * @return meteorDTO 국가명, List<유성우 명소 관련 정보>
      */
     public MeteorDTO getInterestMeteor(Long memberId) {
-        log.debug("test: " + jwtService.getUserIdFromJWT());
-//        Long memberId = jwtService.getUserIdFromJWT();
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("Member not found for member ID: " + memberId));
+
         MeteorInterest meteorInterest = meteorInterestRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new EntityNotFoundException("Meteor interest not found for member ID: " + memberId));
-        log.info("***********************************************" + meteorInterest);
+                .orElse(null);
+
+        if (meteorInterest == null) {
+            // 유성우 서비스를 등록 O && 관심 국가 등록 X: null
+            if (member.getMeteorService()) {
+                log.warn("Meteor interest not found for member ID: " + memberId);
+                return null;
+            }
+            // 유성우 서비스를 등록 X: BAD_REQUEST
+            else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Please register the meteor service.");
+            }
+        }
+
         Country country = meteorInterest.getCountry();
         if (country == null) {
             throw new EntityNotFoundException("Country not found for meteor interest ID: " + meteorInterest.getId());
         }
         String countryName = country.getCountry();
-        log.info("***********************************************" + countryName);
         List<Meteor> meteorList = meteorRepository.findByNation(countryName);
-        log.info("***********************************************" + meteorList);
         List<MeteorInformationDTO> meteorInformationDTOS = new ArrayList<>();
         for (Meteor meteor : meteorList) {
             String constellation = meteor.getConstellation();
