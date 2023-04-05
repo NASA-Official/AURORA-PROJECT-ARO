@@ -27,6 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
@@ -84,33 +87,9 @@ public class FCMScheduler {
     int[] days = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
     public String pushDate(){
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Date now = new Date();
 
-        log.info("pushMessage - currentTime : " + format.format(now));
 
-        String[] now_dt = format.format(now).split("-");
-        String now_Year = now_dt[0];
-        String now_Month = now_dt[1];
-        String now_Day = now_dt[2];
-
-        int iMonth = Integer.parseInt(now_Month);
-        int iDay = Integer.parseInt(now_Day);
-        if(iDay == days[iMonth]){
-            ++iMonth;
-            iDay = 1;
-        }else{
-            ++iDay;
-        }
-
-        if(iMonth == 13){
-            iMonth = 1;
-        }
-
-        if(iMonth < 10) now_Month = "0" + iMonth;
-        if(iDay < 10) now_Day = "0" + iDay;
-
-        return now_Year +"-" + now_Month + "-" + now_Day;
+        return "";
     }
 
     @Scheduled(cron = "0 12 * * * ?")
@@ -119,16 +98,20 @@ public class FCMScheduler {
     public void pushMessage() throws IOException {
         log.info("pushMessage - scheduler ");
 
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb;
         Probability maxProbability;
-        List<String> meteors = new LinkedList<>();
 
-        String pushDate = pushDate();
-        log.info("pushMessage - pushTime : " + pushDate);
+        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+        LocalDateTime dateTime = LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(),0,0,0).minusDays(1);
+        String sdateTime
+                = dateTime.format(
+                DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        );
 
         // 1. 모든 유저에 대해서
         List<Member> members = memberRepository.findAll();
         for(Member member : members){
+            sb = new StringBuilder();
             maxProbability = null;
             // 2. 알람 여부 확인 및 FCM 토큰 확인
             if(!member.getAlarm() || member.getFcmToken() == null || member.getFcmToken().equals("")) continue;
@@ -159,38 +142,39 @@ public class FCMScheduler {
                 sb.append(member.getNickname()).append("님! ")
                         .append(maxProbability.getAttraction().getAttractionName()).append("에서 ")
                         .append(month).append("월 ")
-                        .append(day).append("일에 오로라를 볼 수 있을것 같아요!");
+                        .append(day).append("일에 오로라를 볼 수 있을것 같아요!\n");
 
                 log.info("pushMessage - maxProbability");
                 log.info(maxProbability.toString());
                 log.info("pushMessage - getFcmToken : " + member.getFcmToken());
                 log.info("pushMessage : " + sb.toString());
 
-
             }
 
             // 유성우
             logger.info("Meteor");
             MeteorInterest meteorInterest = member.getMeteorInterest();
+            // 3. 유저의 관심국가에 대해서
             if(meteorInterest != null){
                 Country country = meteorInterest.getCountry();
                 String nation = country.getCountry();
 
                 List<Meteor> meteorList = meteorRepository.findByNation(nation);
-
+                sb.append("내일 관측할 수 있는 별자리에요!\n");
                 for(Meteor meteor : meteorList){
-                    log.info("meteor : " + meteor.getMeteorName() + ",  "+ meteor.getPredictDate());
+                    if(meteor.getPredictDate().equals(sdateTime)){
+                        sb.append(meteor.getConstellation() + ", ");
+                    }
                 }
+                sb.deleteCharAt(sb.length()-1);
             }
 
-
-
-//            sendMessageTo(
-//                    member.getFcmToken(),
-//                    "Aro",
-//                    " " +
-//                            sb.toString()
-//            );
+            sendMessageTo(
+                    member.getFcmToken(),
+                    "Aro",
+                    " " +
+                            sb.toString()
+            );
 
         }
 
