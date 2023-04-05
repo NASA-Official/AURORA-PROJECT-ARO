@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -68,7 +69,6 @@ public class ForecastService {
         }
 
         List<WeatherAndProbDTO> weatherAndProbList = attractionRepository.findWeatherAndProbList(dateTime, memberId);
-
         return ForecastAndInterestResDTO.builder().probs(weatherAndProbList).kps(kps).build();
     }
 
