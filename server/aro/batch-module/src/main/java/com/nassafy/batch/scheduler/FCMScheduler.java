@@ -78,7 +78,7 @@ public class FCMScheduler {
         }
     }
 
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 12 * * * ?")
 //    @Scheduled(cron = "0/10 * * * * ?")
     @Transactional
     public void pushMessage() throws IOException {
