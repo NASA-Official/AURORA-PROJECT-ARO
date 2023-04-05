@@ -18,10 +18,10 @@ public class MeteorInterest {
     @Column(name = "meteor_interest_id")
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id")
     private Country country;
 
