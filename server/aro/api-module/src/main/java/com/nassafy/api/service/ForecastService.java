@@ -69,7 +69,6 @@ public class ForecastService {
         }
 
         List<WeatherAndProbDTO> weatherAndProbList = attractionRepository.findWeatherAndProbList(dateTime, memberId);
-        Collections.sort(weatherAndProbList, Collections.reverseOrder());
         return ForecastAndInterestResDTO.builder().probs(weatherAndProbList).kps(kps).build();
     }
 
