@@ -8,10 +8,9 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.gson.JsonParseException;
 import com.nassafy.batch.dto.notificcation.FcmMessage;
-import com.nassafy.core.entity.Interest;
-import com.nassafy.core.entity.Member;
-import com.nassafy.core.entity.Probability;
+import com.nassafy.core.entity.*;
 import com.nassafy.core.respository.MemberRepository;
+import com.nassafy.core.respository.MeteorRepository;
 import com.nassafy.core.respository.ProbabilityRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +26,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 @Slf4j
@@ -38,6 +40,7 @@ public class FCMScheduler {
     private static final Logger logger = LoggerFactory.getLogger(FCMScheduler.class);
 
     private final MemberRepository memberRepository;
+    private final MeteorRepository meteorRepository;
     private final ProbabilityRepository probabilityRepository;
     private final ObjectMapper objectMapper;
     private FirebaseApp firebaseApp;
@@ -78,14 +81,51 @@ public class FCMScheduler {
         }
     }
 
+    int[] days = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+    public String pushDate(){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date now = new Date();
+
+        log.info("pushMessage - currentTime : " + format.format(now));
+
+        String[] now_dt = format.format(now).split("-");
+        String now_Year = now_dt[0];
+        String now_Month = now_dt[1];
+        String now_Day = now_dt[2];
+
+        int iMonth = Integer.parseInt(now_Month);
+        int iDay = Integer.parseInt(now_Day);
+        if(iDay == days[iMonth]){
+            ++iMonth;
+            iDay = 1;
+        }else{
+            ++iDay;
+        }
+
+        if(iMonth == 13){
+            iMonth = 1;
+        }
+
+        if(iMonth < 10) now_Month = "0" + iMonth;
+        if(iDay < 10) now_Day = "0" + iDay;
+
+        return now_Year +"-" + now_Month + "-" + now_Day;
+    }
+
     @Scheduled(cron = "0 12 * * * ?")
 //    @Scheduled(cron = "0/10 * * * * ?")
     @Transactional
     public void pushMessage() throws IOException {
         log.info("pushMessage - scheduler ");
 
-        StringBuilder sb;
+        StringBuilder sb = new StringBuilder();
         Probability maxProbability;
+        List<String> meteors = new LinkedList<>();
+
+        String pushDate = pushDate();
+        log.info("pushMessage - pushTime : " + pushDate);
+
         // 1. 모든 유저에 대해서
         List<Member> members = memberRepository.findAll();
         for(Member member : members){
@@ -94,6 +134,7 @@ public class FCMScheduler {
             if(!member.getAlarm() || member.getFcmToken() == null || member.getFcmToken().equals("")) continue;
             logger.info("member : " + member.getEmail() + ", " + member.getNickname());
 
+            // 오로라
             // 3. 유저의 관심지역에 대해서
             for(Interest interest : member.getInterests()){
                 Long attrectionId = interest.getAttraction().getId();
@@ -109,9 +150,10 @@ public class FCMScheduler {
             }
 
             if(maxProbability != null && maxProbability.getProb() >= pivot){
-                sb  = new StringBuilder();
+
 
                 String[] date = maxProbability.getDateTime().toString().split("-");
+
                 int month = Integer.parseInt(date[1]);
                 int day = Integer.parseInt(date[2].substring(0, 2));
                 sb.append(member.getNickname()).append("님! ")
@@ -123,15 +165,32 @@ public class FCMScheduler {
                 log.info(maxProbability.toString());
                 log.info("pushMessage - getFcmToken : " + member.getFcmToken());
                 log.info("pushMessage : " + sb.toString());
-                sendMessageTo(
-                        member.getFcmToken(),
-                        "Aro",
-                        " " +
-                        sb.toString()
-                );
 
 
             }
+
+            // 유성우
+            logger.info("Meteor");
+            MeteorInterest meteorInterest = member.getMeteorInterest();
+            if(meteorInterest != null){
+                Country country = meteorInterest.getCountry();
+                String nation = country.getCountry();
+
+                List<Meteor> meteorList = meteorRepository.findByNation(nation);
+
+                for(Meteor meteor : meteorList){
+                    log.info("meteor : " + meteor.getMeteorName() + ",  "+ meteor.getPredictDate());
+                }
+            }
+
+
+
+//            sendMessageTo(
+//                    member.getFcmToken(),
+//                    "Aro",
+//                    " " +
+//                            sb.toString()
+//            );
 
         }
 
