@@ -2,27 +2,37 @@ package com.nassafy.batch.config;
 
 
 import com.nassafy.batch.service.OpenWeatherMapService;
+import com.nassafy.core.entity.Forecast;
 import com.nassafy.core.entity.Weather;
 import com.nassafy.core.respository.WeatherRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.rosuda.REngine.RList;
+import org.rosuda.REngine.Rserve.RConnection;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.JobScope;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.StepContribution;
+import org.springframework.batch.core.configuration.annotation.*;
+import org.springframework.batch.core.scope.context.ChunkContext;
+import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.support.ListItemReader;
+import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableBatchProcessing
+@Slf4j
 public class WeatherBatchConfig {
     @Autowired
     private WeatherRepository weatherRepository;
@@ -80,6 +90,7 @@ public class WeatherBatchConfig {
     public Job weatherJob() {
         return jobBuilderFactory.get("weatherJob")
                 .start(weatherStep())
+                .next(appendTimeStep())
                 .build();
     }
 
@@ -114,6 +125,40 @@ public class WeatherBatchConfig {
                 for (Weather weather : weatherData) {
                     weatherRepository.save(weather);
                 }
+            }
+        };
+    }
+
+    public Step appendTimeStep() {
+        log.info("********** This is appendTimeStep");
+        return stepBuilderFactory.get("appendTimeStep")
+                .tasklet(appendTime(null))
+                .build();
+    }
+
+
+    /*
+    *
+    * 날씨 데이터가 현재부터 들어오는 것이 아니라, 현재로부터 3시간 후 시간부터 들어오기 때문에,
+    * 가장 빠른 시간에서 3시간 이전 데이터를 추가로 넣어줍니다.
+    *
+     */
+    @Bean
+    @StepScope
+    public Tasklet appendTime(@Value("#{jobParameters[time]}") String time) {
+        return new Tasklet() {
+            @Override
+            public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+                List<Weather> weathers = weatherRepository.findMinDateTime();
+                List<Weather> newWeatherList = new ArrayList<>();
+                for (Weather weather: weathers) {
+                    Weather weather1 = Weather.builder().main(weather.getMain()).clouds(weather.getClouds()).latitude(weather.getLatitude())
+                            .longitude(weather.getLongitude()).visibility(weather.getVisibility())
+                            .dateTime(weather.getDateTime().minusHours(3)).build();
+                    newWeatherList.add(weather1);
+                }
+                weatherRepository.saveAll(newWeatherList);
+                return RepeatStatus.FINISHED;
             }
         };
     }
