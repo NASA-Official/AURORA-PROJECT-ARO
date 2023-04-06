@@ -121,7 +121,7 @@ public class ThreeDaysPredictJopConfig {
 
                     for (int i = 0; i < 72; i++) {
                         datetime = datetime.plusHours(1);
-                        Forecast forecast = Forecast.builder().kp((float) predictKp[i]).dateTime(datetime).build();
+                        Forecast forecast = Forecast.builder().kp((float) (predictKp[i] * predictKp[i] * 0.5 * predictKp[i])).dateTime(datetime).build();
                         forecasts.add(forecast);
                     }
 
@@ -129,7 +129,7 @@ public class ThreeDaysPredictJopConfig {
                     if (append) {
                         for (int i = 0; i < 3; i ++) {
                             datetime = datetime.plusHours(1);
-                            Forecast forecast = Forecast.builder().kp((float) predictKp[predictKp.length -1]).dateTime(datetime).build();
+                            Forecast forecast = Forecast.builder().kp((float) (predictKp[predictKp.length -1] * predictKp[predictKp.length -1] * 0.5 * predictKp[predictKp.length -1])).dateTime(datetime).build();
                             forecasts.add(forecast);
                         }
                     }
