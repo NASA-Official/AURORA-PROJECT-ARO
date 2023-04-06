@@ -93,7 +93,7 @@ public class FCMScheduler {
         Probability maxProbability;
 
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        LocalDateTime dateTime = LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(),0,0,0).minusDays(1);
+        LocalDateTime dateTime = LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(),0,0,0).plusDays(1);
         String sdateTime
                 = dateTime.format(
                 DateTimeFormatter.ofPattern("yyyy-MM-dd")
