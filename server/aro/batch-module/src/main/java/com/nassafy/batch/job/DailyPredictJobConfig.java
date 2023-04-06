@@ -112,7 +112,7 @@ public class DailyPredictJobConfig {
                             try {
                                 Forecast forecast = forecastRepository.findByDateTime(datetime)
                                         .orElseThrow(IllegalArgumentException::new);
-                                forecast.updateKp((float) (predictKp[i] * predictKp[i] * 0.5 * predictKp[i]));
+                                forecast.updateKp((float) predictKp[i]);
                                 forecastRepository.save(forecast);
                                 cnt += 1;
                             } catch (Exception e) {
