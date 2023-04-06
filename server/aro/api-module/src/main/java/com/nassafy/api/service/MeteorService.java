@@ -51,7 +51,7 @@ public class MeteorService {
             // 유성우 서비스를 등록 O && 관심 국가 등록 X: null
             if (member.getMeteorService()) {
                 log.warn("Meteor interest not found for member ID: " + memberId);
-                return null;
+                return new MeteorDTO("", new ArrayList<>());
             }
             // 유성우 서비스를 등록 X: BAD_REQUEST
             else {
