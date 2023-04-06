@@ -131,6 +131,7 @@ public class MemberController {
      * @param signupReqDto
      * @return
      */
+    @Transactional
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody SignupReqDto signupReqDto) {
         logger.debug("\t Start singup");
