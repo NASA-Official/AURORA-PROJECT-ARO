@@ -122,7 +122,7 @@ public class FCMScheduler {
                     }
                 }
             }
-            sb.append(member.getNickname()).append("님! ");
+//            sb.append(member.getNickname()).append("님! ");
             if(maxProbability != null && maxProbability.getProb() >= pivot){
 
                 String[] date = maxProbability.getDateTime().toString().split("-");
@@ -154,7 +154,7 @@ public class FCMScheduler {
             log.info("pushMessage : " + sb.toString());
             sendMessageTo(
                     member.getFcmToken(),
-                    "Aro",
+                    member.getNickname() + "님!",
                     " " +
                             sb.toString()
             );
