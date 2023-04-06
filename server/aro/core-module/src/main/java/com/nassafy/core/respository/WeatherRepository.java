@@ -14,4 +14,7 @@ import java.util.List;
 @Repository
 public interface WeatherRepository extends JpaRepository<Weather, Long> {
     List<Weather> findAll(Sort sort);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM weather WHERE date_time = (SELECT MIN(date_time) FROM weather)")
+    List<Weather> findMinDateTime();
 }
