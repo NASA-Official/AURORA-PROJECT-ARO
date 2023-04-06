@@ -88,7 +88,7 @@ public class Member implements UserDetails {
         this.meteorInterest = null;
     }
 
-
+    public boolean getCloud(){ return this.cloudDisplay;}
     public boolean getAlarm(){
         return this.alarm;
     }
