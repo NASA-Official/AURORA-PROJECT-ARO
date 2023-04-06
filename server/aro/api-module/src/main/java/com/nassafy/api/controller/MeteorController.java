@@ -4,9 +4,12 @@ import com.nassafy.api.dto.req.CountryIdRequest;
 import com.nassafy.api.dto.res.MeteorDTO;
 import com.nassafy.api.service.JwtService;
 import com.nassafy.api.service.MeteorService;
+import com.nassafy.core.entity.Member;
+import com.nassafy.core.respository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,23 +21,27 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class MeteorController {
-    @Autowired
+
     private final MeteorService meteorService;
 
-    @Autowired
     private final JwtService jwtService;
 
 
     // 82번 Api
     // 관심 국가 유성우 리스트 보여주기
     @GetMapping("")
-    public ResponseEntity<?> getInterestMeteor() {
+    public ResponseEntity<MeteorDTO> getInterestMeteor() {
         log.debug("getInterestMeteor");
         Long memberId = jwtService.getUserIdFromJWT();
         log.debug("******************************" + memberId);
+
         MeteorDTO meteorDTO = meteorService.getInterestMeteor(memberId);
+        if (meteorDTO == null) {
+            return new ResponseEntity<>(new MeteorDTO(), HttpStatus.OK);
+        }
         return ResponseEntity.ok(meteorDTO);
     }
+
 
     // 83번 Api22
     @PostMapping("")
