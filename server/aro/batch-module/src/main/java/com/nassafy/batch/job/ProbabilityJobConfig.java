@@ -89,7 +89,7 @@ public class ProbabilityJobConfig {
                     Float kp = forecast.getKp();
 
                     for (Weather weather : weatherList) {
-                        LocalDateTime weatherDateTime = weather.getDateTime();
+                        LocalDateTime weatherDateTime = weather.getDateTime().minusHours(1);
 
                         // weather의 시간이 forecast의 시간보다 3시간 이상 크면 break
                         if (weatherDateTime.isAfter(forecastDateTime.plusHours(3))) {
