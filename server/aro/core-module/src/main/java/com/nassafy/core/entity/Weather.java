@@ -1,5 +1,6 @@
 package com.nassafy.core.entity;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,4 +28,14 @@ public class Weather {
     private String main;
     private Integer clouds;
     private Integer visibility;
+
+    @Builder
+    public Weather(LocalDateTime dateTime, Float latitude, Float longitude, String main, Integer clouds, Integer visibility) {
+        this.dateTime = dateTime;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.main = main;
+        this.clouds = clouds;
+        this.visibility = visibility;
+    }
 }
