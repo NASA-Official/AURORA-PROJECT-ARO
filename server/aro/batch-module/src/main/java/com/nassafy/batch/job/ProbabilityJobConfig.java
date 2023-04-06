@@ -75,7 +75,7 @@ public class ProbabilityJobConfig {
 
 
                 List<Attraction> attractionList = attractionRepository.findAll();
-                //  kp 불러온다. 날짜를 기준으로 정렬한다.
+                //  kp 불러온다. 시간을 기준으로 정렬한다.
                 List<Forecast> forecasts = forecastRepository.findAll(Sort.by(Sort.Direction.ASC, "dateTime"));
                 // 날씨를 불러온다. 시간을 기준으로 정렬한다.
                 List<Weather> weatherList = weatherRepository.findAll(Sort.by(Sort.Direction.ASC, "dateTime"));
