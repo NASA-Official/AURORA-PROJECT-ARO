@@ -43,6 +43,7 @@ public class MemberService {
                 .meteorService(signupReqDto.isMeteorService())
                 .alarm(true)
                 .auroraDisplay(true)
+                .cloudDisplay(true)
                 .refreshToken(null)
                 .build();
 
