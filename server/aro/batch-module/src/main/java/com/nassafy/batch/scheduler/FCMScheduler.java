@@ -84,16 +84,7 @@ public class FCMScheduler {
         }
     }
 
-    int[] days = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-
-    public String pushDate(){
-
-
-        return "";
-    }
-
-    @Scheduled(cron = "0 12 * * * ?")
-//    @Scheduled(cron = "0/10 * * * * ?")
+    @Scheduled(cron = "0 0 12 * * ?")
     @Transactional
     public void pushMessage() throws IOException {
         log.info("pushMessage - scheduler ");
@@ -140,7 +131,6 @@ public class FCMScheduler {
                         sb.append(maxProbability.getAttraction().getAttractionName()).append("에서 ")
                         .append(month).append("월 ")
                         .append(day).append("일에 오로라를 볼 수 있을것 같아요!\n");
-
             }
 
             // 유성우
@@ -155,7 +145,7 @@ public class FCMScheduler {
                 sb.append("내일 관측할 수 있는 별자리에요!\n");
                 for(Meteor meteor : meteorList){
                     if(meteor.getPredictDate().equals(sdateTime)){
-                        sb.append(meteor.getConstellation() + ", ");
+                        sb.append(" ").append(meteor.getConstellation() + ",");
                     }
                 }
                 sb.deleteCharAt(sb.length()-1);
