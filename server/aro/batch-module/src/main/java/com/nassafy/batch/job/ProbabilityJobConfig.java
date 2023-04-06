@@ -73,7 +73,7 @@ public class ProbabilityJobConfig {
                 log.info("*****************This is ProbabilityTasklet");
                 probabilityRepository.deleteAllInBatch();
 
-                // 지역을 불러온다
+
                 List<Attraction> attractionList = attractionRepository.findAll();
                 //  kp 불러온다. 날짜를 기준으로 정렬한다.
                 List<Forecast> forecasts = forecastRepository.findAll(Sort.by(Sort.Direction.ASC, "dateTime"));
