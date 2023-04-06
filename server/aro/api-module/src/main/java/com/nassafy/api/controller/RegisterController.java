@@ -54,6 +54,7 @@ public class RegisterController {
             // 메테오 서비스가 추가 되면 메테오 명소 지우는 로직도 추가 되어야 합니다.
             if (!member.getMeteorService()) {
                 meteorInterestRepository.deleteByMemberId(memberId);
+                meteorInterestRepository.flush();
             }
         }
         memberRepository.save(member);
