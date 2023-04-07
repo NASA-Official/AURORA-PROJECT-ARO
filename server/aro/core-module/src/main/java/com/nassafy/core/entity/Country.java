@@ -15,8 +15,8 @@ public class Country {
     private Long countryId;
     private String country;
     private String countryEmoji;
-
-    @OneToOne(mappedBy = "country", cascade = {CascadeType.REMOVE})
+    
+    @OneToOne(mappedBy = "country", cascade = {CascadeType.REMOVE}, orphanRemoval = true)
     private MeteorInterest meteorInterest;
 
     public Country(Long countryId, String country, String countryEmoji) {
