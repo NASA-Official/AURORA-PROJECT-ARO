@@ -334,26 +334,9 @@ SSAFY 8기 2학기 공통프로젝트 - ARO
 
 ### BackEnd
 
-- 이찬석
-  - ERD 설계
-  - JWT 기반 자체 로그인 구현
-    - 이메일 인증
-  - 소셜 로그인 구현
-    - Naver / Github
-  - 회원 관리
-  - FCM알림
-- 고청천
-  - API 설계
-  - API 개발
-  - Spring batch
-    - weather API 데이터베이스화
-    - 오로라 확률 산정
-- 이민지
-  - 아키텍처 설계
-  - AWS, Docker, Jenkins기반 서버 및 CI/CD 구축
-  - S3를 통한 이미지 저장 및 삭제 API 개발
-  - KP 및 확률 관련 API 개발
-  - Spring batch - R 데이터 분석 결과 데이터베이스화
+![backend_member_image](https://user-images.githubusercontent.com/74912130/230780397-245767eb-74a1-456f-b93e-66c6db747e19.png)
+
+
 
 ## 📱 시연 시나리오
 
