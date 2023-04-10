@@ -334,7 +334,7 @@ SSAFY 8기 2학기 공통프로젝트 - ARO
 
 ### BackEnd
 
-![backend_member_image](https://user-images.githubusercontent.com/74912130/230780397-245767eb-74a1-456f-b93e-66c6db747e19.png)
+![35](https://user-images.githubusercontent.com/74912130/230803822-c2d8cbe4-3ef4-41a4-ab59-e2ea2adf456b.jpg)
 
 
 
