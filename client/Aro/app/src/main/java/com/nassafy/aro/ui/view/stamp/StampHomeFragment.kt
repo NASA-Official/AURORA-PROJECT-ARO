@@ -1,4 +1,4 @@
-package com.nassafy.aro.UI.view.stamp
+package com.nassafy.aro.ui.view.stamp
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
