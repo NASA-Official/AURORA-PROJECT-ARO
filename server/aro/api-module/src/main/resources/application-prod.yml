@@ -34,7 +34,7 @@ spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://database:3306/nassafy
-    username: root
+    username: aro
     password: ssafy1234!
 
   jpa:
@@ -56,8 +56,8 @@ spring:
     # Google smtp server 사용
     host: smtp.gmail.com
     port: 587
-    username: ckstjr93@gmail.com #앱 비밀번호 발급받은 google 계정
-    password: isemeuihjvftkkwx #발급받은 앱 비밀번호
+    username: aurora.aro106@gmail.com #앱 비밀번호 발급받은 google 계정
+    password: jrpvcuoinecdrljp #발급받은 앱 비밀번호
     properties:
       mail:
         smtp:
