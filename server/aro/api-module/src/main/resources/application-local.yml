@@ -59,7 +59,7 @@ spring:
             enable: true
           auth: true
   redis:
-    host: j8d106.p.ssafy.io
+    host: aurora-aro.com
     port: 6379
     password: ssafy1234!
 jwt:
