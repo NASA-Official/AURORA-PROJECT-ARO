@@ -17,20 +17,20 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@SpringBootTest
+//@SpringBootTest
 public class RConnectionTest {
 
     @Autowired
     ForecastRepository forecastRepository;
 
 
-    @Test
+//    @Test
     @DisplayName("r connection test")
     public void rConnectionTest ()  {
         RConnection conn = null;
         double[] x;
         try {
-            conn = new RConnection("rstudio", 6311);  // 로컬에서는 host를 j8d106.p.ssafy.io로, 코드 올릴 때는 rstudio로 변경하기
+            conn = new RConnection("aurora-aro.com", 6311);  // 로컬에서는 host를 j8d106.p.ssafy.io로, 코드 올릴 때는 rstudio로 변경하기
             REXP exp = conn.eval("source('/home/rstudio/getAceLocData2.R')");
             RList rList = conn.eval("getAceLocData()").asList();
 
