@@ -4,7 +4,7 @@ import android.net.Uri
 import com.nassafy.aro.BuildConfig
 
 const val BASE_URL = ""
-const val SERVER_URL = "https://j8d106.p.ssafy.io/"
+const val SERVER_URL = "https://aurora-aro.com/"
 const val WEATHER_URL = "https://api.openweathermap.org/data/2.5/"
 val githubLoginUri = Uri.Builder().scheme("https").authority("github.com")
     .appendPath("login")

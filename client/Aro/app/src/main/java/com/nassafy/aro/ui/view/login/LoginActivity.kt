@@ -5,19 +5,16 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.Navigation
-import com.nassafy.aro.R
 import com.nassafy.aro.databinding.ActivityLoginBinding
 import com.nassafy.aro.ui.view.login.viewmodel.LoginActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
-private const val TAG = "LoginActivity_싸피"
+private const val TAG = "LoginActivity_Young"
 
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
-
     lateinit var binding: ActivityLoginBinding
     private val loginActivityViewModel: LoginActivityViewModel by viewModels()
 
@@ -25,6 +22,8 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        Log.d(TAG, "onCreate: 여기는?")
 
         val uri = intent?.data
         // Oauth 로그인 인지 아닌지 확인
@@ -36,12 +35,6 @@ class LoginActivity : AppCompatActivity() {
             }
             else -> {}
         } // End of when
-    }
-
-    override fun startActivityForResult(intent: Intent, requestCode: Int) {
-        super.startActivityForResult(intent, requestCode)
-
-
     }
 
 

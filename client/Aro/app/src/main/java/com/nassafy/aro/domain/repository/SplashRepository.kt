@@ -1,5 +1,6 @@
 package com.nassafy.aro.domain.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nassafy.aro.domain.api.SplashApi
@@ -8,7 +9,7 @@ import com.nassafy.aro.util.di.HeaderInterceptorApi
 import com.nassafy.aro.util.di.WithoutHeaderInterceptorApi
 import javax.inject.Inject
 
-private const val TAG = "SplashRepository_싸피"
+private const val TAG = "SplashRepository_Young"
 
 class SplashRepository @Inject constructor(
     @WithoutHeaderInterceptorApi private val splashApi: SplashApi,
@@ -23,6 +24,8 @@ class SplashRepository @Inject constructor(
 
     suspend fun postAccessTokenGetUserData() {
         val response = splashHeaderApi.postAccessTokenGetUserData()
+        Log.d(TAG, "postAccessTokenGetUserData: $response")
+        Log.d(TAG, "postAccessTokenGetUserData: ${response.body()}")
 
         _postAccessTokenGetUserDataResponseLiveData.postValue(NetworkResult.Loading())
 

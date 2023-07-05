@@ -20,6 +20,8 @@ import com.nassafy.aro.util.showSnackBarMessage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 
+
+private const val TAG = "SplashFragment_Young"
 @AndroidEntryPoint
 class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding::inflate) {
 
@@ -97,6 +99,8 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding
      */
 
     private fun postAccessTokenGetUserDataResponseLiveDataObserve() {
+        Log.d(TAG, "postAccessTokenGetUserDataResponseLiveDataObserve: 여기 돌아감?")
+        
         splashViewModel.postAccessTokenGetUserDataResponseLiveData.observe(this.viewLifecycleOwner) {
             binding.splashProgressbar.visibility = View.GONE
             binding.splashProgressbar.isVisible = false
