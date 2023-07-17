@@ -16,7 +16,7 @@ services:
         max-file: "5"
         max-size: "100000000"
     networks:
-      D106-network:
+      aro-network:
         ipv4_address: 172.19.0.7
   batch-server:
     container_name: batch-server
@@ -34,9 +34,9 @@ services:
         max-file: "5"
         max-size: "100000000"
     networks:
-      D106-network:
+      aro-network:
         ipv4_address: 172.19.0.9
 
 networks:
-  D106-network:
+  aro-network:
     external: true
