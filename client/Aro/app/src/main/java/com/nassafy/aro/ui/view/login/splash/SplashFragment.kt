@@ -66,7 +66,6 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding
             else -> {}
         }
 
-        Log.d("ssafy/login/github", loginActivityViewModel.isTriedGithubLogin.toString())
         when (loginActivityViewModel.isTriedGithubLogin) {
             true -> {
                 findNavController().navigate(R.id.action_splashFragment_to_LoginFragment)
@@ -99,8 +98,6 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding
      */
 
     private fun postAccessTokenGetUserDataResponseLiveDataObserve() {
-        Log.d(TAG, "postAccessTokenGetUserDataResponseLiveDataObserve: 여기 돌아감?")
-        
         splashViewModel.postAccessTokenGetUserDataResponseLiveData.observe(this.viewLifecycleOwner) {
             binding.splashProgressbar.visibility = View.GONE
             binding.splashProgressbar.isVisible = false

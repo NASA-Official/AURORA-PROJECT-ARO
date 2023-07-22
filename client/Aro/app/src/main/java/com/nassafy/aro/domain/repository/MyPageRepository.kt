@@ -172,7 +172,6 @@ class MyPageRepository @Inject constructor(
 
     suspend fun getMeteorCountryList() {
         val response = myPageApi.getMeteorCountryList()
-        Log.d(TAG, "getMeteorCountryList: ${response.body()}")
         _meteorCountryListNetworkResultLiveData.setNetworkResult(response)
     }
 
@@ -187,7 +186,6 @@ class MyPageRepository @Inject constructor(
                 addProperty("countryId", it)
             }
         })
-        Log.d(TAG, "postFavoriteMeteorCountry: ${response}")
         _postFavoriteMeteorCountryNetworkResultLiveData.postValue(NetworkResult.Loading())
         try {
             when {

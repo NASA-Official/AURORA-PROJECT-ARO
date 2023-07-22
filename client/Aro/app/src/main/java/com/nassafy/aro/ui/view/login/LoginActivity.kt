@@ -23,13 +23,10 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        Log.d(TAG, "onCreate: 여기는?")
-
         val uri = intent?.data
         // Oauth 로그인 인지 아닌지 확인
         when (uri?.scheme.toString()) {
             "aro-github" -> { // 깃허브
-                Log.d("ssafy/login/github/body", uri?.getQueryParameter("scope") ?: "")
                 loginActivityViewModel.isTriedGithubLogin = true
                 loginActivityViewModel.githubCode = uri?.getQueryParameter("code") ?: ""
             }
@@ -37,23 +34,4 @@ class LoginActivity : AppCompatActivity() {
         } // End of when
     }
 
-
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-
-    } // End of onNewIntent
-
-    override fun onResume() {
-        super.onResume()
-//        val uri = intent?.data
-//        // Oauth 로그인 인지 아닌지 확인
-//        when (uri?.scheme.toString()) {
-//            "aro-github" -> { // 깃허브
-//                Log.d("ssafy/login/github", "onResume")
-//                loginActivityViewModel.isTriedGithubLogin = true
-//                loginActivityViewModel.githubToken = uri?.getQueryParameter("code") ?: ""
-//            }
-//            else -> {}
-//        } // End of when
-    } // End of onResume
 }

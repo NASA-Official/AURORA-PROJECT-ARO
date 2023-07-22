@@ -56,7 +56,6 @@ class JoinEmailFragment :
 
     private fun initEmailValidateObserve() {
         joinEmailFragmentViewModel.isEmailValidated.observe(this.viewLifecycleOwner) {
-            Log.d("ssafy_pcs", "progress.Off")
             when (it) {
                 is NetworkResult.Success -> {
                     isVerifyEmailTextviewClicked = false
@@ -79,7 +78,6 @@ class JoinEmailFragment :
                     requireView().showSnackBarMessage(getString(R.string.join_already_exist_email_text))
                 }
                 is NetworkResult.Loading -> {
-                    Log.d("ssafy_pcs", "progress.On")
                     when (isVerifyEmailTextviewClicked) {
                         true -> {
                             binding.progressGroup.isVisible = true

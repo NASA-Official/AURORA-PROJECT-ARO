@@ -57,11 +57,8 @@ class MyPageServiceRegisterFragment :
                     findNavController().navigate(R.id.action_myPageServiceRegisterFragment_to_myPageFragment)
                 }
                 is NetworkResult.Error -> {
-                    Log.d("ssafy", "error")
-
                 }
                 is NetworkResult.Loading -> {
-                    Log.d("ssafy", "loading")
                 }
             }
         }

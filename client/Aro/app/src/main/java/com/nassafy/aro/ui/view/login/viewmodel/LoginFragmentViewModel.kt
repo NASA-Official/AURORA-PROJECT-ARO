@@ -32,7 +32,6 @@ class LoginFragmentViewModel @Inject constructor(
         val job = viewModelScope.launch {
             userAccessRepository.snsLogin(providerType, accessToken)
         }
-        Log.d("ssafy/coroutine", "2")
         job.join()
     }
 

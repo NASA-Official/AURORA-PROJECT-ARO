@@ -104,9 +104,6 @@ class MyPageFavoriteRegisterFragment :
                     requireView().showSnackBarMessage("서버 통신 에러 발생")
                 } // End of Error
                 is NetworkResult.Loading -> {
-                    Log.d(
-                        "ssafy_pcs", "로딩 중.."
-                    )
                 } // End of Loading
             }
         }
@@ -139,9 +136,6 @@ class MyPageFavoriteRegisterFragment :
                     requireView().showSnackBarMessage("서버 통신 에러 발생")
                 } // End of Error
                 is NetworkResult.Loading -> {
-                    Log.d(
-                        "ssafy_pcs", "로딩 중.."
-                    )
                 } // End of Loading
             } // End of when
         } // End of setSelectServiceNetworkResultLiveData.observe
@@ -157,7 +151,6 @@ class MyPageFavoriteRegisterFragment :
                     requireView().showSnackBarMessage("서버 통신 에러 발생")
                 } // End of Error
                 is NetworkResult.Loading -> {
-                    Log.d("ssafy_pcs", "로딩 중..")
                 } // End of Loading
             } // End of when
         } // End of postFavoriteListNetworkResultLiveData.observe
@@ -174,7 +167,6 @@ class MyPageFavoriteRegisterFragment :
                     requireView().showSnackBarMessage("서버 통신 에러 발생")
                 } // End of Error
                 is NetworkResult.Loading -> {
-                    Log.d("ssafy_pcs", "로딩 중..")
                 } // End of Loading
             } // End of when
         } // End of postFavoriteListNetworkResultLiveData.observe
@@ -199,9 +191,6 @@ class MyPageFavoriteRegisterFragment :
                 }
                 is NetworkResult.Loading -> {
                     binding.loadingLayout.isVisible = true
-                    Log.d(
-                        "ssafy_pcs", "로딩 중.."
-                    )
                 }
             }
         } // End of countryListLiveData.observe
@@ -233,9 +222,6 @@ class MyPageFavoriteRegisterFragment :
                     requireView().showSnackBarMessage("서버 통신 에러 발생")
                 }
                 is NetworkResult.Loading -> {
-                    Log.d(
-                        "ssafy_pcs", "로딩 중.."
-                    )
                 }
             } // End of when
         } // End of .placeListLiveData.observe(this.viewLifecycleOwner)
