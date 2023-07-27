@@ -47,7 +47,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             true -> {
                 loginActivityViewModel.isTriedGithubLogin = false
                 isTriedLoginState = true
-                Log.d("ssafy/github/code", loginActivityViewModel.githubCode)
                 CoroutineScope(Dispatchers.Main).launch {
                     snsLogin("GITHUB", "")
                 }
@@ -90,7 +89,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                         val naverAccessToken = NaverIdLoginSDK.getAccessToken()
                         naverAccessToken ?: return
                         val providerType = "NAVER"
-                        Log.d("ssafy/auth/naver", "naverAccessToken: $naverAccessToken")
                         snsLogin(providerType, naverAccessToken)
                     } // End of onSuccess
 
@@ -159,12 +157,16 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                     }
                 }
                 val networkResult = userSnsLoginNetworkResultLiveData.value
-                Log.d("ssafy/snslogin/networkResult", networkResult?.data.toString())
                 launch(Dispatchers.Main) {
                     when (networkResult) {
                         is NetworkResult.Success -> {
                             when (networkResult.data!!.signup) {
                                 true -> {
+                                    if (networkResult.data!!.providerType == "LOCAL") {
+                                        requireView().showSnackBarMessage("해당 이메일로 가입된 계정이 존재합니다\nID 및 패스워드를 사용하여 로그인해주세요")
+                                        binding.progressbar.isVisible = false
+                                        return@launch
+                                    }
                                     loginByIdPassword(
                                         networkResult.data!!.providerType,
                                         networkResult.data!!.email,
@@ -202,7 +204,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             when (it) {
                 is NetworkResult.Success -> {
                     val data = it.data
-                    Log.d("ssafy/login", it.data.toString())
                     Application.sharedPreferencesUtil.addUserAccessToken(data?.accessToken ?: "")
                     Application.sharedPreferencesUtil.addUserRefreshToken(data?.refreshToken ?: "")
                     startMainActivity()

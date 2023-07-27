@@ -66,9 +66,6 @@ class JoinServiceFragment :
                 is NetworkResult.Loading -> {
                     binding.serviceSelectSkipTextview.isEnabled = false
                     binding.progressbar.isVisible = true
-                    Log.d(
-                        "ssafy_pcs", "로딩 중.."
-                    )
                 }
             }
         }

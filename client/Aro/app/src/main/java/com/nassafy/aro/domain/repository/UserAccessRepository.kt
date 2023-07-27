@@ -224,10 +224,7 @@ class UserAccessRepository @Inject constructor(
         val response = userAccessApi.snsLogin(JsonObject().apply {
             addProperty("providerType", providerType)
             addProperty("accessToken", accessToken)
-            Log.d("ssafy/sns/request", this.toString())
         })
-        Log.d("ssafy/sns/response", response.toString())
-        Log.d("ssafy/sns/response/body", response.body().toString())
         _userSnsLoginNetworkResultLiveData.setNetworkResult(response)
     }
 
@@ -237,11 +234,9 @@ class UserAccessRepository @Inject constructor(
             BuildConfig.GITHUB_CLIENT_SECRET,
             code
         )
-        Log.d("ssafy/sns/response", response.toString())
         try {
             when {
                 response.isSuccessful -> {
-                    Log.d("ssafy/sns/response/body", response.body().toString())
                     return NetworkResult.Success(response.body()!!)
                 }
                 response.errorBody() != null -> {
@@ -249,7 +244,6 @@ class UserAccessRepository @Inject constructor(
                 }
             }
         } catch (e: java.lang.Exception) {
-            Log.e("ssafy", "getServerCallTest: ${e.message}")
             return NetworkResult.Error(e.message)
         } // End of try-catch
         return NetworkResult.Error("")

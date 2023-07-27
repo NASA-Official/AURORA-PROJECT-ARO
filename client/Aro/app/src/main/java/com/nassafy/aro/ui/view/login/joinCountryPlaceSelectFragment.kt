@@ -107,16 +107,11 @@ class JoinCountryPlaceSelectFragment : BaseFragment<FragmentAroCountryPlaceSelec
                 is NetworkResult.Success -> {
                     loginActivityViewModel.meteorCountryList.clear()
                     loginActivityViewModel.meteorCountryList.addAll(it.data!!)
-                    Log.d(
-                        TAG,
-                        "initAuroraCountryPlaceObserve: ${loginActivityViewModel.meteorCountryList.joinToString()}"
-                    )
                 }
                 is NetworkResult.Error -> {
                     requireView().showSnackBarMessage("서버 통신 에러 발생")
                 }
                 is NetworkResult.Loading -> {
-                    Log.d("ssafy_pcs", "로딩 중..")
                 }
             }
         }
@@ -129,8 +124,6 @@ class JoinCountryPlaceSelectFragment : BaseFragment<FragmentAroCountryPlaceSelec
                     when (loginActivityViewModel.placeListLiveData.value!!) {
                         is NetworkResult.Success<List<PlaceItem>> -> {
                             requireView().showSnackBarMessage("회원가입 성공!")
-                            Log.d("ssafy_pcs/it", it.toString())
-                            Log.d("ssafy_pcs/it.data", it.data.toString())
                             Application.sharedPreferencesUtil.addUserAccessToken(
                                 it.data?.accessToken ?: ""
                             )
@@ -146,7 +139,6 @@ class JoinCountryPlaceSelectFragment : BaseFragment<FragmentAroCountryPlaceSelec
                             requireView().showSnackBarMessage("서버 통신 에러 발생")
                         }
                         is NetworkResult.Loading<*> -> {
-                            Log.d("ssafy_pcs", "로딩 중..")
                         }
                     }
                 }
@@ -154,7 +146,6 @@ class JoinCountryPlaceSelectFragment : BaseFragment<FragmentAroCountryPlaceSelec
                     requireView().showSnackBarMessage("서버 통신 에러 발생")
                 }
                 is NetworkResult.Loading -> {
-                    Log.d("ssafy_pcs", "로딩 중..")
                 }
             }
         } // End of userJoinNetworkResultLiveData.observe
@@ -182,7 +173,6 @@ class JoinCountryPlaceSelectFragment : BaseFragment<FragmentAroCountryPlaceSelec
                     gson.toJsonTree(selectedAuroraPlaceList.map { it.placeId })
                         .getAsJsonArray()
                 )
-                Log.d(TAG, "initView: ${user}")
                 joinCountryPlaceServiceSelectFragmentViewModel.join(user)
             }
         }
@@ -239,9 +229,6 @@ class JoinCountryPlaceSelectFragment : BaseFragment<FragmentAroCountryPlaceSelec
                 }
                 is NetworkResult.Loading -> {
                     binding.loadingLayout.isVisible = true
-                    Log.d(
-                        "ssafy_pcs", "로딩 중.."
-                    )
                 }
             }
         } // End of countryListLiveData.observe
@@ -257,9 +244,6 @@ class JoinCountryPlaceSelectFragment : BaseFragment<FragmentAroCountryPlaceSelec
                     requireView().showSnackBarMessage("서버 통신 에러 발생")
                 }
                 is NetworkResult.Loading -> {
-                    Log.d(
-                        "ssafy_pcs", "로딩 중.."
-                    )
                 }
             } // End of when
         } // End of .placeListLiveData.observe(this.viewLifecycleOwner)
