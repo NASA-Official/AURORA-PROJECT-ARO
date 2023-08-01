@@ -7,7 +7,7 @@ import com.google.gson.JsonObject
 import com.nassafy.aro.data.dto.FavoriteList
 import com.nassafy.aro.data.dto.MeteorCountry
 import com.nassafy.aro.data.dto.PlaceItem
-import com.nassafy.aro.data.dto.UserTest
+import com.nassafy.aro.data.dto.UserData
 import com.nassafy.aro.domain.api.MyPageApi
 import com.nassafy.aro.domain.api.WithoutHeaderMyPageApi
 import com.nassafy.aro.util.NetworkResult
@@ -25,7 +25,7 @@ class MyPageRepository @Inject constructor(
     val nicknameLiveData get() = _nicknameLiveData
 
     private val _getSelectedServiceNetworkResultLiveData =
-        MutableLiveData<NetworkResult<UserTest>>()
+        MutableLiveData<NetworkResult<UserData>>()
     val getSelectedServiceNetworkResultLiveData get() = _getSelectedServiceNetworkResultLiveData
 
     private val _favoriteListNetworkResultLiveData = MutableLiveData<NetworkResult<FavoriteList>>()

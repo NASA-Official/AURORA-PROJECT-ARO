@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class UserTest @JvmOverloads constructor(
+data class UserData @JvmOverloads constructor(
     val auroraPlaces: List<Int>,
     val auroraService: Boolean,
     val email: String,

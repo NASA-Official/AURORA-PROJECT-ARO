@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nassafy.aro.data.dto.UserTest
+import com.nassafy.aro.data.dto.UserData
 import com.nassafy.aro.data.dto.UserWholeData
 import com.nassafy.aro.domain.repository.MainRepository
 import com.nassafy.aro.util.NetworkResult
@@ -36,7 +36,7 @@ class MainActivityViewModel @Inject constructor(private val mainRepository: Main
     var meteorShowerServiceEnabled: Boolean = false
 
     val logoutNetworkResultLiveData get() = mainRepository.logoutNetworkResultLiveData
-    val userInfo: LiveData<NetworkResult<UserTest>> get() = mainRepository.userInfo
+    val userInfo: LiveData<NetworkResult<UserData>> get() = mainRepository.userInfo
     val getAlarmOptionNetworkResultLiveData get() = mainRepository.getAlarmOptionNetworkResultLiveData
     val getAuroraOptionNetworkResultLiveData get() = mainRepository.getAuroraDisplayOptionNetworkResultLiveData
     val getCloudOptionNetworkResultLiveData get() = mainRepository.getCloudDisplayOptionNetworkResultLiveData

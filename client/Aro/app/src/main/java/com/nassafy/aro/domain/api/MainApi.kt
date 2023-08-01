@@ -1,7 +1,7 @@
 package com.nassafy.aro.domain.api
 
 import com.google.gson.JsonObject
-import com.nassafy.aro.data.dto.UserTest
+import com.nassafy.aro.data.dto.UserData
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -15,7 +15,7 @@ interface MainApi {
     @POST("api/members/memberInfo")
     suspend fun getUserInfo(
         @Body requestBody: JsonObject
-    ): Response<UserTest>
+    ): Response<UserData>
 
     @GET("api/members/alarm")
     suspend fun getAlarmOption(): Response<Boolean>

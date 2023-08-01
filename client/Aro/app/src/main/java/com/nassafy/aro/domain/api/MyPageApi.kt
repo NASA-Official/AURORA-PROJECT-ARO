@@ -4,7 +4,7 @@ import com.google.gson.JsonObject
 import com.nassafy.aro.data.dto.FavoriteList
 import com.nassafy.aro.data.dto.MeteorCountry
 import com.nassafy.aro.data.dto.PlaceItem
-import com.nassafy.aro.data.dto.UserTest
+import com.nassafy.aro.data.dto.UserData
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -15,7 +15,7 @@ interface MyPageApi {
     ): Response<Unit>
 
     @GET("api/members/service/all")
-    suspend fun getSelectedService(): Response<UserTest>
+    suspend fun getSelectedService(): Response<UserData>
 
     @GET("api/interest")
     suspend fun getFavoriteList(): Response<FavoriteList>
