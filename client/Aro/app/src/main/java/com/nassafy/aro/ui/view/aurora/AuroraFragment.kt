@@ -29,11 +29,11 @@ import com.nassafy.aro.BuildConfig
 import com.nassafy.aro.R
 import com.nassafy.aro.data.dto.PlaceItem
 import com.nassafy.aro.data.dto.kp.KpWithProbs
-import com.nassafy.aro.data.dto.kp.Probability
 import com.nassafy.aro.databinding.FragmentAuroraBinding
 import com.nassafy.aro.ui.adapter.BottomSheetFavoriteAdapter
 import com.nassafy.aro.ui.view.*
 import com.nassafy.aro.ui.view.dialog.DateHourSelectDialog
+import com.nassafy.aro.ui.view.dialog.OkDialog
 import com.nassafy.aro.ui.view.main.MainActivity
 import com.nassafy.aro.ui.view.main.MainActivityViewModel
 import com.nassafy.aro.util.*
@@ -96,6 +96,7 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
     } // End of onViewCreated
 
     override fun onMapReady(googleMap: GoogleMap?) {
+        Log.d(TAG, "onMapReady: 1")
         mMap = googleMap!!
         mMap!!.uiSettings.isMapToolbarEnabled = false
         setCustomMapStyle()
@@ -136,6 +137,7 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
         } // End of currentKpIndexLiveData
 
         auroraViewModel.kpAndProbsLiveData.observe(viewLifecycleOwner) {
+            Log.d(TAG, "kpAndProbsLiveData: ${it.data}")
             if (it.data != null) {
                 kpWithProbs = it.data!!
                 favoriteAdapter.probs = it.data!!.probs
@@ -147,12 +149,23 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
         } // End of kpAndProbsLiveData
 
         auroraViewModel.placeItemListLiveData.observe(viewLifecycleOwner) {
+            Log.d(TAG, "placeItemListLiveData: ${it.data}")
             when (it) {
                 is NetworkResult.Success -> {
                     if (mMap != null && it.data != null) {
-                        mClusterManager.clearItems()
-                        mClusterManager.addItems(it.data)
-                        mClusterManager.cluster()
+                        if (it.data!!.isEmpty()) {
+                            val noProbDialog = OkDialog(
+                                getString(R.string.dialog_no_probs),
+                                getString(R.string.dialog_retry),
+                                getString(R.string.dialog_confirm_button_text)
+                            )
+                            noProbDialog.show(childFragmentManager, "NoProbDialog")
+                            Log.d(TAG, "initObserve: 2")
+                        } else {
+                            mClusterManager.clearItems()
+                            mClusterManager.addItems(it.data)
+                            mClusterManager.cluster()
+                        }
                         // set Start Location
                         mMap!!.animateCamera(
                             CameraUpdateFactory.newLatLngZoom(
@@ -364,7 +377,6 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
                 } catch (e: MalformedURLException) {
                     throw AssertionError(e)
                 }
-//                Log.d(TAG, "getTileUrl: $tileUrl")
                 return tileUrl
             }
         }
@@ -399,7 +411,7 @@ class AuroraFragment : BaseFragment<FragmentAuroraBinding>(FragmentAuroraBinding
             )
         )
         mClusterManager.setOnClusterItemClickListener(this@AuroraFragment)
-
+        Log.d(TAG, "setClusterManager: 2")
 //        auroraViewModel.getPlaceItemList()
     } // End of setClusterManager
 
